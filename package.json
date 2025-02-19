@@ -1,0 +1,20 @@
+{
+  "name": "com.lycheelabs.fruityinterface",
+  "displayName": "Fruity Interface",
+  "version": "0.1.0",
+  "unity": "2022.3",
+  "description": "Fruity Interface",
+
+  "keywords": [
+    "keyword1",
+    "keyword2",
+    "keyword3"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Lychee Game Labs"
+  },
+  "dependencies": {
+     "com.unity.textmeshpro": "3.0.7"
+  }
+}
