@@ -1,0 +1,16 @@
+{
+    "name": "com.lycheelabs.fruityinterface.EDITOR",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0805e2714b47e2742a28bc2c0292a0d5"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

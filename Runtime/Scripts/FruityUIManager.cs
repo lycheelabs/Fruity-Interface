@@ -1,11 +1,10 @@
-using LycheeLabs.FruityInterface.Elements;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
-    public class LycheeUIManager : MonoBehaviour {
+    public class FruityUIManager : MonoBehaviour {
 
-        public static LycheeUIManager Instance { get; private set; }
+        public static FruityUIManager Instance { get; private set; }
 
         // ------------------------------------------------------------------------
 
