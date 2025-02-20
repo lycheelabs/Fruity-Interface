@@ -16,7 +16,7 @@ namespace LycheeLabs.FruityInterface  {
             bufferedEvents.Enqueue(e);
         }
         
-        public void Update() {
+        public void Update(bool logging) {
             // Swap buffers
             (bufferedEvents, events) = (events, bufferedEvents);
 

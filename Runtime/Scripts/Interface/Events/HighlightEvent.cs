@@ -1,17 +1,12 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface  {
-    public interface InterfaceEvent {
-
-        void Activate(bool logging);
-
-    }
-
+namespace LycheeLabs.FruityInterface
+{
     public class HighlightEvent : InterfaceEvent {
 
-        public HighlightParams HighlightParams;
+        public HighlightParams Params;
         public void Activate(bool logging) {
-            var newTarget = HighlightParams.Target;
+            var newTarget = Params.Target;
             var firstFrame = (newTarget != InterfaceTargets.Highlighted);
 
             if (firstFrame) {
@@ -22,14 +17,7 @@ namespace LycheeLabs.FruityInterface  {
                 }
             }
 
-            InterfaceTargets.Highlighted?.MouseHighlight(firstFrame, HighlightParams);
+            InterfaceTargets.Highlighted?.MouseHighlight(firstFrame, Params);
         }
     }
-
-    public static class InterfaceTargets {
-
-        public static MouseTarget Highlighted;
-
-    }
-    
 }

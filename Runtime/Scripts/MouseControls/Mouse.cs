@@ -17,17 +17,15 @@ namespace LycheeLabs.FruityInterface {
         public static Vector3 MouseWorldPosition => InterfaceConfig.MouseToWorldPoint();
 
         public static bool MouseIsMoving { get; private set; }
-        public static bool MouseIsDragging => currentDragTarget != null;
+        public static bool MouseIsDragging => InterfaceTargets.Dragged != null;
         public static bool DisableMouse { get; set; }
-        public static bool IsIdle => InterfaceTargets.Highlighted == null && currentDragTarget == null;
+        public static bool IsIdle => InterfaceTargets.Highlighted == null && InterfaceTargets.Dragged == null;
         public static MouseTarget HighlightTarget => InterfaceTargets.Highlighted;
         public static MouseTarget DragOverTarget => currentDragOverTarget;
 
         private static MouseRaycaster Raycaster = new MouseRaycaster();
         
         // Targets
-        private static ClickTarget currentSelectTarget;
-        private static DragTarget currentDragTarget;
         private static MouseTarget currentDragOverTarget;
 
         // Events
@@ -85,8 +83,8 @@ namespace LycheeLabs.FruityInterface {
             // Override
             var mouseTarget = highlightParams.Target;
             var appliedHighlightParams = highlightParams;
-            if (currentDragTarget != null) {
-                appliedHighlightParams.Target = currentDragTarget;
+            if (InterfaceTargets.Dragged != null) {
+                appliedHighlightParams.Target = InterfaceTargets.Dragged;
             }
             else if (GrabTarget.CurrentGrabbedInstance != null) {
                 appliedHighlightParams.Target = GrabTarget.CurrentGrabbedInstance;
@@ -124,7 +122,7 @@ namespace LycheeLabs.FruityInterface {
             if (Input.GetMouseButtonDown((int)MouseButton.Right)) pressButton = MouseButton.Right;
 
             // Prepare drag params
-            DragParams dragParams = new DragParams(Camera.main, currentDragTarget, mouseTarget,
+            DragParams dragParams = new DragParams(Camera.main, InterfaceTargets.Dragged, mouseTarget,
                 pressPixel, Input.mousePosition, pressedClickParams.ClickButton);
 
             // Mouse pressing
@@ -138,14 +136,13 @@ namespace LycheeLabs.FruityInterface {
                 // Start dragging
                 var newDragTarget = mouseTarget as DragTarget;
                 if (newDragTarget != null && newDragTarget.DraggingIsEnabled) {
-                    currentDragTarget = newDragTarget;
-                    dragParams = new DragParams(Camera.main, currentDragTarget, mouseTarget,
+                    dragParams = new DragParams(Camera.main, newDragTarget, mouseTarget,
                         pressPixel, pressPixel, pressedClickParams.ClickButton);
-                    StartDrag(newDragTarget, dragParams);
+                    StartDrag(dragParams);
                 }
 
                 // Press
-                if (pressedClickParams.Target != currentSelectTarget) {
+                if (pressedClickParams.Target != InterfaceTargets.Dragged) {
                     OnNewPress?.Invoke(pressedClickParams.Target);
                 }
                 var clickOnPress = pressedClickParams.Target?.ClickOnMouseDown == true;
@@ -153,14 +150,14 @@ namespace LycheeLabs.FruityInterface {
                     pressedClickParams.HeldDuration = Time.time - lastClickTime;
                     Select(pressedClickParams);
                 }
-                
+                return;
             }
 
             // Mouse releasing (+ Finish Dragging)
             if (mouseIsPressed && !Input.GetMouseButton((int)pressedClickParams.ClickButton)) {
 
                 // Apply drag
-                if (currentDragTarget != null) {
+                if (InterfaceTargets.Dragged != null) {
                     CompleteDrag(dragParams);
                 }
 
@@ -176,11 +173,11 @@ namespace LycheeLabs.FruityInterface {
             }
 
             // Update or cancel drag
-            var cancelDrag = currentDragTarget?.DraggingIsEnabled == false ||
-                (dragParams.DragButton == MouseButton.Left && Input.GetMouseButtonDown((int)MouseButton.Right)) ||
-                (dragParams.DragButton == MouseButton.Right && Input.GetMouseButtonDown((int)MouseButton.Left));
+            var cancelDrag = InterfaceTargets.Dragged?.DraggingIsEnabled == false ||
+                             (dragParams.DragButton == MouseButton.Left && Input.GetMouseButtonDown((int)MouseButton.Right)) ||
+                             (dragParams.DragButton == MouseButton.Right && Input.GetMouseButtonDown((int)MouseButton.Left));
 
-            if (mouseIsPressed && currentDragTarget != null && !cancelDrag) {
+            if (mouseIsPressed && InterfaceTargets.Dragged != null && !cancelDrag) {
                 UpdateDrag(dragParams);
             } else {
                 CancelDrag();
@@ -199,76 +196,40 @@ namespace LycheeLabs.FruityInterface {
         #region Events
         private static void Highlight (HighlightParams highlightParams) {
             FruityUIManager.Queue(new HighlightEvent {
-                HighlightParams = highlightParams
+                Params = highlightParams
             });
         }
 
         private static void Select (ClickParams clickParams) {
-            selectionLock = true;
-            var newTarget = clickParams.Target;
-
-            // Try unclicking current target
-            if (currentSelectTarget != null && newTarget != currentSelectTarget) {
-                var unclicked = currentSelectTarget.TryMouseUnclick(clickParams);
-                if (!unclicked) {
-                    if (enableLogging) {
-                        Debug.Log("Unclick blocked: " + currentSelectTarget);
-                    }
-                    selectionLock = false;
-                    return;
-                }
-            }
-
-            if (enableLogging) {
-                Debug.Log("Click: " + newTarget);
-            }
-
-            OnNewClick?.Invoke(pressedClickParams.Target);
-
-            currentSelectTarget = newTarget;
-            currentSelectTarget?.MouseClick(clickParams);
-            selectionLock = false;
-
+            FruityUIManager.Queue(new ClickEvent {
+                Params = clickParams
+            });
         }
-
-        public static void TrySelect (ClickTarget target, MouseButton button) {
-            if (!selectionLock) {
-                Select(new ClickParams(Camera.main, target, default, button));
-            }
-        }
-
-        private static void StartDrag(DragTarget newTarget, DragParams dragParams) {
-            currentDragTarget = newTarget;
-            if (enableLogging) {
-                Debug.Log("Dragging: " + newTarget);
-            }
-            currentDragTarget.StartMouseDrag(dragParams);
+        
+        private static void StartDrag(DragParams dragParams) {
+            FruityUIManager.Queue(new StartDragEvent {
+                Params = dragParams
+            });
         }
 
         private static void UpdateDrag (DragParams dragParams) {
-            if (currentDragTarget != null) {
-                currentDragTarget.UpdateMouseDrag(dragParams);
-            }
+            FruityUIManager.Queue(new UpdateDragEvent {
+                Params = dragParams
+            });
         }
 
         private static void CompleteDrag (DragParams dragParams) {
-            if (currentDragTarget != null) {
-                if (enableLogging) {
-                    Debug.Log("Dragged: " + currentDragTarget);
-                }
-                currentDragTarget.CompleteMouseDrag(dragParams);
-                currentDragTarget = null;
-            }
+            FruityUIManager.Queue(new EndDragEvent {
+                Params = dragParams,
+                WasCancelled = false
+            });
         }
 
         private static void CancelDrag () {
-            if (currentDragTarget != null) {
-                if (enableLogging) {
-                    Debug.Log("Drag cancelled: " + currentDragTarget);
-                }
-                currentDragTarget.CancelMouseDrag();
-                currentDragTarget = null;
-            }
+            FruityUIManager.Queue(new EndDragEvent {
+                Params = default,
+                WasCancelled = true
+            });
         }
         #endregion
 
