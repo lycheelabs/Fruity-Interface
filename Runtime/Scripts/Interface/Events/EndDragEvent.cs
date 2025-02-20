@@ -24,7 +24,7 @@ namespace LycheeLabs.FruityInterface
                     }
                     else  {
                         if (logging) {
-                            Debug.Log("Cancel Drag: " + InterfaceTargets.Dragged);
+                            Debug.Log("Dragged: " + InterfaceTargets.Dragged);
                         }
                         InterfaceTargets.Dragged.CompleteMouseDrag(Params);
                         InterfaceTargets.Dragged = null;

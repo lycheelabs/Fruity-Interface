@@ -7,8 +7,6 @@ namespace LycheeLabs.FruityInterface.Elements {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class TextLayout : LayoutNode {
 
-        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => null;
-
         private TextMeshProUGUI _text;
         public TextMeshProUGUI Text {
             get {

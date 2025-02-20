@@ -9,7 +9,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// (For example, using the ImageButton and TextButton subclasses.)
     /// More complex buttons should implement UIButton directly.
     /// </summary>
-    public class ClickButton : UIButton, ClickTarget, EnteringElement {
+    public class ClickButton : InterfaceButton, ClickTarget, EnteringElement {
 
         private ClickButtonEffect _effect;
         public ClickButtonEffect TryGetEffect {
@@ -18,8 +18,6 @@ namespace LycheeLabs.FruityInterface.Elements {
                 return _effect;
             }
         }
-
-        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => this;
 
         protected override void OnHighlight (bool firstFrame, HighlightParams highlightParams) {
             if (firstFrame && TryGetEffect != null) {

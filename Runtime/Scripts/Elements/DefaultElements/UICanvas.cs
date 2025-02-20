@@ -15,8 +15,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         public RectTransform contents;
         protected override Transform AttachTarget => contents.transform;
 
-        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => null;
-
         public void Setup (string name, Camera camera, string layerName, int order, float planeDistance) {
             canvas.name = "Canvas-" + name;
             canvas.worldCamera = camera ?? Camera.main;

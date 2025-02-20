@@ -34,9 +34,10 @@ namespace LycheeLabs.FruityInterface {
 
         // Click tracking
         private static bool mouseIsPressed;
-        private static bool mouseIsClicking;
-        private static bool mouseIsDragging;
-        private static ClickParams pressedClickParams = ClickParams.blank;
+        private static bool pressIsClick;
+        private static bool pressIsDrag;
+        private static MouseButton pressButton;
+        private static ClickParams pressClickParams = ClickParams.blank;
         
         private static Vector3 oldMousePosition;
         private static Vector2 pressPixel;
@@ -95,8 +96,8 @@ namespace LycheeLabs.FruityInterface {
             }
             
             var heldButton = MouseButton.None;
-            if (pressedClickParams.Target == target) {
-                heldButton = pressedClickParams.ClickButton;
+            if (pressClickParams.Target == target) {
+                heldButton = pressButton;
             }
             return new HighlightParams(target, targetPoint, heldButton);
         }
@@ -130,7 +131,7 @@ namespace LycheeLabs.FruityInterface {
                     PressClick(highlightParams, clickTarget, newPressedButton);
 
                     // Trigger an immediate click (if configured)
-                    var clickOnPress = pressedClickParams.Target?.ClickOnMouseDown == true;
+                    var clickOnPress = pressClickParams.Target?.ClickOnMouseDown == true;
                     if (clickOnPress) {
                         ReleaseClick();
                         return; // Don't drag!
@@ -139,7 +140,7 @@ namespace LycheeLabs.FruityInterface {
 
                 // Start a drag (if applicable)
                 if (dragTarget != null && dragTarget.DraggingIsEnabled)  {
-                    StartDrag(dragTarget, mouseTarget);
+                    StartDrag(dragTarget, mouseTarget, newPressedButton);
                 }
             }
         }
@@ -149,17 +150,17 @@ namespace LycheeLabs.FruityInterface {
             
             // Active drag params
             var dragParams = DragParams.Null;
-            if (mouseIsDragging) {
+            if (pressIsDrag) {
                 dragParams = new DragParams(InterfaceTargets.Dragged, mouseTarget,
-                    pressPixel, Input.mousePosition, pressedClickParams.ClickButton);
+                    pressPixel, Input.mousePosition, pressButton);
             }
 
             // Release mouse press
-            if (mouseIsPressed && !Input.GetMouseButton((int)pressedClickParams.ClickButton)) {
-                if (mouseIsDragging) {
+            if (mouseIsPressed && !Input.GetMouseButton((int)pressButton)) {
+                if (pressIsDrag) {
                     QueueDragCompleteEvent(dragParams);
                 }
-                if (mouseIsClicking && pressedClickParams.Target == mouseTarget) {
+                if (pressIsClick && pressClickParams.Target == mouseTarget) {
                     ReleaseClick();
                 }
                 ClearPress();
@@ -167,29 +168,31 @@ namespace LycheeLabs.FruityInterface {
             }
 
             // Update or cancel drag
-            if (mouseIsDragging) {
+            if (pressIsDrag) {
                 UpdateDrag(dragParams);
             }
         }
 
-        private static void PressClick(HighlightParams highlightParams, ClickTarget clickTarget, MouseButton newPressedButton) {
+        private static void PressClick(HighlightParams highlightParams, ClickTarget clickTarget, MouseButton pressedButton) {
             mouseIsPressed = true;
-            mouseIsClicking = true;
-                    
+            pressIsClick = true;
+            pressButton = pressedButton;
+
             lastClickTime = Time.time;
             pressPixel = Input.mousePosition;
             pressPosition = highlightParams.MouseWorldPosition;
-            pressedClickParams = new ClickParams(clickTarget, pressPosition, newPressedButton);
+            pressClickParams = new ClickParams(clickTarget, pressPosition, pressedButton);
 
-            OnNewPress?.Invoke(pressedClickParams.Target);
+            OnNewPress?.Invoke(pressClickParams.Target);
         }
 
-        private static void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget) {
+        private static void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget, MouseButton pressedButton) {
             mouseIsPressed = true;
-            mouseIsDragging = true;
-                    
+            pressIsDrag = true;
+            pressButton = pressedButton;
+
             var dragParams = new DragParams(dragTarget, mouseTarget,
-                pressPixel, pressPixel, pressedClickParams.ClickButton);
+                pressPixel, pressPixel, pressButton);
             QueueDragStartEvent(dragParams);
         }
 
@@ -202,21 +205,21 @@ namespace LycheeLabs.FruityInterface {
                 QueueDragUpdateEvent(dragParams);
             } else {
                 QueueDragCancelEvent();
-                mouseIsDragging = false;
+                pressIsDrag = false;
             }
         }
 
         private static void ReleaseClick() {
-            pressedClickParams.HeldDuration = Time.time - lastClickTime;
-            QueueClickEvent(pressedClickParams);
+            pressClickParams.HeldDuration = Time.time - lastClickTime;
+            QueueClickEvent(pressClickParams);
             ClearPress();
         }
 
         private static void ClearPress()  {
             mouseIsPressed = false;
-            mouseIsClicking = false;
-            mouseIsDragging = false;
-            pressedClickParams = ClickParams.blank;
+            pressIsClick = false;
+            pressIsDrag = false;
+            pressClickParams = ClickParams.blank;
         }
 
         #endregion
