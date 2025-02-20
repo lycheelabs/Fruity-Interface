@@ -16,7 +16,7 @@ public class MouseRaycaster  {
     public void CollideAndResolve (out MouseTarget target, out Vector3 targetPoint) {
         target = null;
         targetPoint = Vector3.zero; 
-        if (!Mouse.MouseIsInBounds) {
+        if (!FruityUI.MouseIsOnscreen) {
             return;
         }
 

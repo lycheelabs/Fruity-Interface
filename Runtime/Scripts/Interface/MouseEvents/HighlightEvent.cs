@@ -7,17 +7,17 @@ namespace LycheeLabs.FruityInterface
         public HighlightParams Params;
         public void Activate(bool logging) {
             var newTarget = Params.Target;
-            var firstFrame = (newTarget != InterfaceTargets.Highlighted);
+            var firstFrame = (newTarget != FruityUI.HighlightedTarget);
 
             if (firstFrame) {
-                InterfaceTargets.Highlighted?.MouseDehighlight();
-                InterfaceTargets.Highlighted = newTarget;
+                FruityUI.HighlightedTarget?.MouseDehighlight();
+                FruityUI.HighlightedTarget = newTarget;
                 if (logging) {
                     Debug.Log("Highlight: " + newTarget);
                 }
             }
 
-            InterfaceTargets.Highlighted?.MouseHighlight(firstFrame, Params);
+            FruityUI.HighlightedTarget?.MouseHighlight(firstFrame, Params);
         }
     }
 }

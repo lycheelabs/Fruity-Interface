@@ -6,31 +6,38 @@ namespace LycheeLabs.FruityInterface {
 
         public static FruityUIManager Instance { get; private set; }
 
-        public static void Queue(InterfaceEvent newEvent) {
-            Instance.tree.QueueEvent(newEvent);
+        public static void TriggerNewClick (ClickTarget target, MouseButton button) {
+            if (Instance != null && target != null) {
+                Instance.mouseState.ClickNow(target, button);
+            }
         }
-        
+
+        internal static void Queue(InterfaceEvent newEvent) {
+            if (Instance != null && newEvent != null) {
+                Instance.events.Queue(newEvent);
+            }
+        }
+
         // ------------------------------------------------------------------------
 
         public ScreenAspect MinAspectRatio = ScreenAspect.STANDARD;
         public ScreenAspect MaxAspectRatio = ScreenAspect.ULTRAWIDE;
         public bool LogEvents;
 
-        private InterfaceTree tree;
+        private MouseState mouseState;
+        private EventQueue events;
         
         private void Start () {
             Instance = this;
-            tree = new InterfaceTree();
+            mouseState = new MouseState();
+            events = new EventQueue();
         }
 
         void Update () {
 
-            // Update the interface
             InterfaceConfig.Update(MinAspectRatio, MaxAspectRatio);
-            Mouse.Update();
-            tree.Update(LogEvents);
-            
-            // Update the scene
+            mouseState.Update();
+            events.Update(LogEvents);
             GrabTarget.UpdateCurrentGrab();
             
         }

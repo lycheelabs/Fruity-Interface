@@ -9,20 +9,20 @@ namespace LycheeLabs.FruityInterface
             var newTarget = Params.Target;
 
             // Cancel drag if needed
-            if (InterfaceTargets.Dragged != null) {
+            if (FruityUI.DraggedTarget != null) {
                 if (logging) {
-                    Debug.Log("Drag cancelled: " + InterfaceTargets.Dragged);
+                    Debug.Log("Drag cancelled: " + FruityUI.DraggedTarget);
                 }
-                InterfaceTargets.Dragged.CancelMouseDrag();
-                InterfaceTargets.Dragged = null;
+                FruityUI.DraggedTarget.CancelMouseDrag();
+                FruityUI.DraggedTarget = null;
             }
             
             // Try unclicking current target
-            if (InterfaceTargets.Selected != null && newTarget != InterfaceTargets.Selected) {
-                var unclicked = InterfaceTargets.Selected.TryMouseUnclick(Params);
+            if (FruityUI.SelectedTarget != null && newTarget != FruityUI.SelectedTarget) {
+                var unclicked = FruityUI.SelectedTarget.TryMouseUnclick(Params);
                 if (!unclicked) {
                     if (logging) {
-                        Debug.Log("Unclick blocked: " + InterfaceTargets.Selected);
+                        Debug.Log("Unclick blocked: " + FruityUI.SelectedTarget);
                     }
                     return;
                 }
@@ -33,8 +33,8 @@ namespace LycheeLabs.FruityInterface
             }
             //OnNewClick?.Invoke(pressedClickParams.Target);
 
-            InterfaceTargets.Selected = newTarget;
-            InterfaceTargets.Selected?.MouseClick(Params);
+            FruityUI.SelectedTarget = newTarget;
+            FruityUI.SelectedTarget?.MouseClick(Params);
         }
     }
 }

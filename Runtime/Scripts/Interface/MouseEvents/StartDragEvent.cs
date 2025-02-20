@@ -5,18 +5,18 @@ namespace LycheeLabs.FruityInterface
     public class StartDragEvent : InterfaceEvent  {
         public DragParams Params;
         public void Activate(bool logging) {
-            if (InterfaceTargets.Dragged != null) {
+            if (FruityUI.DraggedTarget != null) {
                 if (logging) {
-                    Debug.Log("Cancel Drag: " + InterfaceTargets.Dragged);
+                    Debug.Log("Cancel Drag: " + FruityUI.DraggedTarget);
                 }
-                InterfaceTargets.Dragged.CancelMouseDrag();
+                FruityUI.DraggedTarget.CancelMouseDrag();
             }
             
             if (logging) {
                 Debug.Log("Dragging: " + Params.Target);
             }
-            InterfaceTargets.Dragged = Params.Target;
-            InterfaceTargets.Dragged.StartMouseDrag(Params);
+            FruityUI.DraggedTarget = Params.Target;
+            FruityUI.DraggedTarget.StartMouseDrag(Params);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿namespace LycheeLabs.FruityInterface  {
-    public interface InterfaceEvent {
+    internal interface InterfaceEvent {
 
         void Activate(bool logging);
 

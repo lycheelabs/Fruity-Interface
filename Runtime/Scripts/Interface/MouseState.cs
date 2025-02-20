@@ -2,38 +2,25 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
-    public static class Mouse {
+    public class MouseState {
 
-        public static bool MouseIsInBounds =>
-            Input.mousePosition.x >= 1  && 
-            Input.mousePosition.y >= 1 && 
-            Input.mousePosition.x < (Screen.width - 1) && 
-            Input.mousePosition.y < (Screen.height - 1);
-
-        public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * InterfaceConfig.UIScaling) - InterfaceConfig.LetterboxOffset;
-        public static Vector3 MouseWorldPosition => InterfaceConfig.MouseToWorldPoint();
         public static bool MouseIsMoving { get; private set; }
         public static bool DisableMouse { get; set; }
-        public static MouseTarget HighlightTarget => InterfaceTargets.Highlighted;
-        public static MouseTarget DragOverTarget => currentDragOverTarget;
 
-        // Components
-        private static MouseRaycaster Raycaster = new MouseRaycaster();
-        
-        // Targets
-        private static MouseTarget currentDragOverTarget;
+        private MouseRaycaster Raycaster;
+        private MousePress press;
+        private float lastPressTime;
+        public Vector3 oldMousePosition;
 
-        // Events
+        // Delegates
         public delegate void TargetDelegate(ClickTarget newTarget);
         public static TargetDelegate OnNewPress;
-        //public static TargetDelegate OnNewClick;
 
-        // Click tracking
-        private static MousePress press;
-        private static float lastPressTime;
-        public static Vector3 oldMousePosition;
-
-        public static void Update () {
+        public MouseState() {
+            Raycaster = new MouseRaycaster();
+        }
+        
+        public void Update () {
             if (!Application.isFocused || DisableMouse) {
                 return;
             }
@@ -50,12 +37,12 @@ namespace LycheeLabs.FruityInterface {
 
         }
 
-        public static void Click (ClickTarget target, MouseButton button, Vector3 clickWorldPosition = default) {
+        public void ClickNow (ClickTarget target, MouseButton button, Vector3 clickWorldPosition = default) {
             QueueClickEvent(new ClickParams(target, clickWorldPosition, button));
         }
 
         #region Raycasting
-        private static HighlightParams GetHighlightParams () {
+        private HighlightParams GetHighlightParams () {
 
             // Check for movement
             var newMousePosition = Input.mousePosition;
@@ -66,14 +53,14 @@ namespace LycheeLabs.FruityInterface {
             var highlightParams = GetRaycast();
             
             // Override
-            currentDragOverTarget = highlightParams.Target;
+            FruityUI.DraggedOverTarget = highlightParams.Target;
             OverrideHighlight(ref highlightParams);
             return highlightParams;
             
         }
 
-        private static HighlightParams GetRaycast () {
-            if (!MouseIsInBounds) {
+        private HighlightParams GetRaycast () {
+            if (!FruityUI.MouseIsOnscreen) {
                 return HighlightParams.blank;
             }
             
@@ -90,9 +77,9 @@ namespace LycheeLabs.FruityInterface {
             return new HighlightParams(target, targetPoint, heldButton);
         }
 
-        private static void OverrideHighlight(ref HighlightParams highlightParams) {
-            if (InterfaceTargets.Dragged != null) {
-                highlightParams.Target = InterfaceTargets.Dragged;
+        private void OverrideHighlight(ref HighlightParams highlightParams) {
+            if (FruityUI.DraggedTarget != null) {
+                highlightParams.Target = FruityUI.DraggedTarget;
             }
             else if (GrabTarget.CurrentGrabbedInstance != null) {
                 highlightParams.Target = GrabTarget.CurrentGrabbedInstance;
@@ -102,7 +89,7 @@ namespace LycheeLabs.FruityInterface {
         #endregion
 
         #region Clicking
-        private static void CheckForMousePress (HighlightParams highlightParams) {
+        private void CheckForMousePress (HighlightParams highlightParams) {
             var mouseTarget = highlightParams.Target;
             var clickTarget = mouseTarget as ClickTarget;
             var dragTarget = mouseTarget as DragTarget;
@@ -134,7 +121,7 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        private static void UpdateMousePress(HighlightParams highlightParams) {
+        private void UpdateMousePress(HighlightParams highlightParams) {
             var mouseTarget = highlightParams.Target;
             var clickTarget = mouseTarget as ClickTarget;
             
@@ -142,7 +129,7 @@ namespace LycheeLabs.FruityInterface {
             var dragParams = DragParams.Null;
             if (press.pressIsDrag) {
                 var dragPosition = Camera.main.WorldToScreenPoint(press.pressPosition);
-                dragParams = new DragParams(InterfaceTargets.Dragged, mouseTarget,
+                dragParams = new DragParams(FruityUI.DraggedTarget, mouseTarget,
                     dragPosition, Input.mousePosition, press.button);
             }
 
@@ -164,23 +151,23 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        private static void PressClick(ClickTarget clickTarget, MouseButton pressedButton) {
+        private void PressClick(ClickTarget clickTarget, MouseButton pressedButton) {
             press.StartClick(clickTarget, pressedButton);
             lastPressTime = Time.time;
             
             OnNewPress?.Invoke(clickTarget);
         }
 
-        private static void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget, MouseButton pressedButton) {
+        private void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget, MouseButton pressedButton) {
             press.StartDrag(dragTarget, pressedButton);
 
             var dragParams = new DragParams(dragTarget, mouseTarget,
-                MouseWorldPosition, MouseWorldPosition, press.button);
+                FruityUI.MouseWorldPosition, FruityUI.MouseWorldPosition, press.button);
             QueueDragStartEvent(dragParams);
         }
 
-        private static void UpdateDrag(DragParams dragParams) {
-            var manualDragCancel = InterfaceTargets.Dragged?.DraggingIsEnabled == false ||
+        private void UpdateDrag(DragParams dragParams) {
+            var manualDragCancel = FruityUI.DraggedTarget?.DraggingIsEnabled == false ||
                    (dragParams.DragButton == MouseButton.Left && Input.GetMouseButtonDown((int)MouseButton.Right)) ||
                    (dragParams.DragButton == MouseButton.Right && Input.GetMouseButtonDown((int)MouseButton.Left));
 
@@ -192,7 +179,7 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        private static void ReleaseClick(ClickTarget target) {
+        private void ReleaseClick(ClickTarget target) {
             var clickParams = new ClickParams(target, press.pressPosition, press.button);
             clickParams.HeldDuration = Time.time - lastPressTime;
             

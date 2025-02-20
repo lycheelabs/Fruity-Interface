@@ -62,7 +62,7 @@ namespace LycheeLabs.FruityInterface {
                 if (!DraggingIsEnabled || TargetIsClickableOnly(CurrentGrabButton)) {
                     CancelDrag();
                 } else {
-                    Behaviour.OnGrabUpdate(Mouse.DragOverTarget);
+                    Behaviour.OnGrabUpdate(FruityUI.DraggedOverTarget);
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         private void CompleteDrag () {
-            Behaviour.OnGrabCompleted(Mouse.DragOverTarget);
+            Behaviour.OnGrabCompleted(FruityUI.DraggedOverTarget);
             Behaviour.OnGrabEnd();
 
             draggedInstance = null;
@@ -148,14 +148,14 @@ namespace LycheeLabs.FruityInterface {
         public bool TryMouseUnclick (ClickParams clickParams) {
             if (CurrentGrabbedInstance == this) {
                 if (DraggingIsEnabled && clickParams.ClickButton == CurrentGrabButton) {
-                    if (Behaviour.CanMultiPlace (Mouse.HighlightTarget)) {
+                    if (Behaviour.CanMultiPlace (FruityUI.HighlightedTarget)) {
                         // Complete but dont end
-                        Behaviour.OnGrabCompleted(Mouse.HighlightTarget);
+                        Behaviour.OnGrabCompleted(FruityUI.HighlightedTarget);
                         return false;
                     } else {
                         // Complete and end
                         CompleteDrag();
-                        var newDragger = Mouse.HighlightTarget as GrabTarget;
+                        var newDragger = FruityUI.HighlightedTarget as GrabTarget;
                         return newDragger != null && !Behaviour.CanPassGrabTo(newDragger);
                     }
                 } else {
