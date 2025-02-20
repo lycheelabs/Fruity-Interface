@@ -5,16 +5,14 @@ namespace LycheeLabs.FruityInterface {
 
     public struct ClickParams {
 
-        public static readonly ClickParams blank = new ClickParams(null, null, Vector2.zero, MouseButton.None);
+        public static readonly ClickParams blank = new ClickParams(null, Vector2.zero, MouseButton.None);
 
-        private Camera camera;
         private MouseButton clickButton;
         private Vector3 mouseWorldPosition;
         private ClickTarget target;
         public float HeldDuration;
 
-        public ClickParams (Camera camera, ClickTarget target, Vector3 mouseWorldPosition, MouseButton clickButton) {
-            this.camera = camera;
+        public ClickParams (ClickTarget target, Vector3 mouseWorldPosition, MouseButton clickButton) {
             this.target = target;
             this.mouseWorldPosition = mouseWorldPosition;
             this.clickButton = clickButton;
@@ -22,7 +20,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public Vector3 MouseWorldPosition => mouseWorldPosition;
-        public Vector2 MouseUIPosition => new ScreenPosition(mouseWorldPosition).ScreenVector(camera);
+        //public Vector2 MouseUIPosition => new ScreenPosition(mouseWorldPosition).ScreenVector();
 
         public MouseButton ClickButton => clickButton; 
         public ClickTarget Target => target; 

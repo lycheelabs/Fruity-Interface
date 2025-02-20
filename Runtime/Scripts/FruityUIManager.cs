@@ -27,7 +27,7 @@ namespace LycheeLabs.FruityInterface {
 
             // Update the interface
             InterfaceConfig.Update(MinAspectRatio, MaxAspectRatio);
-            Mouse.Update(LogEvents);
+            Mouse.Update();
             tree.Update(LogEvents);
             
             // Update the scene

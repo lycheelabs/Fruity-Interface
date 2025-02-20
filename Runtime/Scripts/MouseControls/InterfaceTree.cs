@@ -20,8 +20,9 @@ namespace LycheeLabs.FruityInterface  {
             // Swap buffers
             (bufferedEvents, events) = (events, bufferedEvents);
 
+            // Activate events
             while (events.Count > 0) {
-                events.Dequeue().Activate(true);
+                events.Dequeue().Activate(logging);
             }
         }
 

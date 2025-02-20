@@ -6,21 +6,19 @@ namespace LycheeLabs.FruityInterface {
 
     public struct HighlightParams {
 
-        public static readonly HighlightParams blank = new HighlightParams(null, null, Vector3.zero, MouseButton.None);
+        public static readonly HighlightParams blank = new HighlightParams(null, Vector3.zero, MouseButton.None);
 
-        private Camera camera;
         public MouseButton HeldButton;
         public Vector3 MouseWorldPosition;
         public MouseTarget Target;
 
-        public HighlightParams (Camera camera, MouseTarget target, Vector3 mouseWorldPosition, MouseButton heldButton) {
-            this.camera = camera;
+        public HighlightParams (MouseTarget target, Vector3 mouseWorldPosition, MouseButton heldButton) {
             Target = target;
             MouseWorldPosition = mouseWorldPosition;
             HeldButton = heldButton;
         }
 
-        public Vector2 MouseUIPosition => new ScreenPosition(MouseWorldPosition).ScreenVector(camera);
+        //public Vector2 MouseUIPosition => new ScreenPosition(MouseWorldPosition).ScreenVector(camera);
 
     }
 

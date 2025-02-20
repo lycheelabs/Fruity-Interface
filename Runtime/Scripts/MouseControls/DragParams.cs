@@ -5,17 +5,15 @@ namespace LycheeLabs.FruityInterface {
 
 	public struct DragParams {
 
-		public static readonly DragParams Null = new DragParams(null, null, null, Vector2.zero, Vector2.zero, MouseButton.None);
+		public static readonly DragParams Null = new DragParams(null, null, Vector2.zero, Vector2.zero, MouseButton.None);
 
-		private readonly Camera camera;
 		private readonly DragTarget target;
 		private readonly MouseTarget draggingOver;
 		private readonly Vector2 startPos;
 		private readonly Vector2 endPos;
 		private readonly MouseButton dragButton;
 
-		public DragParams (Camera camera, DragTarget target, MouseTarget draggingOver, Vector2 startPos, Vector2 endPos, MouseButton dragButton) {
-			this.camera = camera;
+		public DragParams (DragTarget target, MouseTarget draggingOver, Vector2 startPos, Vector2 endPos, MouseButton dragButton) {
 			this.target = target;
 			this.draggingOver = draggingOver;
 			this.startPos = startPos;

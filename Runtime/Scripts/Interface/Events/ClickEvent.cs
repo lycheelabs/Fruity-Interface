@@ -8,6 +8,15 @@ namespace LycheeLabs.FruityInterface
         {
             var newTarget = Params.Target;
 
+            // Cancel drag if needed
+            if (InterfaceTargets.Dragged != null) {
+                if (logging) {
+                    Debug.Log("Drag cancelled: " + InterfaceTargets.Dragged);
+                }
+                InterfaceTargets.Dragged.CancelMouseDrag();
+                InterfaceTargets.Dragged = null;
+            }
+            
             // Try unclicking current target
             if (InterfaceTargets.Selected != null && newTarget != InterfaceTargets.Selected) {
                 var unclicked = InterfaceTargets.Selected.TryMouseUnclick(Params);
