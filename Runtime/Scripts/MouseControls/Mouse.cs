@@ -28,8 +28,8 @@ namespace LycheeLabs.FruityInterface {
         private static MouseTarget currentDragOverTarget;
 
         // Events
-        //public delegate void TargetDelegate(ClickTarget newTarget);
-        //public static TargetDelegate OnNewPress;
+        public delegate void TargetDelegate(ClickTarget newTarget);
+        public static TargetDelegate OnNewPress;
         //public static TargetDelegate OnNewClick;
 
         // Click tracking
@@ -181,9 +181,7 @@ namespace LycheeLabs.FruityInterface {
             pressPosition = highlightParams.MouseWorldPosition;
             pressedClickParams = new ClickParams(clickTarget, pressPosition, newPressedButton);
 
-            //if (pressedClickParams.Target != InterfaceTargets.Dragged) {
-            //OnNewPress?.Invoke(pressedClickParams.Target);
-            //}
+            OnNewPress?.Invoke(pressedClickParams.Target);
         }
 
         private static void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget) {

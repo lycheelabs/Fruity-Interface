@@ -50,7 +50,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         public bool Wrapping {
-            set { text.textWrappingMode = value ? TextWrappingModes.Normal : TextWrappingModes.NoWrap; }
+            set { text.enableWordWrapping = value; } //text.textWrappingMode = value ? TextWrappingModes.Normal : TextWrappingModes.NoWrap; }
         }
 
         public int CharSpacing {
