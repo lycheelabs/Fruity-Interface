@@ -9,24 +9,24 @@ namespace LycheeLabs.FruityInterface {
 
 		private readonly DragTarget target;
 		private readonly MouseTarget draggingOver;
-		private readonly Vector2 startPos;
-		private readonly Vector2 endPos;
+		private readonly Vector2 startScreenPos;
+		private readonly Vector2 endScreenPos;
 		private readonly MouseButton dragButton;
 
-		public DragParams (DragTarget target, MouseTarget draggingOver, Vector2 startPos, Vector2 endPos, MouseButton dragButton) {
+		public DragParams (DragTarget target, MouseTarget draggingOver, Vector2 startScreenPos, Vector2 endScreenPos, MouseButton dragButton) {
 			this.target = target;
 			this.draggingOver = draggingOver;
-			this.startPos = startPos;
-			this.endPos = endPos;
+			this.startScreenPos = startScreenPos;
+			this.endScreenPos = endScreenPos;
 			this.dragButton = dragButton;
 		}
 		
-		public Vector3 OriginalWorldPosition => InterfaceConfig.ScreenPointToWorldPoint(startPos);
-		public Vector3 MouseWorldPosition => InterfaceConfig.ScreenPointToWorldPoint(endPos);
+		public Vector3 OriginalWorldPosition => InterfaceConfig.ScreenPointToWorldPoint(startScreenPos);
+		public Vector3 MouseWorldPosition => InterfaceConfig.ScreenPointToWorldPoint(endScreenPos);
         public Vector3 WorldDragDisplacement => (MouseWorldPosition - OriginalWorldPosition);
 
-		public Vector2 OriginalUIPosition => startPos;
-		public Vector2 MouseUIPosition => endPos;
+		public Vector2 OriginalUIPosition => startScreenPos;
+		public Vector2 MouseUIPosition => endScreenPos;
 		public Vector2 UIDragDisplacement => MouseUIPosition - OriginalUIPosition;
 		
 		public MouseButton DragButton => dragButton;

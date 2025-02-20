@@ -1,6 +1,4 @@
-using UnityEditor.PackageManager;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -14,14 +12,12 @@ namespace LycheeLabs.FruityInterface {
 
         public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * InterfaceConfig.UIScaling) - InterfaceConfig.LetterboxOffset;
         public static Vector3 MouseWorldPosition => InterfaceConfig.MouseToWorldPoint();
-
         public static bool MouseIsMoving { get; private set; }
-        public static bool MouseIsDragging => InterfaceTargets.Dragged != null;
         public static bool DisableMouse { get; set; }
-        public static bool IsIdle => InterfaceTargets.Highlighted == null && InterfaceTargets.Dragged == null;
         public static MouseTarget HighlightTarget => InterfaceTargets.Highlighted;
         public static MouseTarget DragOverTarget => currentDragOverTarget;
 
+        // Components
         private static MouseRaycaster Raycaster = new MouseRaycaster();
         
         // Targets
@@ -33,17 +29,9 @@ namespace LycheeLabs.FruityInterface {
         //public static TargetDelegate OnNewClick;
 
         // Click tracking
-        private static bool mouseIsPressed;
-        private static bool pressIsClick;
-        private static bool pressIsDrag;
-        private static MouseButton pressButton;
-        private static ClickParams pressClickParams = ClickParams.blank;
-        
-        private static Vector3 oldMousePosition;
-        private static Vector2 pressPixel;
-        private static Vector3 pressPosition;
-        private static float lastClickTime;
-        private static bool selectionLock;
+        private static MousePress press;
+        private static float lastPressTime;
+        public static Vector3 oldMousePosition;
 
         public static void Update () {
             if (!Application.isFocused || DisableMouse) {
@@ -54,7 +42,7 @@ namespace LycheeLabs.FruityInterface {
             var highlightParams = GetHighlightParams();
             QueueHighlightEvent(highlightParams);
             
-            if (!mouseIsPressed) {
+            if (!press.isPressed) {
                 CheckForMousePress(highlightParams);
             } else {
                 UpdateMousePress(highlightParams);
@@ -96,8 +84,8 @@ namespace LycheeLabs.FruityInterface {
             }
             
             var heldButton = MouseButton.None;
-            if (pressClickParams.Target == target) {
-                heldButton = pressButton;
+            if (press.target == target) {
+                heldButton = press.button;
             }
             return new HighlightParams(target, targetPoint, heldButton);
         }
@@ -124,16 +112,17 @@ namespace LycheeLabs.FruityInterface {
             if (Input.GetMouseButtonDown((int)MouseButton.Left)) newPressedButton = MouseButton.Left;
             if (Input.GetMouseButtonDown((int)MouseButton.Right)) newPressedButton = MouseButton.Right;
 
-            if (!mouseIsPressed && newPressedButton != MouseButton.None && Time.time > lastClickTime + 0.05f) {
-
+            if (!press.isPressed && newPressedButton != MouseButton.None && Time.time > lastPressTime + 0.05f) {
+                press.pressPosition = highlightParams.MouseWorldPosition;
+                
                 // Start a click-press (if applicable)
                 if (clickTarget != null) {
-                    PressClick(highlightParams, clickTarget, newPressedButton);
+                    PressClick(clickTarget, newPressedButton);
 
                     // Trigger an immediate click (if configured)
-                    var clickOnPress = pressClickParams.Target?.ClickOnMouseDown == true;
+                    var clickOnPress = clickTarget.ClickOnMouseDown == true;
                     if (clickOnPress) {
-                        ReleaseClick();
+                        ReleaseClick(clickTarget);
                         return; // Don't drag!
                     }
                 }
@@ -147,81 +136,70 @@ namespace LycheeLabs.FruityInterface {
 
         private static void UpdateMousePress(HighlightParams highlightParams) {
             var mouseTarget = highlightParams.Target;
+            var clickTarget = mouseTarget as ClickTarget;
             
             // Active drag params
             var dragParams = DragParams.Null;
-            if (pressIsDrag) {
+            if (press.pressIsDrag) {
+                var dragPosition = Camera.main.WorldToScreenPoint(press.pressPosition);
                 dragParams = new DragParams(InterfaceTargets.Dragged, mouseTarget,
-                    pressPixel, Input.mousePosition, pressButton);
+                    dragPosition, Input.mousePosition, press.button);
             }
 
             // Release mouse press
-            if (mouseIsPressed && !Input.GetMouseButton((int)pressButton)) {
-                if (pressIsDrag) {
+            if (press.isPressed && !Input.GetMouseButton((int)press.button)) {
+                if (press.pressIsDrag) {
                     QueueDragCompleteEvent(dragParams);
                 }
-                if (pressIsClick && pressClickParams.Target == mouseTarget) {
-                    ReleaseClick();
+                if (press.pressIsClick && press.target == clickTarget) {
+                    ReleaseClick(clickTarget);
                 }
-                ClearPress();
+                press.Release();
                 return;
             }
 
             // Update or cancel drag
-            if (pressIsDrag) {
+            if (press.pressIsDrag) {
                 UpdateDrag(dragParams);
             }
         }
 
-        private static void PressClick(HighlightParams highlightParams, ClickTarget clickTarget, MouseButton pressedButton) {
-            mouseIsPressed = true;
-            pressIsClick = true;
-            pressButton = pressedButton;
-
-            lastClickTime = Time.time;
-            pressPixel = Input.mousePosition;
-            pressPosition = highlightParams.MouseWorldPosition;
-            pressClickParams = new ClickParams(clickTarget, pressPosition, pressedButton);
-
-            OnNewPress?.Invoke(pressClickParams.Target);
+        private static void PressClick(ClickTarget clickTarget, MouseButton pressedButton) {
+            press.StartClick(clickTarget, pressedButton);
+            lastPressTime = Time.time;
+            
+            OnNewPress?.Invoke(clickTarget);
         }
 
         private static void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget, MouseButton pressedButton) {
-            mouseIsPressed = true;
-            pressIsDrag = true;
-            pressButton = pressedButton;
+            press.StartDrag(dragTarget, pressedButton);
 
             var dragParams = new DragParams(dragTarget, mouseTarget,
-                pressPixel, pressPixel, pressButton);
+                MouseWorldPosition, MouseWorldPosition, press.button);
             QueueDragStartEvent(dragParams);
         }
 
         private static void UpdateDrag(DragParams dragParams) {
             var manualDragCancel = InterfaceTargets.Dragged?.DraggingIsEnabled == false ||
-                                   (dragParams.DragButton == MouseButton.Left && Input.GetMouseButtonDown((int)MouseButton.Right)) ||
-                                   (dragParams.DragButton == MouseButton.Right && Input.GetMouseButtonDown((int)MouseButton.Left));
+                   (dragParams.DragButton == MouseButton.Left && Input.GetMouseButtonDown((int)MouseButton.Right)) ||
+                   (dragParams.DragButton == MouseButton.Right && Input.GetMouseButtonDown((int)MouseButton.Left));
 
-            if (mouseIsPressed && !manualDragCancel) {
+            if (press.isPressed && !manualDragCancel) {
                 QueueDragUpdateEvent(dragParams);
             } else {
                 QueueDragCancelEvent();
-                pressIsDrag = false;
+                press.pressIsDrag = false;
             }
         }
 
-        private static void ReleaseClick() {
-            pressClickParams.HeldDuration = Time.time - lastClickTime;
-            QueueClickEvent(pressClickParams);
-            ClearPress();
+        private static void ReleaseClick(ClickTarget target) {
+            var clickParams = new ClickParams(target, press.pressPosition, press.button);
+            clickParams.HeldDuration = Time.time - lastPressTime;
+            
+            QueueClickEvent(clickParams);
+            press.Release();
         }
-
-        private static void ClearPress()  {
-            mouseIsPressed = false;
-            pressIsClick = false;
-            pressIsDrag = false;
-            pressClickParams = ClickParams.blank;
-        }
-
+        
         #endregion
 
         #region Events
