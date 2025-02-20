@@ -7,7 +7,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class UIShadow : MonoBehaviour {
 
 		public static UIShadow Instantiate (Transform parent) {
-			var instance = LycheeUIPrefabs.NewUIShadow().GetComponent<UIShadow>();
+			var instance = FruityUIPrefabs.NewUIShadow().GetComponent<UIShadow>();
 			instance.transform.SetParent(parent, false);
 			return instance;
 		}

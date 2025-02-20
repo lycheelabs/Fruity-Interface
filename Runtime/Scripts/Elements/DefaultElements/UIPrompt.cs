@@ -7,10 +7,10 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// <summary>
     /// A UINode that attaches to a canvas. Can be activated and dismissed.
     /// </summary>
-    public abstract class UIPrompt : UINode {
+    public abstract class UIPrompt : InterfaceNode {
 
         public static T SpawnGeneric<T> (string name, UICanvas canvas) where T : UIPrompt {
-            var rootObject = LycheeUIPrefabs.NewUIRect();
+            var rootObject = FruityUIPrefabs.NewUIRect();
             rootObject.name = name;
 
             var prompt = rootObject.AddComponent<T>();

@@ -11,7 +11,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class ToggleButton : UIButton, ClickTarget {
 
         public static ToggleButton SpawnDefault() {
-            return LycheeUIPrefabs.NewToggleButton().GetComponent<ToggleButton>();
+            return FruityUIPrefabs.NewToggleButton().GetComponent<ToggleButton>();
         }
 
         public TextMeshProUGUI ButtonText;

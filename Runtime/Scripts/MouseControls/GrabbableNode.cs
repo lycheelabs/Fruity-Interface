@@ -6,7 +6,7 @@ namespace LycheeLabs.FruityInterface {
     /// An abstract UINode that implements GrabBehaviour. 
     /// Since this is a MonoBehaviour, inheriting classes can provide grabbing behaviour to GameObjects.
     /// </summary>
-    public abstract class GrabbableNode : UINode, ClickTarget, DragTarget, GrabBehaviour {
+    public abstract class GrabbableNode : InterfaceNode, ClickTarget, DragTarget, GrabBehaviour {
 
         public bool IsHighlighted => GrabTarget.IsHighlighted;
         public bool IsDragging => GrabTarget.IsGrabbed;

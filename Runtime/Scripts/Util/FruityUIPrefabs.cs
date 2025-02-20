@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
-    public static class LycheeUIPrefabs {
+    public static class FruityUIPrefabs {
 
         private const string PREFABS_PATH = "LycheeUIPrefabs/";
 

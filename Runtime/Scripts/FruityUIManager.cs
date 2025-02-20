@@ -10,7 +10,8 @@ namespace LycheeLabs.FruityInterface {
 
         public ScreenAspect MinAspectRatio = ScreenAspect.STANDARD;
         public ScreenAspect MaxAspectRatio = ScreenAspect.ULTRAWIDE;
-
+        public bool LogEvents;
+        
         private void Start () {
             Instance = this;
         }
@@ -18,11 +19,13 @@ namespace LycheeLabs.FruityInterface {
         void Update () {
 
             // Update the interface
-            UIConfig.Update(MinAspectRatio, MaxAspectRatio);
+            InterfaceConfig.Update(MinAspectRatio, MaxAspectRatio);
+            Mouse.Update(LogEvents);
 
             // Update the scene
             GrabTarget.UpdateCurrentGrab();
 
+            
         }
 
     }

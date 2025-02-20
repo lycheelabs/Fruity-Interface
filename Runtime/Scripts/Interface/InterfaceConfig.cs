@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -7,9 +6,7 @@ namespace LycheeLabs.FruityInterface {
          ULTRATALL, TALLSCREEN, STANDARD, WIDESCREEN, ULTRAWIDE,
     }
 
-    public static class UIConfig {
-
-        // --------------------------------------------------------------
+    public static class InterfaceConfig {
 
         // Canvas
         public static Vector2 WindowCanvasSize { get; private set; }
@@ -26,11 +23,11 @@ namespace LycheeLabs.FruityInterface {
         public static float LetterboxHeight { get; private set; }
 
         // Input
-        public static UINode LockedNode { get; private set; }
+        public static InterfaceNode LockedNode { get; private set; }
         public static bool DisableInput { get; set; }
         public static Plane MousePlane = new Plane(Vector3.up, Vector3.zero);
 
-        static UIConfig () {
+        static InterfaceConfig () {
             // Safe initial values
             WindowCanvasSize = Vector2.one;
             WindowAspectRatio = 1;
@@ -42,7 +39,6 @@ namespace LycheeLabs.FruityInterface {
 
         public static void Update (ScreenAspect minAspect = ScreenAspect.STANDARD, ScreenAspect maxAspect = ScreenAspect.WIDESCREEN) {
             UpdateCanvas(minAspect, maxAspect);
-            Mouse.Update();
         }
 
         private static void UpdateCanvas (ScreenAspect minAspect, ScreenAspect maxAspect) {
@@ -73,7 +69,7 @@ namespace LycheeLabs.FruityInterface {
 
         }
 
-        public static void LockUI (UINode newLockedRoot) {
+        public static void LockUI (InterfaceNode newLockedRoot) {
             LockedNode = newLockedRoot;
         }
 

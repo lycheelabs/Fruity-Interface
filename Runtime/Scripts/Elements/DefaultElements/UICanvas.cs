@@ -3,10 +3,10 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface.Elements {
 
     [RequireComponent(typeof(Canvas))]
-    public sealed class UICanvas : UINode {
+    public sealed class UICanvas : InterfaceNode {
 
         public static UICanvas Spawn (string name, string layerName, int order, float planeDistance, Camera camera = null) {
-            var instance = LycheeUIPrefabs.NewUICanvas().GetComponent<UICanvas>();
+            var instance = FruityUIPrefabs.NewUICanvas().GetComponent<UICanvas>();
             instance.Setup(name, camera, layerName, order, planeDistance);
             return instance;
         }
@@ -34,8 +34,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         void Update () {
-            contents.sizeDelta = UIConfig.BoxedCanvasSize;
-            contents.localScale = Vector3.one / UIConfig.UIScaling;
+            contents.sizeDelta = InterfaceConfig.BoxedCanvasSize;
+            contents.localScale = Vector3.one / InterfaceConfig.UIScaling;
         }
 
     }

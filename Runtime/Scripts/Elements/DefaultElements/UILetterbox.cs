@@ -5,7 +5,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class UILetterbox : MonoBehaviour {
 
 		public static UILetterbox Instantiate (Transform parent) {
-			var instance = LycheeUIPrefabs.NewUILetterbox().GetComponent<UILetterbox>();
+			var instance = FruityUIPrefabs.NewUILetterbox().GetComponent<UILetterbox>();
 			instance.transform.SetParent(parent, false);
 			return instance;
         }
@@ -20,8 +20,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
 		private void Update () {
-			float width = UIConfig.LetterboxWidth / UIConfig.UIScaling;
-			float height = UIConfig.LetterboxHeight / UIConfig.UIScaling;
+			float width = InterfaceConfig.LetterboxWidth / InterfaceConfig.UIScaling;
+			float height = InterfaceConfig.LetterboxHeight / InterfaceConfig.UIScaling;
 
 			borderL.sizeDelta = new Vector2 (width / 2, 0);
 			borderR.sizeDelta = new Vector2 (width / 2, 0);

@@ -7,7 +7,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// (For example, using the ImageButton and TextButton subclasses.)
     /// More complex buttons should implement UIButton directly.
     /// </summary>
-    public class ClickButton : UIButton, ClickTarget, InterfaceElement {
+    public class ClickButton : UIButton, ClickTarget, EnteringElement {
 
         private ClickButtonEffect _effect;
         public ClickButtonEffect TryGetEffect {
@@ -41,7 +41,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             return true;
         }
 
-        public void SetEntered (float tween) {
+        public void SetEnterTween (float tween) {
             if (TryGetEffect != null) {
                 Offset = (1 - tween) * TryGetEffect.EntryOffset;
             }

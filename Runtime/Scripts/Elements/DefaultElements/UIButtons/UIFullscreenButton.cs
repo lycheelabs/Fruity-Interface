@@ -7,10 +7,10 @@ namespace LycheeLabs.FruityInterface.Elements {
     }
 
 	[RequireComponent(typeof(BoxCollider))]
-    public class UIFullscreenButton : UINode, ClickTarget {
+    public class UIFullscreenButton : InterfaceNode, ClickTarget {
 
-		public static UIFullscreenButton Spawn (UINode parent, FullscreenButtonCallbacks callbacks) {
-			var instance = LycheeUIPrefabs.NewUIFullscreenButton().GetComponent<UIFullscreenButton>();
+		public static UIFullscreenButton Spawn (InterfaceNode parent, FullscreenButtonCallbacks callbacks) {
+			var instance = FruityUIPrefabs.NewUIFullscreenButton().GetComponent<UIFullscreenButton>();
 			instance.transform.SetParent(parent?.transform, false);
 			instance.InputParent = parent;
 			instance.Callbacks = callbacks;
@@ -27,7 +27,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 		}
 
 		private void Update () {
-			var canvasSize = UIConfig.BoxedCanvasSize;
+			var canvasSize = InterfaceConfig.BoxedCanvasSize;
 			collider.size = new Vector3(canvasSize.x, canvasSize.y, 1);
 		}
 

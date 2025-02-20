@@ -9,7 +9,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class ImageButton : ClickButton {
 
         public static ImageButton SpawnDefault () {
-            return LycheeUIPrefabs.NewImageButton().GetComponent<ImageButton>();
+            return FruityUIPrefabs.NewImageButton().GetComponent<ImageButton>();
         }
 
         public Image ButtonImage;

@@ -39,7 +39,7 @@ namespace LycheeLabs.FruityInterface {
                 return;
             }
             QueuedPrompts.Add(newPrompt);
-            UIConfig.DisableInput = ActivePrompt == null;
+            InterfaceConfig.DisableInput = ActivePrompt == null;
         }
 
         // ---------------------------------------------------
@@ -66,7 +66,7 @@ namespace LycheeLabs.FruityInterface {
             }
             if (PromptIsActive && ActivePrompt == null) {
                 PromptIsActive = false;
-                UIConfig.UnlockUI();
+                InterfaceConfig.UnlockUI();
             }
 
             // Update active event
@@ -112,8 +112,8 @@ namespace LycheeLabs.FruityInterface {
             ActivePrompt = QueuedPrompts[0];
             QueuedPrompts.RemoveAt(0);
             ActivePrompt.Activate();
-            UIConfig.LockUI(ActivePrompt);
-            UIConfig.DisableInput = false;
+            InterfaceConfig.LockUI(ActivePrompt);
+            InterfaceConfig.DisableInput = false;
             PromptIsActive = true;
         }
 

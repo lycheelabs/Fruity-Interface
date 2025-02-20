@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
-    public class InterfaceSwitcher<T> where T : Enum {
+    public class InterfaceModeSwitcher<T> where T : Enum {
 
-		private static InterfaceElement[] None = new InterfaceElement[0];
+		private static readonly EnteringElement[] None = Array.Empty<EnteringElement>();
 
 		// -----------------------------------------------
 
 		private readonly List<Set> sets;
-		private Dictionary<InterfaceElement, float> enterValues;
+		private Dictionary<EnteringElement, float> enterValues;
 
-		private InterfaceElement[] previousElements;
-		private InterfaceElement[] currentElements;
+		private EnteringElement[] previousElements;
+		private EnteringElement[] currentElements;
 		private T activeMode;
 
 		private bool transitioning;
@@ -23,22 +23,22 @@ namespace LycheeLabs.FruityInterface {
 
 		public T CurrentMode => activeMode;
 
-        public InterfaceSwitcher() {
+        public InterfaceModeSwitcher() {
 			sets = new List<Set>();
-			enterValues = new Dictionary<InterfaceElement, float>();
+			enterValues = new Dictionary<EnteringElement, float>();
 
 			previousElements = None;
 			currentElements = None;
 		}
 
-		public void AddMode (T mode, params InterfaceElement[] elements) {
+		public void AddMode (T mode, params EnteringElement[] elements) {
 			var modeName = mode.ToString();
 			var set = new Set(modeName, elements);
 			sets.Add(set);
 
 			foreach (var element in elements) {
 				if (!Contains(currentElements, element)) {
-					element.SetEntered(0);
+					element.SetEnterTween(0);
 				}
 			}
 		}
@@ -58,11 +58,11 @@ namespace LycheeLabs.FruityInterface {
             StartTransition(None);
 		}
 
-		private void StartTransition (InterfaceElement[] newElements) {
+		private void StartTransition (EnteringElement[] newElements) {
 			// Incase previous transition didn't finish
 			foreach (var element in previousElements) {
 				if (!Contains(newElements, element)) {
-					element.SetEntered(0);
+					element.SetEnterTween(0);
 				}
 			}
 
@@ -88,16 +88,16 @@ namespace LycheeLabs.FruityInterface {
 				// Transition old element out
 				if (exiting) {
 					transitionCurve = Mathf.Max(transitionCurve - 6f * Time.deltaTime, 0f);
-					var tween = Tweens.	EaseOutQuad(transitionCurve);
+					var tween = Tweens.EaseOutQuad(transitionCurve);
 
-					foreach (InterfaceElement element in previousElements) {
+					foreach (EnteringElement element in previousElements) {
 						if (Contains(currentElements, element)) {
 							// This element is not exiting
 							enterValues[element] = 1;
 						} else {
 							enterValues[element] = Mathf.Min(tween, CachedEntryTween(element));
 						}
-						element.SetEntered(enterValues[element]);
+						element.SetEnterTween(enterValues[element]);
 					}
 					if (transitionCurve <= 0) {
 						exiting = false;
@@ -109,12 +109,12 @@ namespace LycheeLabs.FruityInterface {
 					transitionCurve = Mathf.Min(transitionCurve + 6f * Time.deltaTime, 1f);
 					var tween = Tweens.EaseOutQuad(transitionCurve);
 					
-					foreach (InterfaceElement element in previousElements) {
-						element.SetEntered(0);
+					foreach (EnteringElement element in previousElements) {
+						element.SetEnterTween(0);
 					}
-					foreach (InterfaceElement element in currentElements) {
+					foreach (EnteringElement element in currentElements) {
 						enterValues[element] = Mathf.Max(tween, CachedEntryTween(element));
-						element.SetEntered(enterValues[element]);
+						element.SetEnterTween(enterValues[element]);
 					}
 					if (transitionCurve >= 1) {
 						transitioning = false;
@@ -124,12 +124,12 @@ namespace LycheeLabs.FruityInterface {
 
 		}
 
-		private float CachedEntryTween (InterfaceElement element) {
+		private float CachedEntryTween (EnteringElement element) {
 			if (!enterValues.ContainsKey(element)) return 0;
 			return enterValues[element];
 		}
 
-        private bool Contains(InterfaceElement[] currentElements, InterfaceElement element) {
+        private bool Contains(EnteringElement[] currentElements, EnteringElement element) {
             for (int i = 0; i < currentElements.Length; i++) {
                 if (currentElements[i] == element) return true;
             }
@@ -139,9 +139,9 @@ namespace LycheeLabs.FruityInterface {
         private class Set {
 
 			public readonly string Name;
-			public readonly InterfaceElement[] Elements;
+			public readonly EnteringElement[] Elements;
 
-			public Set (string name, InterfaceElement[] elements) {
+			public Set (string name, EnteringElement[] elements) {
 				Name = name;
 				Elements = elements;
 			}

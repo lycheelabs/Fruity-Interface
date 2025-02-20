@@ -23,8 +23,8 @@ namespace LycheeLabs.FruityInterface {
 			this.dragButton = dragButton;
 		}
 		
-		public Vector3 OriginalWorldPosition => UIConfig.ScreenPointToWorldPoint(startPos);
-		public Vector3 MouseWorldPosition => UIConfig.ScreenPointToWorldPoint(endPos);
+		public Vector3 OriginalWorldPosition => InterfaceConfig.ScreenPointToWorldPoint(startPos);
+		public Vector3 MouseWorldPosition => InterfaceConfig.ScreenPointToWorldPoint(endPos);
         public Vector3 WorldDragDisplacement => (MouseWorldPosition - OriginalWorldPosition);
 
 		public Vector2 OriginalUIPosition => startPos;

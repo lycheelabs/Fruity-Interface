@@ -6,16 +6,7 @@ namespace LycheeLabs.FruityInterface {
 
     public static class Mouse {
 
-        /// <summary> Log all mouse events for debug purposes </summary>
-        public static readonly bool LOG_EVENTS = false;
-
-        /// <summary> The maxiumum number of raycast hits that will be considered along a single ray </summary>
-        public static readonly int MAX_HITS = 100;
-
-        /// <summary> The maxiumum raycasting distance </summary>
-        public static readonly float MAX_DISTANCE = 9999;
-
-        private static RaycastHit[] RaycastBuffer = new RaycastHit[MAX_HITS];
+        private static bool enableLogging = false;
 
         public static bool MouseIsInBounds =>
             Input.mousePosition.x >= 1  && 
@@ -23,8 +14,8 @@ namespace LycheeLabs.FruityInterface {
             Input.mousePosition.x < (Screen.width - 1) && 
             Input.mousePosition.y < (Screen.height - 1);
 
-        public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * UIConfig.UIScaling) - UIConfig.LetterboxOffset;
-        public static Vector3 MouseWorldPosition => UIConfig.MouseToWorldPoint();
+        public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * InterfaceConfig.UIScaling) - InterfaceConfig.LetterboxOffset;
+        public static Vector3 MouseWorldPosition => InterfaceConfig.MouseToWorldPoint();
 
         public static bool MouseIsMoving { get; private set; }
         public static bool MouseIsDragging => currentDragTarget != null;
@@ -33,6 +24,8 @@ namespace LycheeLabs.FruityInterface {
         public static MouseTarget HighlightTarget => currentHighlightTarget;
         public static MouseTarget DragOverTarget => currentDragOverTarget;
 
+        private static MouseRaycaster Raycaster = new MouseRaycaster();
+        
         // Targets
         private static MouseTarget currentHighlightTarget;
         private static ClickTarget currentSelectTarget;
@@ -56,7 +49,8 @@ namespace LycheeLabs.FruityInterface {
         private static bool queuedClick;
         private static ClickParams queuedClickParams;
 
-        public static void Update () {
+        public static void Update (bool logEvents) {
+            enableLogging = logEvents;
             CastRays();
 
             if (queuedClick) {
@@ -111,29 +105,7 @@ namespace LycheeLabs.FruityInterface {
                 return HighlightParams.blank;
             }
 
-            // Cast a ray, collecting all hits
-            Ray ray = UIConfig.ScreenPointToRay(Input.mousePosition);
-            int hitCount = Physics.RaycastNonAlloc(ray, RaycastBuffer, MAX_DISTANCE);
-
-            // Extract closest enabled MouseTarget
-            MouseTarget target = null;
-            float targetDistance = MAX_DISTANCE;
-            Vector3 targetPoint = default;
-
-            for (int i = 0; i < hitCount; i++) {
-                var hit = RaycastBuffer[i];
-                if (hit.distance < targetDistance) {
-                    var node = hit.collider.gameObject.GetComponent<UINode>();
-                    var nodeTarget = node as MouseTarget;
-                    nodeTarget = Resolve(nodeTarget, hit.point);
-
-                    if (node != null && nodeTarget != null && node.InputEnabledInHierarchy) {
-                        target = nodeTarget;
-                        targetDistance = hit.distance;
-                        targetPoint = hit.point;
-                    }
-                }
-            }
+            Raycaster.CastAndCollide(out var target, out var targetPoint);
 
             // Return highlight
             if (target == null) {
@@ -224,19 +196,6 @@ namespace LycheeLabs.FruityInterface {
             mouseIsPressed = false;
             pressedClickParams = ClickParams.blank;
         }
-
-        private static List<MouseTarget> resolutionStack = new List<MouseTarget>();
-        private static MouseTarget Resolve (MouseTarget target, Vector3 point) {
-            var nextTarget = target;
-            resolutionStack.Clear();
-
-            while (nextTarget != null && !resolutionStack.Contains(nextTarget)) {
-                resolutionStack.Add(nextTarget);
-                target = nextTarget;
-                nextTarget = target.ResolveTarget(point);
-            }
-            return target;
-        }
         #endregion
 
         #region Events
@@ -247,7 +206,7 @@ namespace LycheeLabs.FruityInterface {
             if (firstFrame) {
                 currentHighlightTarget?.MouseDehighlight();
                 currentHighlightTarget = newTarget;
-                if (LOG_EVENTS) {
+                if (enableLogging) {
                     Debug.Log("Highlight: " + newTarget);
                 }
             }
@@ -263,7 +222,7 @@ namespace LycheeLabs.FruityInterface {
             if (currentSelectTarget != null && newTarget != currentSelectTarget) {
                 var unclicked = currentSelectTarget.TryMouseUnclick(clickParams);
                 if (!unclicked) {
-                    if (LOG_EVENTS) {
+                    if (enableLogging) {
                         Debug.Log("Unclick blocked: " + currentSelectTarget);
                     }
                     selectionLock = false;
@@ -271,7 +230,7 @@ namespace LycheeLabs.FruityInterface {
                 }
             }
 
-            if (LOG_EVENTS) {
+            if (enableLogging) {
                 Debug.Log("Click: " + newTarget);
             }
 
@@ -291,7 +250,7 @@ namespace LycheeLabs.FruityInterface {
 
         private static void StartDrag(DragTarget newTarget, DragParams dragParams) {
             currentDragTarget = newTarget;
-            if (LOG_EVENTS) {
+            if (enableLogging) {
                 Debug.Log("Dragging: " + newTarget);
             }
             currentDragTarget.StartMouseDrag(dragParams);
@@ -305,7 +264,7 @@ namespace LycheeLabs.FruityInterface {
 
         private static void CompleteDrag (DragParams dragParams) {
             if (currentDragTarget != null) {
-                if (LOG_EVENTS) {
+                if (enableLogging) {
                     Debug.Log("Dragged: " + currentDragTarget);
                 }
                 currentDragTarget.CompleteMouseDrag(dragParams);
@@ -315,7 +274,7 @@ namespace LycheeLabs.FruityInterface {
 
         private static void CancelDrag () {
             if (currentDragTarget != null) {
-                if (LOG_EVENTS) {
+                if (enableLogging) {
                     Debug.Log("Drag cancelled: " + currentDragTarget);
                 }
                 currentDragTarget.CancelMouseDrag();
