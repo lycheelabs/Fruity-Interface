@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -20,14 +19,13 @@ namespace LycheeLabs.FruityInterface {
         public static bool MouseIsMoving { get; private set; }
         public static bool MouseIsDragging => currentDragTarget != null;
         public static bool DisableMouse { get; set; }
-        public static bool IsIdle => currentHighlightTarget == null && currentDragTarget == null;
-        public static MouseTarget HighlightTarget => currentHighlightTarget;
+        public static bool IsIdle => InterfaceTargets.Highlighted == null && currentDragTarget == null;
+        public static MouseTarget HighlightTarget => InterfaceTargets.Highlighted;
         public static MouseTarget DragOverTarget => currentDragOverTarget;
 
         private static MouseRaycaster Raycaster = new MouseRaycaster();
         
         // Targets
-        private static MouseTarget currentHighlightTarget;
         private static ClickTarget currentSelectTarget;
         private static DragTarget currentDragTarget;
         private static MouseTarget currentDragOverTarget;
@@ -200,18 +198,9 @@ namespace LycheeLabs.FruityInterface {
 
         #region Events
         private static void Highlight (HighlightParams highlightParams) {
-            var newTarget = highlightParams.Target;
-            var firstFrame = (newTarget != currentHighlightTarget);
-
-            if (firstFrame) {
-                currentHighlightTarget?.MouseDehighlight();
-                currentHighlightTarget = newTarget;
-                if (enableLogging) {
-                    Debug.Log("Highlight: " + newTarget);
-                }
-            }
-
-            currentHighlightTarget?.MouseHighlight(firstFrame, highlightParams);
+            FruityUIManager.Queue(new HighlightEvent {
+                HighlightParams = highlightParams
+            });
         }
 
         private static void Select (ClickParams clickParams) {
@@ -284,5 +273,4 @@ namespace LycheeLabs.FruityInterface {
         #endregion
 
     }
-
 }
