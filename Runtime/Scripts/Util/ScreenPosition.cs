@@ -86,7 +86,7 @@ namespace LycheeLabs.FruityInterface {
 			var screenVector = ScreenVector(camera);
 			var adjustedVector = (screenVector / InterfaceConfig.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
 			var worldVector = Camera.main.ScreenToWorldPoint(adjustedVector);
-			return worldVector.IntersectWithPlane();
+			return worldVector.IntersectWithWorldPlane();
 		}
 
 	}

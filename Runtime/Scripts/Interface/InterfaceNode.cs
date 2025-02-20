@@ -33,17 +33,17 @@ namespace LycheeLabs.FruityInterface {
 
         public bool InputEnabledInHierarchy {
             get {
-                if (InterfaceConfig.DisableInput) {
+                if (FruityUI.DisableInput) {
                     return false;
                 }
                 var node = this;
                 var foundLockRoot = false;
                 while (node != null) {
                     if (node.InputIsDisabled) return false;
-                    foundLockRoot |= (node == InterfaceConfig.LockedNode);
+                    foundLockRoot |= (node == FruityUI.LockedNode);
                     node = node.inputParent;
                 }
-                if (InterfaceConfig.LockedNode != null && !foundLockRoot) {
+                if (FruityUI.LockedNode != null && !foundLockRoot) {
                     return false;
                 }
                 return true;

@@ -21,7 +21,7 @@ public class MouseRaycaster  {
         }
 
         // Cast a ray, collecting all hits (2d and 3d)
-        Ray ray = InterfaceConfig.ScreenPointToRay(Input.mousePosition);
+        Ray ray = UIHelpers.ScreenPointToRay(FruityUI.UICamera, Input.mousePosition);
         int hitCount = Physics.RaycastNonAlloc(ray, RaycastBuffer, MAX_DISTANCE);
         int hitCount2D = Physics2D.GetRayIntersectionNonAlloc(ray, RaycastBuffer2D, MAX_DISTANCE, everything);
 

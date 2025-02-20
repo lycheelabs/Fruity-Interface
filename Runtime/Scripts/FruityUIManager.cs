@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -20,26 +21,29 @@ namespace LycheeLabs.FruityInterface {
 
         // ------------------------------------------------------------------------
 
-        public ScreenAspect MinAspectRatio = ScreenAspect.STANDARD;
-        public ScreenAspect MaxAspectRatio = ScreenAspect.ULTRAWIDE;
+        public AspectRatio MinAspectRatio = AspectRatio.STANDARD;
+        public AspectRatio MaxAspectRatio = AspectRatio.ULTRAWIDE;
         public bool LogEvents;
 
         private MouseState mouseState;
         private EventQueue events;
+        private InterfaceConfig bounds;
         
         private void Start () {
             Instance = this;
             mouseState = new MouseState();
             events = new EventQueue();
+            bounds = new InterfaceConfig();
+            
+            FruityUI.SetUICamera(Camera.main);
+            FruityUI.SetWorldPlane(new Plane(Vector3.up, Vector3.zero));
         }
 
         void Update () {
-
-            InterfaceConfig.Update(MinAspectRatio, MaxAspectRatio);
+            bounds.Update(MinAspectRatio, MaxAspectRatio);
             mouseState.Update();
             events.Update(LogEvents);
             GrabTarget.UpdateCurrentGrab();
-            
         }
 
     }
