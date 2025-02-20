@@ -17,6 +17,8 @@ namespace LycheeLabs.FruityInterface.Elements {
 			return instance;
 		}
 
+		public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => null;
+
 		// --------------------------------------------------------
 
 		private FullscreenButtonCallbacks Callbacks;

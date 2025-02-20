@@ -6,10 +6,14 @@ namespace LycheeLabs.FruityInterface {
     /// InputNodes can arrange your various input-handling elements into a tree (or multiple trees). 
     /// This allows different parts of the trees to be enabled/disabled at various times. 
     /// </summary>
-    public class InterfaceNode : MonoBehaviour {
+    public abstract class InterfaceNode : MonoBehaviour {
 
         [SerializeField] private InterfaceNode inputParent;
         private bool validatedParent;
+
+        public abstract MouseTarget GetMouseTarget(Vector3 mouseWorldPosition);
+        
+        public virtual bool InputIsDisabled { get; }
 
         public InterfaceNode InputParent {
             get {
@@ -22,6 +26,25 @@ namespace LycheeLabs.FruityInterface {
                 if (inputParent == value) return;
                 ValidateParent(value);
                 inputParent = value;
+            }
+        }
+
+        public bool InputEnabledInHierarchy {
+            get {
+                if (InterfaceConfig.DisableInput) {
+                    return false;
+                }
+                var node = this;
+                var foundLockRoot = false;
+                while (node != null) {
+                    if (node.InputIsDisabled) return false;
+                    foundLockRoot |= (node == InterfaceConfig.LockedNode);
+                    node = node.inputParent;
+                }
+                if (InterfaceConfig.LockedNode != null && !foundLockRoot) {
+                    return false;
+                }
+                return true;
             }
         }
 
@@ -55,29 +78,6 @@ namespace LycheeLabs.FruityInterface {
             return target.NodeIsAParent(this);
         }
 
-        // ------------------------------------------------------------------------
-
-        public virtual bool InputIsDisabled { get; }
-
-        public bool InputEnabledInHierarchy {
-            get {
-                if (InterfaceConfig.DisableInput) {
-                    return false;
-                }
-                var node = this;
-                var foundLockRoot = false;
-                while (node != null) {
-                    if (node.InputIsDisabled) return false;
-                    foundLockRoot |= (node == InterfaceConfig.LockedNode);
-                    node = node.inputParent;
-                }
-                if (InterfaceConfig.LockedNode != null && !foundLockRoot) {
-                    return false;
-                }
-                return true;
-            }
-        }
-
         public void Attach (InterfaceNode target) {
             if (target != null && !target.ParentCausesHierarchyLoop(this)) {
                 target.transform.SetParent(AttachTarget.transform, false);
@@ -91,14 +91,14 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        public void AttachTo(InterfaceNode target, Transform transform) {
+        protected void AttachTo(InterfaceNode target, Transform transform) {
             if (target != null && !target.ParentCausesHierarchyLoop(this)) {
                 target.transform.SetParent(transform, false);
                 target.InputParent = this;
             }
         }
 
-        public void AttachTo(GameObject target, Transform transform) {
+        protected void AttachTo(GameObject target, Transform transform) {
             if (target != null) {
                 target.transform.SetParent(transform, false);
             }

@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary>
@@ -16,6 +18,8 @@ namespace LycheeLabs.FruityInterface.Elements {
                 return _effect;
             }
         }
+
+        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => this;
 
         protected override void OnHighlight (bool firstFrame, HighlightParams highlightParams) {
             if (firstFrame && TryGetEffect != null) {

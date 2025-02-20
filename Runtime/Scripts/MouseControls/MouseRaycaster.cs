@@ -31,10 +31,8 @@ public class MouseRaycaster  {
             var hit = RaycastBuffer[i];
             if (hit.distance < bestDistance) {
                 var node = hit.collider.gameObject.GetComponent<InterfaceNode>();
-                var nodeTarget = Resolve(node as MouseTarget, hit.point);
-
-                if (node != null && nodeTarget != null && node.InputEnabledInHierarchy) {
-                    target = nodeTarget;
+                if (node != null && node.InputEnabledInHierarchy) {
+                    target = node.GetMouseTarget(hit.point);
                     targetPoint = hit.point;
                     bestDistance = hit.distance;
                 }
@@ -44,27 +42,13 @@ public class MouseRaycaster  {
             var hit = RaycastBuffer2D[i];
             if (hit.distance < bestDistance) {
                 var node = hit.collider.gameObject.GetComponent<InterfaceNode>();
-                var nodeTarget = Resolve(node as MouseTarget, hit.point);
-
-                if (node != null && nodeTarget != null && node.InputEnabledInHierarchy) {
-                    target = nodeTarget;
+                if (node != null && node.InputEnabledInHierarchy) {
+                    target = node.GetMouseTarget(hit.point);
                     targetPoint = hit.point;
                     bestDistance = hit.distance;
                 }
             }
         }
-    }
-
-    private MouseTarget Resolve (MouseTarget target, Vector3 point) {
-        var nextTarget = target;
-        resolutionStack.Clear();
-
-        while (nextTarget != null && !resolutionStack.Contains(nextTarget)) {
-            resolutionStack.Add(nextTarget);
-            target = nextTarget;
-            nextTarget = target.ResolveTarget(point);
-        }
-        return target;
     }
 
 }

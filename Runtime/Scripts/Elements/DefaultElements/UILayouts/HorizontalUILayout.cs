@@ -5,6 +5,8 @@ namespace LycheeLabs.FruityInterface.Elements {
     [ExecuteAlways]
     public class HorizontalUILayout : UILayout {
 
+        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => null;
+
         protected override void Layout () {
             float containedWidth = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {

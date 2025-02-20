@@ -8,6 +8,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         public int MaxColumns = 5;
         public Vector2 GridCellSize = new Vector2(100, 100);
 
+        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => null;
+
         protected override void Layout() {
             var numItems = ChildNodes.Count;
             var numColumns = Mathf.Max(1, Mathf.Min(numItems, MaxColumns));

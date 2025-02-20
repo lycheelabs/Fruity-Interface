@@ -10,6 +10,8 @@ namespace LycheeLabs.FruityInterface.Elements {
     [RequireComponent(typeof(BoxCollider))]
     public class ToggleButton : UIButton, ClickTarget {
 
+        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => this;
+
         public static ToggleButton SpawnDefault() {
             return FruityUIPrefabs.NewToggleButton().GetComponent<ToggleButton>();
         }

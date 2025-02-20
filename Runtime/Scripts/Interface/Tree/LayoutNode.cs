@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface {
 
     [RequireComponent(typeof(RectTransform))]
-    public class LayoutNode : InterfaceNode {
+    public abstract class LayoutNode : InterfaceNode {
 
         public Vector2 LayoutSizePixels;
         public Vector2 LayoutPaddingPixels;

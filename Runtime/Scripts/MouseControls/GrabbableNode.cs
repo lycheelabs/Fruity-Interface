@@ -22,10 +22,8 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        public MouseTarget MouseTarget => GrabTarget;
-
         // Pass mouse events onto the grabber
-        MouseTarget MouseTarget.ResolveTarget (Vector3 mouseWorldPosition) => GrabTarget;
+        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => GrabTarget;
 
         // Stub my mouse events
         public void MouseHighlight (bool firstFrame, HighlightParams highlightParams) {}

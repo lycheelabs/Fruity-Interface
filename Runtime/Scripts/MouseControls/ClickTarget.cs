@@ -9,7 +9,7 @@
 
         /// <summary>
         /// Called when this target was clicked last, and now a different target has been clicked (default =mouse button up).
-        /// If false is returned, the click target wont change and the new target wont be clicked.
+        /// If false is returned, the click target won't change and the new target wont be clicked.
         /// </summary>
         bool TryMouseUnclick (ClickParams clickParams) { return true; }
 
