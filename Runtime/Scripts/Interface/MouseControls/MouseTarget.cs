@@ -6,14 +6,14 @@ namespace LycheeLabs.FruityInterface {
     public interface MouseTarget {
 
         /// <summary>
-        /// Called on every frame where the mouse is highlighting this target
+        /// Called on every frame where the mouse is hovering over this target
         /// </summary>
-        void MouseHighlight (bool firstFrame, HighlightParams highlightParams);
+        void MouseHovering (bool isFirstFrame, HighlightParams highlightParams);
 
         /// <summary>
-        /// Called when this target stops being highlighted
+        /// Called when this target stops being hovered
         /// </summary>
-        void MouseDehighlight ();
+        void MouseHoverEnd ();
 
     }
 

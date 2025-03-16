@@ -18,7 +18,7 @@ namespace LycheeLabs.FruityInterface {
             HeldButton = heldButton;
         }
 
-        //public Vector2 MouseUIPosition => new ScreenPosition(MouseWorldPosition).ScreenVector(camera);
+        public Vector2 MouseUIPosition => FruityUI.WorldPointToScreenPoint(MouseWorldPosition);
 
     }
 

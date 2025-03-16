@@ -8,7 +8,7 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public abstract class GrabbableNode : InterfaceNode, ClickTarget, DragTarget, GrabBehaviour {
 
-        public bool IsHighlighted => GrabTarget.IsHighlighted;
+        public bool IsHighlighted => GrabTarget.IsHovering;
         public bool IsDragging => GrabTarget.IsGrabbed;
 
         // Create a Grabber pointing back to this instance
@@ -26,25 +26,22 @@ namespace LycheeLabs.FruityInterface {
         public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => GrabTarget;
 
         // Stub my mouse events
-        public void MouseHighlight (bool firstFrame, HighlightParams highlightParams) {}
-        public void MouseDehighlight () {}
-        public void MouseClick(ClickParams clickParams) { }
-        public void StartMouseDrag(DragParams dragParams) { }
-        public void UpdateMouseDrag(DragParams dragParams) { }
+        public void MouseHovering (bool isFirstFrame, HighlightParams highlightParams) {}
+        public void MouseHoverEnd () {}
+        public void MouseClick (ClickParams clickParams) { }
+        public void MouseDragging (bool isFirstFrame, DragParams dragParams) { }
         public void CompleteMouseDrag(DragParams dragParams) { }
         public void CancelMouseDrag() { }
         public bool DraggingIsEnabled => true;
 
         // The grabber will call these methods back
-        public abstract void OnHighlight (bool firstFrame);
-        public abstract void OnDehighlight ();
+        public abstract void OnHovering (bool isFirstFrame);
+        public abstract void OnHoverEnd ();
         public abstract void OnButtonClick(MouseButton button);
 
-        public abstract void OnGrabStart ();
-        public abstract void OnGrabUpdate (MouseTarget draggingOver);
+        public abstract void OnGrabbing (bool isFirstFrame, MouseTarget draggingOver);
         public abstract void OnGrabCompleted (MouseTarget draggingOver);
         public abstract void OnGrabCancelled();
-        public abstract void OnGrabEnd ();
 
         // These configuration properties can be overridden if desired
         public virtual bool GrabbingIsEnabled => InputEnabledInHierarchy;

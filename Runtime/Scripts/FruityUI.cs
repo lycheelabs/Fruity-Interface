@@ -10,10 +10,10 @@ namespace LycheeLabs.FruityInterface {
         // Mouse position
         public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * InterfaceConfig.UIScaling) - InterfaceConfig.LetterboxOffset;
         public static Vector3 MouseWorldPosition => UIHelpers.ScreenPointToWorldPoint(UICamera, Input.mousePosition, WorldPlane);
-        public static Vector3 ScreenPointToWorldPoint(Vector2 screenPosition) 
-            => UIHelpers.ScreenPointToWorldPoint (UICamera, screenPosition, WorldPlane);
-        public static Vector3 WorldPointToScreenPoint(Vector3 worldPosition) 
-            => UIHelpers.WorldPointToScreenPoint (UICamera, worldPosition);
+        public static Vector3 ScreenPointToWorldPoint(Vector2 screenPosition) => 
+            UIHelpers.ScreenPointToWorldPoint (UICamera, screenPosition, WorldPlane);
+        public static Vector3 WorldPointToScreenPoint(Vector3 worldPosition) => 
+            UIHelpers.WorldPointToScreenPoint (UICamera, worldPosition);
         public static Vector3 IntersectWithWorldPlane(this Vector3 worldPosition) =>
             UIHelpers.IntersectWithPlane(UICamera, worldPosition, WorldPlane);
         

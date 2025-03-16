@@ -29,15 +29,13 @@ namespace LycheeLabs.FruityInterface {
         bool CanPassGrabTo(GrabTarget newDragger) => false;
 
         // Highlight events
-        void OnHighlight (bool firstFrame);
-        void OnDehighlight ();
+        void OnHovering (bool firstFrame);
+        void OnHoverEnd ();
 
         // Grab events
-        void OnGrabStart ();
-        void OnGrabUpdate (MouseTarget target);
+        void OnGrabbing (bool isFirstFrame, MouseTarget target);
         void OnGrabCompleted (MouseTarget target);
         void OnGrabCancelled();
-        void OnGrabEnd ();
 
         /// <summary> When in ONLY_CLICK mode, this event is called instead of the Grab events. </summary>
         void OnButtonClick (MouseButton mouseButton);

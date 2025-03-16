@@ -35,8 +35,8 @@ namespace LycheeLabs.FruityInterface.Elements {
 			Callbacks?.OnFullscreenClick(clickParams);
         }
 
-        public void MouseHighlight (bool firstFrame, HighlightParams highlightParams) {}
-        public void MouseDehighlight () {}
+        public void MouseHovering (bool firstFrame, HighlightParams highlightParams) {}
+        public void MouseHoverEnd () {}
 
         public void Disable () {
 			collider.enabled = false;

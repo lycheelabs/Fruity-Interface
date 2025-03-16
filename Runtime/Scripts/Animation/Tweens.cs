@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -121,7 +122,7 @@ namespace LycheeLabs.FruityInterface {
 
         public static float Parabola (float completion) {
             completion = Mathf.Clamp01(completion);
-            return 2 * (completion - completion * completion);
+            return 4 * (completion - completion * completion);
         }
 
         public static float Delay (float completion, float delay) {
@@ -130,6 +131,34 @@ namespace LycheeLabs.FruityInterface {
         }
 
         // ----------------------------------------------------
+
+        public static float SmoothLerp(this float a, float b, float halfLife) {
+            return b + (a - b) * Exp2(-Time.deltaTime / halfLife);
+        }
+
+        public static Vector2 SmoothLerp(this Vector2 a, Vector2 b, float halfLife) {
+            return b + (a - b) * Exp2(-Time.deltaTime / halfLife);
+        }
+
+        public static Vector3 SmoothLerp(this Vector3 a, Vector3 b, float halfLife) {
+            return b + (a - b) * Exp2(-Time.deltaTime / halfLife);
+        }
+
+        public static float SmoothLerp(this float a, float b, float halfLife, float deltaTime) {
+            return b + (a - b) * Exp2(-deltaTime / halfLife);
+        }
+
+        public static Vector2 SmoothLerp(this Vector2 a, Vector2 b, float halfLife, float deltaTime) {
+            return b + (a - b) * Exp2(-deltaTime / halfLife);
+        }
+
+        public static Vector3 SmoothLerp(this Vector3 a, Vector3 b, float halfLife, float deltaTime) {
+            return b + (a - b) * Exp2(-deltaTime / halfLife);
+        }
+
+        private static float Exp2(float x) {
+            return Mathf.Exp(x * Mathf.Log(2));
+        }
 
         public static float MoveTowards(this float value, float target, float speedScaling = 1f) {
             if (value < target) {

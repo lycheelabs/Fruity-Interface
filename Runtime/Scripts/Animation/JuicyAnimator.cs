@@ -8,41 +8,47 @@ namespace LycheeLabs.FruityInterface {
 
     /// <summary>
     /// This MonoBehaviour allows the easy layering of simple code-based animations onto a transform. 
-    /// The animations will be applied relative to the basePosition, baseRotation and baseScale properties, and applied in the order they were queued. 
-    /// Note that the transform's position, rotation and scale will be overwritten every frame!
+    /// The animations will be applied relative to the basePosition, baseRotation and baseScale properties, 
+    /// and applied in the order they were queued. 
+    /// Note: This component overrides the Transform component!
     /// </summary>
     [ExecuteAlways]
     public class JuicyAnimator : MonoBehaviour {
 
         private RectTransform rectTransform;
 
-        private void Awake () {
-            rectTransform = GetComponent<RectTransform>();
-            BasePosition = (rectTransform == null) ? transform.localPosition : rectTransform.anchoredPosition;
-            BaseRotation = transform.localEulerAngles;
-            BaseScale = transform.localScale;
+        private void Reset() {
+            basePosition = (rectTransform == null) ? transform.localPosition : rectTransform.anchoredPosition;
+            baseRotation = transform.localEulerAngles;
+            baseScale = transform.localScale;
         }
 
-        private void OnDestroy () {
+        private void OnEnable () {
+            rectTransform = GetComponent<RectTransform>();
+            isIdle = false;
+            transform.hideFlags = HideFlags.HideInInspector;
+        }
+
+        private void OnDisable() {
             transform.hideFlags = HideFlags.None;
         }
 
-        /// <summary> Animations will be applied relative to this localPosition vector, then the transform will be overwritten with it. </summary>
+        /// <summary> The Transform's position value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BasePosition { 
-            get { return basePosition; } 
-            set { basePosition = value; isIdle = false; }
+            get { return basePosition; }
+            set { if (basePosition != value) { basePosition = value; isIdle = false; } }
         }
-        
-        /// <summary> Animations will be applied relative to this localEulerAngles vector, then the transform will be overwritten with it. </summary>
+
+        /// <summary> The Transform's rotation value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BaseRotation {
             get { return baseRotation; }
-            set { baseRotation = value; isIdle = false; }
+            set { if (baseRotation != value) { baseRotation = value; isIdle = false; } }
         }
-        
-        /// <summary> Animations will be applied relative to this localScale vector, then the transform will be overwritten with it. </summary>
+
+        /// <summary> The Transform's scale value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BaseScale {
             get { return baseScale; }
-            set { baseScale = value; isIdle = false; }
+            set { if (baseScale != value) { baseScale = value; isIdle = false; } }
         }
 
         public bool IsIdle => isIdle;
@@ -54,6 +60,10 @@ namespace LycheeLabs.FruityInterface {
         [SerializeField] private Vector3 baseRotation;
         [SerializeField] private Vector3 baseScale = Vector3.one;
 
+        private Vector3 animatePosition;
+        private Vector3 animateRotation;
+        private Vector3 animateScale = Vector3.one;
+
         private JuicyAnimation BaseAnimation;
         private List<JuicyAnimation> LayeredAnimations = new List<JuicyAnimation>();
         private bool isIdle;
@@ -62,6 +72,25 @@ namespace LycheeLabs.FruityInterface {
             return LayeredAnimations.Count >= maxCount;
         }
 
+        /// <summary> Adjusts the BasePosition for one frame. </summary>
+        public void OverlayPosition(Vector3 translation) {
+            animatePosition += translation;
+            isIdle = false;
+        }
+
+        /// <summary> Adjusts the BaseRotation for one frame. </summary>
+        public void OverlayRotation(Vector3 rotation) {
+            animateRotation += rotation;
+            isIdle = false;
+        }
+
+        /// <summary> Adjusts the BaseScale for one frame. </summary>
+        public void OverlayScale(Vector3 scale) {
+            animateScale = Vector3.Scale(animateScale, scale);
+            isIdle = false;
+        }
+
+        /// <summary> Queue an animation that plays each frame until completion. </summary>
         public void Play (JuicyAnimation animation) {
             if (animation.Mode == JuicyAnimationMode.BASE) {
                 BaseAnimation = animation;
@@ -71,13 +100,13 @@ namespace LycheeLabs.FruityInterface {
             isIdle = false;
         }
 
-        void LateUpdate() {
-            if (isIdle) return;
+        private void Update() {
+            if (isIdle && Application.isPlaying) return;
 
             var transformData = new TransformData {
-                position = Vector3.zero,
-                rotation = Vector3.zero,
-                scale = Vector3.one,
+                position = animatePosition,
+                rotation = animateRotation,
+                scale = animateScale,
             };
 
             // Base animation
@@ -100,20 +129,30 @@ namespace LycheeLabs.FruityInterface {
             // Apply to transform
             Apply (ref transformData);
             isIdle = BaseAnimation == null && LayeredAnimations.Count == 0;
+
+            // Clear animated state
+            animatePosition = Vector3.zero;
+            animateRotation = Vector3.zero;
+            animateScale = Vector3.one;
+
         }
 
         protected virtual void Apply (ref TransformData transformData) {
             transformData.position += basePosition;
-            transformData.scale = Vector3.Scale(transformData.scale, baseScale);
             transformData.rotation += baseRotation;
+            transformData.scale = Vector3.Scale(transformData.scale, baseScale);
 
-            if (rectTransform == null) {
-                transform.localPosition = transformData.position;
-            } else {
-                rectTransform.anchoredPosition = transformData.position;
-            }
+            SetPosition(transformData.position);
             transform.localEulerAngles = transformData.rotation;
             transform.localScale = transformData.scale;
+        }
+
+        private void SetPosition (Vector3 newPosition) {
+            if (rectTransform == null) {
+                transform.localPosition = newPosition;
+            } else {
+                rectTransform.anchoredPosition = newPosition;
+            }
         }
 
         private void OnValidate() {

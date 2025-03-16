@@ -16,7 +16,7 @@ namespace LycheeLabs.FruityInterface
                 Debug.Log("Dragging: " + Params.Target);
             }
             FruityUI.DraggedTarget = Params.Target;
-            FruityUI.DraggedTarget.StartMouseDrag(Params);
+            FruityUI.DraggedTarget.MouseDragging(true, Params);
         }
     }
 }

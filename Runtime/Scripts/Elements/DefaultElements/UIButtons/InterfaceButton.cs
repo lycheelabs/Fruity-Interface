@@ -42,14 +42,14 @@ namespace LycheeLabs.FruityInterface.Elements {
             OnUpdate();
         }
 
-        public void MouseHighlight (bool firstFrame, HighlightParams highlightParams) {
+        public void MouseHovering (bool firstFrame, HighlightParams highlightParams) {
             IsHighlighted = true;
             IsHeld = highlightParams.HeldButton != MouseButton.None;
             OnHighlight(firstFrame, highlightParams);
         }
 
 
-        public void MouseDehighlight () {
+        public void MouseHoverEnd () {
             IsHighlighted = false;
             IsHeld = false;
             OnDehighlight();

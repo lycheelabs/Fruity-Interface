@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
+
     public class InterfaceConfig {
 
         // Canvas

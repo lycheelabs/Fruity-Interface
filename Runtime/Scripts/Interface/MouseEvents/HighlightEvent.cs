@@ -10,14 +10,14 @@ namespace LycheeLabs.FruityInterface
             var firstFrame = (newTarget != FruityUI.HighlightedTarget);
 
             if (firstFrame) {
-                FruityUI.HighlightedTarget?.MouseDehighlight();
+                FruityUI.HighlightedTarget?.MouseHoverEnd();
                 FruityUI.HighlightedTarget = newTarget;
                 if (logging) {
                     Debug.Log("Highlight: " + newTarget);
                 }
             }
 
-            FruityUI.HighlightedTarget?.MouseHighlight(firstFrame, Params);
+            FruityUI.HighlightedTarget?.MouseHovering(firstFrame, Params);
         }
     }
 }

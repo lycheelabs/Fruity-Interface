@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public Vector3 MouseWorldPosition => mouseWorldPosition;
-        //public Vector2 MouseUIPosition => new ScreenPosition(mouseWorldPosition).ScreenVector();
+        public Vector2 MouseUIPosition => FruityUI.WorldPointToScreenPoint(mouseWorldPosition);
 
         public MouseButton ClickButton => clickButton; 
         public ClickTarget Target => target; 

@@ -115,8 +115,11 @@ namespace LycheeLabs.FruityInterface {
                 }
 
                 // Start a drag (if applicable)
-                if (dragTarget != null && dragTarget.DraggingIsEnabled)  {
-                    StartDrag(dragTarget, mouseTarget, newPressedButton);
+                if (dragTarget != null && dragTarget.DraggingIsEnabled) {
+                    var dragPosition = Camera.main.WorldToScreenPoint(press.pressPosition);
+                    var dragParams = new DragParams(dragTarget, mouseTarget,
+                        dragPosition, Input.mousePosition, newPressedButton);
+                    StartDrag(dragParams);
                 }
             }
         }
@@ -158,11 +161,8 @@ namespace LycheeLabs.FruityInterface {
             OnNewPress?.Invoke(clickTarget);
         }
 
-        private void StartDrag(DragTarget dragTarget, MouseTarget mouseTarget, MouseButton pressedButton) {
-            press.StartDrag(dragTarget, pressedButton);
-
-            var dragParams = new DragParams(dragTarget, mouseTarget,
-                FruityUI.MouseWorldPosition, FruityUI.MouseWorldPosition, press.button);
+        private void StartDrag(DragParams dragParams) {
+            press.StartDrag(dragParams.Target, dragParams.DragButton);
             QueueDragStartEvent(dragParams);
         }
 

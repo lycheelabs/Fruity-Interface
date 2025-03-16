@@ -7,7 +7,7 @@ namespace LycheeLabs.FruityInterface {
     /// A MouseTarget (both ClickTarget and Dragtarget) that converts basic mouse events 
     /// into grab events, which are  passed to a GrabBehaviour instance.
     /// 'Grabbing' means the object can be dragged normally, 
-    /// and also dragged by clicking once to pick up and clicking again to place.
+    /// and also dragged indirectly by clicking once to pick up and clicking again to place.
     /// </summary>
     public class GrabTarget : ClickTarget, DragTarget {
 
@@ -28,8 +28,9 @@ namespace LycheeLabs.FruityInterface {
 
         private GrabBehaviour Behaviour;
         private MouseButton CurrentGrabButton;
-        private float clickStartTime;
-        private float clickDistance;
+
+        private float grabStartTime;
+        private Vector2 grabStartPosition;
         private int grabEndFrame;
 
         public GrabTarget(GrabBehaviour callbacks) {
@@ -40,7 +41,7 @@ namespace LycheeLabs.FruityInterface {
             CurrentGrabButton = MouseButton.None;
         }
 
-        public bool IsHighlighted { get; private set; }
+        public bool IsHovering { get; private set; }
         public bool IsGrabbed => draggedInstance == this || clickedInstance == this;
         public bool DraggingIsEnabled => true;
 
@@ -60,16 +61,22 @@ namespace LycheeLabs.FruityInterface {
         private void UpdateDrag () {
             if (IsGrabbed) {
                 if (!DraggingIsEnabled || TargetIsClickableOnly(CurrentGrabButton)) {
-                    CancelDrag();
+                    CancelGrab();
                 } else {
-                    Behaviour.OnGrabUpdate(FruityUI.DraggedOverTarget);
+                    Behaviour.OnGrabbing(false, FruityUI.DraggedOverTarget);
                 }
             }
         }
 
-        public void CancelDrag () {
+        private void StartGrab(MouseButton button, Vector2 uiPosition) {
+            CurrentGrabButton = button;
+            Behaviour.OnGrabbing(true, null);
+            grabStartTime = Time.unscaledTime;
+            grabStartPosition = uiPosition;
+        }
+
+        public void CancelGrab () {
             Behaviour.OnGrabCancelled();
-            Behaviour.OnGrabEnd();
 
             draggedInstance = null;
             clickedInstance = null;
@@ -77,9 +84,8 @@ namespace LycheeLabs.FruityInterface {
             grabEndFrame = Time.frameCount;
         }
 
-        private void CompleteDrag () {
+        private void CompleteGrab () {
             Behaviour.OnGrabCompleted(FruityUI.DraggedOverTarget);
-            Behaviour.OnGrabEnd();
 
             draggedInstance = null;
             clickedInstance = null;
@@ -87,25 +93,25 @@ namespace LycheeLabs.FruityInterface {
             grabEndFrame = Time.frameCount;
         }
 
-        private void Highlight () {
-            Behaviour.OnHighlight(!IsHighlighted);
-            IsHighlighted = true;
+        private void Hover () {
+            Behaviour.OnHovering(!IsHovering);
+            IsHovering = true;
         }
 
         // -------------------------------------------------
 
-        public void MouseHighlight (bool firstFrame, HighlightParams highlightParams) {
+        public void MouseHovering (bool firstFrame, HighlightParams highlightParams) {
             var otherIsClicked = clickedInstance != this && clickedInstance != null;
             if (!DraggingIsEnabled || otherIsClicked) {
-                MouseDehighlight();
+                MouseHoverEnd();
                 return;
             }
-            Highlight();
+            Hover();
         }
 
-        public void MouseDehighlight () {
-            Behaviour.OnDehighlight();
-            IsHighlighted = false;
+        public void MouseHoverEnd () {
+            Behaviour.OnHoverEnd();
+            IsHovering = false;
         }
 
         public void MouseClick (ClickParams clickParams) {
@@ -119,107 +125,92 @@ namespace LycheeLabs.FruityInterface {
                 return;
             }
 
-            // Cancel/complete drag
+            // Cancel drag
             if (TargetIsDisabled(clickParams.ClickButton)) {
-                CancelDrag();
+                CancelGrab();
                 return;
             }
-            if (ClickIsExtended()) {
-                if (ClickDistanceHasPassed()) {
-                    CompleteDrag();
-                } else {
-                    CancelDrag();
-                }
-                return;
-            } 
 
-            // Start drag
-            if (DraggingIsEnabled && !IsGrabbed && !TargetIsDraggableOnly(clickParams.ClickButton)) {
-                if (CurrentGrabbedInstance != this) {
-                    CurrentGrabButton = clickParams.ClickButton;
-                    Behaviour.OnGrabStart();
-                    clickStartTime = Time.unscaledTime;
-                }
+            // Pass grab state from 'dragging' over to 'clicked'
+            if (IsGrabbed) {
+                clickedInstance = this;
             }
-            clickedInstance = this;
-            
+
+            // Grabs are completed from CompleteMouseDrag(), not here.
+            // Once grabbed, all drag events are overridden with this target.
+            // Therefore my drag events will trigger upon a second (placement) click.
+
         }
 
         public bool TryMouseUnclick (ClickParams clickParams) {
             if (CurrentGrabbedInstance == this) {
                 if (DraggingIsEnabled && clickParams.ClickButton == CurrentGrabButton) {
                     if (Behaviour.CanMultiPlace (FruityUI.HighlightedTarget)) {
+
                         // Complete but dont end
                         Behaviour.OnGrabCompleted(FruityUI.HighlightedTarget);
                         return false;
+
                     } else {
+
                         // Complete and end
-                        CompleteDrag();
+                        CompleteGrab();
                         var newDragger = FruityUI.HighlightedTarget as GrabTarget;
                         return newDragger != null && !Behaviour.CanPassGrabTo(newDragger);
                     }
                 } else {
-                    CancelDrag();
+                    CancelGrab();
                 }
             }
             clickedInstance = null;
             return true;
         }
 
-        public void StartMouseDrag(DragParams dragParams) {
+        public void MouseDragging (bool isFirstFrame, DragParams dragParams) {
+
+            // Check cancellation
             if (!TargetIsDraggable(dragParams.DragButton)) {
                 if (IsGrabbed) {
-                    CancelDrag();
+                    CancelGrab();
                 }
                 return;
             }
 
-            var alreadyDragging = clickedInstance != null && clickedInstance != this;
-            if (alreadyDragging) {
-                clickedInstance.CancelDrag();
-                clickedInstance = null;
-                Highlight();
-            }
-
-            if (CurrentGrabbedInstance != this) {
-                CurrentGrabButton = dragParams.DragButton;
-                Behaviour.OnGrabStart();
-                clickStartTime = Time.unscaledTime;
-            }
-            draggedInstance = this;
-        }
-
-        public void UpdateMouseDrag (DragParams dragParams) {
-            if (!TargetIsDraggable(dragParams.DragButton) && IsGrabbed) {
-                CancelDrag();
+            // Start a grab
+            if (isFirstFrame) {
+                if (CurrentGrabbedInstance != this) {
+                    StartGrab(dragParams.DragButton, dragParams.MouseUIPosition);
+                }
+                draggedInstance = this;
             }
         }
 
         public void CompleteMouseDrag (DragParams dragParams) {
-            clickDistance = dragParams.UIDragDisplacement.magnitude;
-            if (ClickIsExtended() || TargetIsDraggableOnly(dragParams.DragButton)) {
-                CompleteDrag();
+            if (DragIsClick(dragParams) || TargetIsDraggableOnly(dragParams.DragButton)) {
+                CompleteGrab();
             }
         }
 
         public void CancelMouseDrag () {
             if (draggedInstance == this) {
-                CancelDrag();
+                CancelGrab();
             }
             draggedInstance = null;
         }
 
-        private bool ClickIsExtended() {
-            return CurrentGrabbedInstance == this && (ClickDurationHasPassed() || ClickDistanceHasPassed());
+        private bool DragIsClick(DragParams dragParams) {
+            return IsGrabbed && (ExceedsClickDuration() || ExceedsClickDistance(dragParams.MouseUIPosition));
         }
 
-        private bool ClickDurationHasPassed () {
-            var dragDuration = (Time.unscaledTime - clickStartTime);
+        private bool ExceedsClickDistance(Vector2 mousePosition) {
+            var dragDistance = (mousePosition - grabStartPosition).magnitude;
+            var targetDistance = InterfaceConfig.BoxedCanvasSize.y / 20;
+            return dragDistance > targetDistance;
+        }
+
+        private bool ExceedsClickDuration() {
+            var dragDuration = (Time.unscaledTime - grabStartTime);
             return dragDuration > MAX_CLICK_DURATION;
-        }
-
-        private bool ClickDistanceHasPassed() {
-            return clickDistance > 40;
         }
 
     }

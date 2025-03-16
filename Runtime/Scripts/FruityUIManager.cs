@@ -29,12 +29,14 @@ namespace LycheeLabs.FruityInterface {
         private EventQueue events;
         private InterfaceConfig bounds;
         
-        private void Start () {
+        private void Awake () { 
             Instance = this;
             mouseState = new MouseState();
             events = new EventQueue();
             bounds = new InterfaceConfig();
-            
+            bounds.Update(MinAspectRatio, MaxAspectRatio);
+
+            // Default settings
             FruityUI.SetUICamera(Camera.main);
             FruityUI.SetWorldPlane(new Plane(Vector3.up, Vector3.zero));
         }

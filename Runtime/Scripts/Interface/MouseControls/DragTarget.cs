@@ -8,14 +8,9 @@
         bool DraggingIsEnabled { get; }
 
         /// <summary>
-        /// Called on the first frame of a mouse drag
+        /// Called on every frame of a mouse drag
         /// </summary>
-        void StartMouseDrag(DragParams dragParams);
-
-        /// <summary>
-        /// Called on every frame of a mouse drag, including the first
-        /// </summary>
-        void UpdateMouseDrag (DragParams dragParams);
+        void MouseDragging (bool isFirstFrame, DragParams dragParams);
 
         /// <summary>
         /// Called on the last frame of a mouse drag, if the drag was completed

@@ -8,8 +8,8 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public abstract class Grabbable : GrabBehaviour {
 
-        public bool IsHighlighted => GrabTarget.IsHighlighted;
-        public bool IsDragging => GrabTarget.IsGrabbed;
+        public bool IsHighlighted => GrabTarget.IsHovering;
+        public bool IsGrabbed => GrabTarget.IsGrabbed;
 
         // Create a Grabber pointing back to this instance
         private GrabTarget _grabber;
@@ -25,15 +25,13 @@ namespace LycheeLabs.FruityInterface {
         public MouseTarget MouseTarget => GrabTarget;
 
         // The GrabTarget will call these methods for its behaviour
-        public abstract void OnHighlight(bool firstFrame);
-        public abstract void OnDehighlight();
+        public abstract void OnHovering(bool isFirstFrame);
+        public abstract void OnHoverEnd();
         public abstract void OnButtonClick(MouseButton button);
 
-        public abstract void OnGrabStart();
-        public abstract void OnGrabUpdate(MouseTarget draggingOver);
+        public abstract void OnGrabbing(bool isFirstFrame, MouseTarget draggingOver);
         public abstract void OnGrabCompleted(MouseTarget draggingOver);
         public abstract void OnGrabCancelled();
-        public abstract void OnGrabEnd();
 
         // These configuration properties can be overridden if desired
         public virtual bool GrabbingIsEnabled => true;
