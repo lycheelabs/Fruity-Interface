@@ -23,7 +23,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         // Pass mouse events onto the grabber
-        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) => GrabTarget;
+        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition, MouseButton pressedButton) => GrabTarget;
 
         // Stub my mouse events
         public void MouseHovering (bool isFirstFrame, HighlightParams highlightParams) {}
@@ -32,7 +32,7 @@ namespace LycheeLabs.FruityInterface {
         public void MouseDragging (bool isFirstFrame, DragParams dragParams) { }
         public void CompleteMouseDrag(DragParams dragParams) { }
         public void CancelMouseDrag() { }
-        public bool DraggingIsEnabled => true;
+        public bool DraggingIsEnabled(MouseButton dragButton) => true;
 
         // The grabber will call these methods back
         public abstract void OnHovering (bool isFirstFrame);

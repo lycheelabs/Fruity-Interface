@@ -11,7 +11,7 @@ namespace LycheeLabs.FruityInterface {
         [SerializeField] private InterfaceNode inputParent;
         private bool validatedParent;
 
-        public virtual MouseTarget GetMouseTarget(Vector3 mouseWorldPosition) {
+        public virtual MouseTarget GetMouseTarget(Vector3 mouseWorldPosition, MouseButton pressedButton) {
             return this as MouseTarget;
         }
         

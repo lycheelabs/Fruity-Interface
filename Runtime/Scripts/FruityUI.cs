@@ -55,7 +55,7 @@ namespace LycheeLabs.FruityInterface {
         public static void TriggerNewClick (ClickTarget target, MouseButton button) {
             FruityUIManager.TriggerNewClick(target, button);
         }
-        
+
     }
-    
+
 }

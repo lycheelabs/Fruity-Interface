@@ -5,7 +5,7 @@
         /// <summary>
         /// If false, this target will not recieve drag events (and any current drag will be cancelled)
         /// </summary>
-        bool DraggingIsEnabled { get; }
+        bool DraggingIsEnabled (MouseButton dragButton);
 
         /// <summary>
         /// Called on every frame of a mouse drag

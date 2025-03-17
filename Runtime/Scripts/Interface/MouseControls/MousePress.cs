@@ -26,7 +26,11 @@ namespace LycheeLabs.FruityInterface  {
             button = pressedButton;
         }
 
-        public void Release(){
+        public void ReleaseClick() {
+            pressIsClick = false;
+        }
+
+        public void Clear() {
             isPressed = false;
             target = null;
             pressIsClick = false;
@@ -34,6 +38,6 @@ namespace LycheeLabs.FruityInterface  {
             target = null;
             button = MouseButton.None;
         }
-        
+
     }
 }
