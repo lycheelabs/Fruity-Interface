@@ -1,4 +1,5 @@
 using LycheeLabs.FruityInterface.Animation;
+using TMPro;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
@@ -36,10 +37,14 @@ namespace LycheeLabs.FruityInterface.Elements {
         private void Update () {
             highlightTween = highlightTween.MoveTowards(IsHighlighted, 8);
             heldTween = heldTween.MoveTowards(IsHeld, 8);
+            Animate(highlightTween, heldTween);
+            OnUpdate();
+        }
+
+        protected virtual void Animate (float highlightTween, float heldTween) {
             var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
             float highlightScale = 1 + scaleShift * AnimationScaling;
             ButtonAnimator.BaseScale = Vector3.one * highlightScale * BaseScale;
-            OnUpdate();
         }
 
         public void MouseHovering (bool firstFrame, HighlightParams highlightParams) {

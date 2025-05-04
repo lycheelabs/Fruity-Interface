@@ -28,6 +28,9 @@ namespace LycheeLabs.FruityInterface {
         public static ClickTarget SelectedTarget { get; internal set; }
         public static DragTarget DraggedTarget { get; internal set; }
         public static MouseTarget DraggedOverTarget { get; internal set; }
+        public static DragTarget GrabbedTarget => GrabTarget.CurrentGrabbedInstance;
+        public static MouseTarget GrabbedOverTarget => 
+            (GrabTarget.CurrentGrabbedInstance != null ? HighlightedTarget : null);
 
         // Lock state
         public static bool InterfaceIsLocked => LockedNode != null;

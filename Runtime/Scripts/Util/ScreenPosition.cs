@@ -42,12 +42,13 @@ namespace LycheeLabs.FruityInterface {
 		}
 
 		/// <summary> Baking locks in the camera's current position.</summary>
-		public void Bake () => Bake(Camera.main);
+		public ScreenPosition Bake () => Bake(Camera.main);
 
 		/// <summary> Baking locks in the camera's current position.</summary>
-		public void Bake(Camera camera) {
+		public ScreenPosition Bake(Camera camera) {
 			bakedPosition = (Vector2)camera.WorldToScreenPoint(position);
 			baked = true;
+			return this;
 		}
 
 

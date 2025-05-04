@@ -100,7 +100,7 @@ namespace LycheeLabs.FruityInterface {
             isIdle = false;
         }
 
-        private void Update() {
+        private void LateUpdate() {
             if (isIdle && Application.isPlaying) return;
 
             var transformData = new TransformData {

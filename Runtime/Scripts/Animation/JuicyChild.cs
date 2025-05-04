@@ -19,6 +19,15 @@ namespace LycheeLabs.FruityInterface.Animation {
             baseScale = transform.localScale;
         }
 
+        private void OnValidate() {
+            rectTransform = GetComponent<RectTransform>();
+            basePosition = (rectTransform == null) ? transform.localPosition : rectTransform.anchoredPosition;
+            baseRotation = transform.localEulerAngles;
+            baseScale = transform.localScale;
+        }
+
+        private void Update() {}
+
     }
 
 }

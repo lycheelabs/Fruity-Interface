@@ -7,6 +7,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public abstract class UILayout : LayoutNode {
 
         public readonly List<LayoutNode> ChildNodes = new List<LayoutNode>();
+        public int ChildCount => ChildNodes.Count;
 
         public void RebuildChildNodes () {
             ChildNodes.Clear();

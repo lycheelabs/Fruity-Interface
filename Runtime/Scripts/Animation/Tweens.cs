@@ -136,6 +136,11 @@ namespace LycheeLabs.FruityInterface {
             return b + (a - b) * Exp2(-Time.deltaTime / halfLife);
         }
 
+        public static float SmoothLerp(this float a, bool b, float halfLife) {
+            var B = b ? 1 : 0;
+            return B + (a - B) * Exp2(-Time.deltaTime / halfLife);
+        }
+
         public static Vector2 SmoothLerp(this Vector2 a, Vector2 b, float halfLife) {
             return b + (a - b) * Exp2(-Time.deltaTime / halfLife);
         }
@@ -146,6 +151,11 @@ namespace LycheeLabs.FruityInterface {
 
         public static float SmoothLerp(this float a, float b, float halfLife, float deltaTime) {
             return b + (a - b) * Exp2(-deltaTime / halfLife);
+        }
+
+        public static float SmoothLerp(this float a, bool b, float halfLife, float deltaTime) {
+            var B = b ? 1 : 0;
+            return B + (a - B) * Exp2(-deltaTime / halfLife);
         }
 
         public static Vector2 SmoothLerp(this Vector2 a, Vector2 b, float halfLife, float deltaTime) {

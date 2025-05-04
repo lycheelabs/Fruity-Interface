@@ -69,6 +69,11 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
+        private void Hover () {
+            Behaviour.OnHovering(!IsHovering);
+            IsHovering = true;
+        }
+
         private void StartGrab(MouseButton button, Vector2 uiPosition) {
             CurrentGrabButton = button;
             Behaviour.OnGrabbing(true, null);
@@ -76,16 +81,7 @@ namespace LycheeLabs.FruityInterface {
             grabStartPosition = uiPosition;
         }
 
-        public void CancelGrab () {
-            Behaviour.OnGrabCancelled();
-
-            draggedInstance = null;
-            clickedInstance = null;
-            CurrentGrabButton = MouseButton.None;
-            grabEndFrame = Time.frameCount;
-        }
-
-        private void CompleteGrab () {
+        private void CompleteGrab() {
             Behaviour.OnGrabCompleted(FruityUI.DraggedOverTarget);
 
             draggedInstance = null;
@@ -94,9 +90,15 @@ namespace LycheeLabs.FruityInterface {
             grabEndFrame = Time.frameCount;
         }
 
-        private void Hover () {
-            Behaviour.OnHovering(!IsHovering);
-            IsHovering = true;
+        public void CancelGrab () {
+            if (IsGrabbed) {
+                draggedInstance = null;
+                clickedInstance = null;
+                CurrentGrabButton = MouseButton.None;
+                grabEndFrame = Time.frameCount;
+
+                Behaviour.OnGrabCancelled();
+            }
         }
 
         // -------------------------------------------------

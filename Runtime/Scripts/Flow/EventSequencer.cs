@@ -10,6 +10,7 @@ namespace LycheeLabs.FruityInterface {
         public bool IsAnimating => ActiveEvent != null || WaitingEvents.Count > 0;
         public bool IsPrompting => ActivePrompt != null || QueuedPrompts.Count > 0;
         public bool IsPromptingNow => ActivePrompt != null;
+        public bool CurrentPromptIs<T>() where T : UIPrompt => ActivePrompt != null && ActivePrompt is T;
 
         /// <summary> Played events trigger first </summary>
         public void Play(BlockingEvent newEvent) {

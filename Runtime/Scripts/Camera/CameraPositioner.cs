@@ -92,11 +92,11 @@ namespace LycheeLabs.FruityInterface {
         /// <summary>
         /// Sets the size of the HUD margins, relative to a 1080 pixel window height
         /// </summary>
-        public void SetUIMargins(float top, float bottom, float right, float left) {
+        public void SetUIMargins(float top, float bottom, float left, float right) {
             uiMarginTop = top;
             uiMarginBottom = bottom;
-            uiMarginRight = right;
             uiMarginLeft = left;
+            uiMarginRight = right;
         }
 
         public void SetFudgeOffset(Vector3 fudgeOffset) {

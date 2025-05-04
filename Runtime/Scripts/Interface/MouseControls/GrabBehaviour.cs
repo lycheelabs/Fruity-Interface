@@ -23,7 +23,7 @@ namespace LycheeLabs.FruityInterface {
         Mode GetMode (MouseButton mouseButton);
 
         /// <summary> If true, placing the Grabbable will not end the grab. </summary>
-        bool CanMultiPlace(MouseTarget target) => false;
+        bool CanMultiPlace(MouseTarget placeTarget) => false;
 
         /// <summary> When true, clicking this target will immediately drop the old target and grab this instead. </summary>
         bool CanPassGrabTo(GrabTarget newDragger) => false;
@@ -33,8 +33,8 @@ namespace LycheeLabs.FruityInterface {
         void OnHoverEnd ();
 
         // Grab events
-        void OnGrabbing (bool isFirstFrame, MouseTarget target);
-        void OnGrabCompleted (MouseTarget target);
+        void OnGrabbing (bool isFirstFrame, MouseTarget placeTarget);
+        void OnGrabCompleted (MouseTarget placeTarget);
         void OnGrabCancelled();
 
         /// <summary> When in ONLY_CLICK mode, this event is called instead of the Grab events. </summary>

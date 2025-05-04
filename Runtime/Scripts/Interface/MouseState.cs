@@ -36,11 +36,9 @@ namespace LycheeLabs.FruityInterface {
             // Pressing
             if (!press.isPressed) {
                 CheckForMousePress(hover);
-            }
-            else {
+            } else {
                 UpdateMousePress(hover);
             }
-
         }
 
         public void ClickNow(ClickTarget target, MouseButton button, Vector3 clickWorldPosition = default) {
