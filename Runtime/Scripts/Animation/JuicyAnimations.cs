@@ -24,6 +24,10 @@ namespace LycheeLabs.FruityInterface {
             animator?.Play(new WiggleAnimation(sizeScale, speedScale));
         }
 
+        public static void LongWiggle(this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
+            animator?.Play(new LongWiggleAnimation(sizeScale, speedScale));
+        }
+
         public static void SmoothBulge (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
             Bulge(animator, sizeScale, speedScale * 0.5f, Tweens.EaseInOutQuadTween);
         }

@@ -218,7 +218,7 @@ namespace LycheeLabs.FruityInterface {
 
         private bool ExceedsClickDistance(Vector2 mousePosition) {
             var dragDistance = (mousePosition - grabStartPosition).magnitude;
-            var targetDistance = InterfaceConfig.BoxedCanvasSize.y / 20;
+            var targetDistance = ScreenBounds.BoxedCanvasSize.y / 20;
             return dragDistance > targetDistance;
         }
 

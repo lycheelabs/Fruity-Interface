@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             canvas.worldCamera = camera ?? Camera.main;
             canvas.sortingLayerName = layerName;
             canvas.sortingOrder = order;
-            canvas.planeDistance = planeDistance;
+            canvas.planeDistance = planeDistance + 5;
         }
 
         public UICanvas SetLayer (string newLayerName) {
@@ -34,8 +34,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         void Update () {
-            contents.sizeDelta = InterfaceConfig.BoxedCanvasSize;
-            contents.localScale = Vector3.one / InterfaceConfig.UIScaling;
+            contents.sizeDelta = ScreenBounds.BoxedCanvasSize;
+            contents.localScale = Vector3.one / ScreenBounds.UIScaling;
         }
 
     }

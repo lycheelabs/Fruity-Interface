@@ -57,8 +57,8 @@ namespace LycheeLabs.FruityInterface {
 
 		/// <summary> Returns the position as a scaled screenspace vector, relative to the screen centre.</summary>
 		public Vector3 ScreenVector (Camera camera) {
-			var canvasVector = RawScreenVector(camera) * InterfaceConfig.UIScaling;
-            var screenOffset = (Vector3)(-InterfaceConfig.WindowCanvasSize / 2f);
+			var canvasVector = RawScreenVector(camera) * ScreenBounds.UIScaling;
+            var screenOffset = (Vector3)(-ScreenBounds.WindowCanvasSize / 2f);
 			return canvasVector + screenOffset;
         }
 
@@ -76,7 +76,7 @@ namespace LycheeLabs.FruityInterface {
             if (!baked) {
 				screenPosition = camera.WorldToScreenPoint(position);
             }
-			return screenPosition + (Vector3)offset / InterfaceConfig.UIScaling;
+			return screenPosition + (Vector3)offset / ScreenBounds.UIScaling;
         }
 
 		/// <summary> Returns the position as a worldspace position.</summary>
@@ -85,7 +85,7 @@ namespace LycheeLabs.FruityInterface {
         /// <summary> Returns the position as a worldspace position.</summary>
         public Vector3 WorldVector (Camera camera) {
 			var screenVector = ScreenVector(camera);
-			var adjustedVector = (screenVector / InterfaceConfig.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
+			var adjustedVector = (screenVector / ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
 			var worldVector = Camera.main.ScreenToWorldPoint(adjustedVector);
 			return worldVector.IntersectWithWorldPlane();
 		}

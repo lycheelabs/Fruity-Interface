@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
-    public class InterfaceConfig {
+    public class ScreenBounds {
 
         // Canvas
         public static Vector2 WindowCanvasSize { get; private set; }
@@ -18,7 +18,7 @@ namespace LycheeLabs.FruityInterface {
         public static float LetterboxWidth { get; private set; }
         public static float LetterboxHeight { get; private set; }
         
-        public InterfaceConfig () {
+        public ScreenBounds() {
             // Safe initial values
             WindowCanvasSize = Vector2.one;
             WindowAspectRatio = 1;

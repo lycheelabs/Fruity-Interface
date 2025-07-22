@@ -27,7 +27,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 		}
 
 		private void Update () {
-			var canvasSize = InterfaceConfig.BoxedCanvasSize;
+			var canvasSize = ScreenBounds.BoxedCanvasSize;
 			collider.size = new Vector3(canvasSize.x, canvasSize.y, 1);
 		}
 

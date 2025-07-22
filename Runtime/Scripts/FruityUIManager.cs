@@ -27,13 +27,13 @@ namespace LycheeLabs.FruityInterface {
 
         private MouseState mouseState;
         private EventQueue events;
-        private InterfaceConfig bounds;
+        private ScreenBounds bounds;
         
         private void Awake () { 
             Instance = this;
             mouseState = new MouseState();
             events = new EventQueue();
-            bounds = new InterfaceConfig();
+            bounds = new ScreenBounds();
             bounds.Update(MinAspectRatio, MaxAspectRatio);
 
             // Default settings

@@ -183,6 +183,19 @@ namespace LycheeLabs.FruityInterface {
             return MoveTowards(value, target ? 1 : 0, speedScaling);
         }
 
+        public static float MoveTowardsDelta(this float value, float target, float delta) {
+            if (value < target) {
+                return Mathf.Min(value + delta, target);
+            }
+            else {
+                return Mathf.Max(value - delta, target);
+            }
+        }
+
+        public static float MoveTowardsDelta(this float value, bool target, float delta) {
+            return MoveTowardsDelta(value, target ? 1 : 0, delta);
+        }
+
         public static float MoveTowardsUnscaled(this float value, float target, float speedScaling = 1f) {
             if (value < target) {
                 return Mathf.Min(value + Time.unscaledDeltaTime * speedScaling, target);

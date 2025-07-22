@@ -109,11 +109,14 @@ namespace LycheeLabs.FruityInterface {
             focusZoom = zoom;
         }
 
-        public void ReleaseFocus() {
+        public void ReleaseFocus(bool keepCameraPosition = false) {
             isFocused = false;
+            if (keepCameraPosition) {
+                cameraPosition = appliedCameraPosition;
+            }
         }
 
-        public void UpdateAndApply(Camera camera, float viewDistance = 30) {
+        public void UpdateAndApply(Camera camera, float viewDistance = 60) {
             focusTween = focusTween.MoveTowards(isFocused, 0.75f);
             var focusEase = Tweens.EaseInOutCube(focusTween);
 
@@ -140,8 +143,8 @@ namespace LycheeLabs.FruityInterface {
 
                 // Scaling and shift
                 var marginShift = camera.transform.right * worldViewportX + camera.transform.up * worldViewportY;
-                var largestAspect = Mathf.Max(worldViewportW / InterfaceConfig.BoxedAspectRatio, worldViewportH);
-                var scaling = largestAspect / 2f * InterfaceConfig.CameraScaling;
+                var largestAspect = Mathf.Max(worldViewportW / ScreenBounds.BoxedAspectRatio, worldViewportH);
+                var scaling = largestAspect / 2f * ScreenBounds.CameraScaling;
 
                 // Clamping 
                 var clampedCameraPosition = CalculateClamp(camera, fitSize);
@@ -164,8 +167,8 @@ namespace LycheeLabs.FruityInterface {
         private void CalculateViewport(out Vector2 size, out Vector2 offset) {
 
             // Size of the boxed game canvas
-            var canvasW = InterfaceConfig.BoxedCanvasSize.x;
-            var canvasH = InterfaceConfig.BoxedCanvasSize.y;
+            var canvasW = ScreenBounds.BoxedCanvasSize.x;
+            var canvasH = ScreenBounds.BoxedCanvasSize.y;
 
             // Size of the game panel (the canvas size within the UI margins)
             var panelW = Mathf.Max(1, canvasW - uiMarginRight - uiMarginLeft);
@@ -182,12 +185,12 @@ namespace LycheeLabs.FruityInterface {
             var fitSize = cameraSize / zoom;
             if (fitMode == CameraFitMode.FitHeightToLevelY) {
                 var cameraHeight = cameraSize.y / zoom;
-                var cameraWidth = cameraHeight * InterfaceConfig.BoxedAspectRatio;
+                var cameraWidth = cameraHeight * ScreenBounds.BoxedAspectRatio;
                 fitSize = new Vector3(cameraWidth * viewportSize.x, cameraHeight * viewportSize.y, 0);
             }
             if (fitMode == CameraFitMode.FitHeightToLevelZ) {
                 var cameraHeight = cameraSize.z / zoom;
-                var cameraWidth = cameraHeight * InterfaceConfig.BoxedAspectRatio;
+                var cameraWidth = cameraHeight * ScreenBounds.BoxedAspectRatio;
                 fitSize = new Vector3(cameraWidth * viewportSize.x, 0, cameraHeight * viewportSize.y);
             }
 

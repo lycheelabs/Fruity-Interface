@@ -26,7 +26,6 @@ namespace LycheeLabs.FruityInterface {
         private void OnEnable () {
             rectTransform = GetComponent<RectTransform>();
             isIdle = false;
-            transform.hideFlags = HideFlags.HideInInspector;
         }
 
         private void OnDisable() {
@@ -101,7 +100,15 @@ namespace LycheeLabs.FruityInterface {
         }
 
         private void LateUpdate() {
-            if (isIdle && Application.isPlaying) return;
+
+            if (!Application.isPlaying) {
+                basePosition = (rectTransform == null) ? transform.localPosition : rectTransform.anchoredPosition;
+                baseRotation = transform.localEulerAngles;
+                baseScale = transform.localScale;
+                return;
+            }
+
+            if (isIdle) return;
 
             var transformData = new TransformData {
                 position = animatePosition,
@@ -144,7 +151,7 @@ namespace LycheeLabs.FruityInterface {
 
             SetPosition(transformData.position);
             transform.localEulerAngles = transformData.rotation;
-            transform.localScale = transformData.scale;
+            transform.localScale = Attenuate(transformData.scale);
         }
 
         private void SetPosition (Vector3 newPosition) {
@@ -155,8 +162,20 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        private void OnValidate() {
-            isIdle = false;
+        private Vector3 Attenuate (Vector3 scale, float k = 4f, float maxScale = 1.5f) {
+            return new Vector3(
+                Attenuate(scale.x, k, maxScale),
+                Attenuate(scale.y, k, maxScale),
+                Attenuate(scale.z, k, maxScale));
+        }
+
+        private float Attenuate(float input, float k, float maxScale) {
+            if (input <= 1f) {
+                return input;
+            }
+            else {
+                return 1f + (1f - 1f / (1f + (input - 1f) * k)) * (maxScale - 1f);
+            }
         }
 
     }
