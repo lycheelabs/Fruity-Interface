@@ -4,22 +4,26 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface {
     public class CameraShaker {
 
-        private float fastShake;
-        private float fastShakeTime;
+        private float shake;
+        private float shakeTime;
 
         public Vector3 Offset { get; private set; }
 
         public void Shake(float strength) {
-            fastShake = Math.Max(fastShake, strength);
+            shake = Math.Max(shake, strength);
         }
 
         public void Update() {
 
+            //if (Input.GetKeyUp(KeyCode.Backspace)) {
+            //    Shake(2);
+            //}
+
             // Shake
-            fastShake = fastShake.MoveTowards(0, 7);
-            fastShakeTime += Time.deltaTime * 75;
-            if (fastShake == 0) fastShakeTime = 0;
-            var shake = Mathf.Sin(fastShakeTime) * fastShake;
+            this.shake = this.shake.MoveTowards(0, 7);
+            shakeTime += Time.deltaTime * 40;
+            if (this.shake == 0) shakeTime = 0;
+            var shake = Mathf.Sin(shakeTime) * this.shake;
             var shakeVector = new Vector3(0, shake, 0);
             Offset = shakeVector * 0.66f;
         }
