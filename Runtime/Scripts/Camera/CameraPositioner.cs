@@ -24,6 +24,7 @@ namespace LycheeLabs.FruityInterface {
 
         private Vector3 appliedCameraSize;
         private Vector3 appliedCameraPosition;
+        private float appliedZoom = 1;
         private bool shiftedThisFrame;
 
         private bool isFocused;
@@ -36,6 +37,9 @@ namespace LycheeLabs.FruityInterface {
 
         /// <summary> The size of the viewed area in worldspace units </summary>
         public Vector3 WorldViewSize => appliedCameraSize;
+
+        /// <summary> The current zoom multiplier. </summary>
+        public float AppliedZoom => appliedZoom;
 
         /// <summary>
         /// Sets the boundaries of the level space
@@ -122,7 +126,7 @@ namespace LycheeLabs.FruityInterface {
 
             if (isConfigured) {
 
-                var appliedZoom = Mathf.Lerp(zoom, focusZoom, focusEase);
+                appliedZoom = Mathf.Lerp(zoom, focusZoom, focusEase);
 
                 // Viewport of the game panel (the canvas size within the margins)
                 CalculateViewport(out var viewportSize, out var viewportOffset);
