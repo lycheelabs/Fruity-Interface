@@ -11,10 +11,14 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public abstract void Activate();
-
-        public bool IsComplete => time >= duration;
-        public void Update() { time += Time.deltaTime; }
-        public void Finish() { }
+        public void Update(bool isPaused, out bool isComplete) {
+            isComplete = false;
+            if (!isPaused) {
+                time += Time.deltaTime;
+                isComplete = (time >= duration);
+            }
+        }
+        public void Deactivate() { }
     }
 
 }

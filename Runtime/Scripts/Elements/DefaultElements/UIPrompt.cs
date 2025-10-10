@@ -9,27 +9,15 @@ namespace LycheeLabs.FruityInterface.Elements {
     public abstract class UIPrompt : InterfaceNode {
 
         public interface Instantiator {
-            UIPrompt Instantiate(UICanvas canvas);
+            UIPrompt Instantiate(PromptSequenceLayer layer);
         }
-
-        public static T SpawnGeneric<T> (string name, UICanvas canvas) where T : UIPrompt {
-            var rootObject = FruityUIPrefabs.NewUIRect();
-            rootObject.name = name;
-
-            var prompt = rootObject.AddComponent<T>();
-            canvas?.Attach(prompt);
-
-            return prompt;
-        } 
-
-        // -------------------------------------------------------
 
         private enum States { OPENING, OPEN, CLOSING, CLOSED }
         private States State = States.OPENING;
 
         private bool closeQueued;
 
-        public void UpdateFlow () {
+        public void UpdateFlow (bool isPaused) {
             switch (State) {
 
                 case States.OPENING:
@@ -40,7 +28,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                     break;
 
                 case States.OPEN:
-                    if (closeQueued) {
+                    if (closeQueued && !isPaused) {
                         State = States.CLOSING;
                         StartClosing();
                     }
@@ -61,6 +49,13 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public override bool InputIsDisabled => State != States.OPEN;
         public bool HasCompleted { get; private set; }
+
+        public PromptSequenceLayer PromptLayer { get; private set; }
+        public void AttachToLayer (PromptSequenceLayer layer) {
+            PromptLayer = layer;
+            PromptLayer.Canvas.Attach(this);
+        }
+
         public void Close () {
             closeQueued = true;
         }

@@ -2,12 +2,12 @@
 
 namespace LycheeLabs.FruityInterface  {
     
-    internal class EventQueue {
+    internal class InterfaceEventQueue {
 
         private Queue<InterfaceEvent> events;
         private Queue<InterfaceEvent> bufferedEvents;
 
-        public EventQueue() {
+        public InterfaceEventQueue() {
             events = new Queue<InterfaceEvent>();
             bufferedEvents = new Queue<InterfaceEvent>();
         }
