@@ -46,28 +46,18 @@ namespace LycheeLabs.FruityInterface {
         public bool IsGrabbed => draggedInstance == this || clickedInstance == this;
         public bool DraggingIsEnabled(MouseButton dragButton) => true;// TargetIsDraggable(dragButton);
 
-        private bool TargetIsDisabled(MouseButton button) =>
+        private bool TargetIsDisabled(MouseButton button) => !Behaviour.GrabbingIsEnabled ||
             Behaviour.GetMode(button) == GrabBehaviour.Mode.DISABLED;
 
-        private bool TargetIsDraggable(MouseButton button) =>
-            Behaviour.GetMode(button) == GrabBehaviour.Mode.GRAB ||
+        private bool TargetIsDraggable(MouseButton button) => Behaviour.GrabbingIsEnabled &&
+            (Behaviour.GetMode(button) == GrabBehaviour.Mode.GRAB ||
+            Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_DRAG);
+
+        private bool TargetIsDraggableOnly (MouseButton button) => Behaviour.GrabbingIsEnabled &&
             Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_DRAG;
 
-        private bool TargetIsDraggableOnly (MouseButton button) =>
-            Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_DRAG;
-
-        private bool TargetIsClickableOnly(MouseButton button) =>
+        private bool TargetIsClickableOnly(MouseButton button) => Behaviour.GrabbingIsEnabled &&
             Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_CLICK;
-
-        private void UpdateDrag () {
-            if (IsGrabbed) {
-                if (TargetIsClickableOnly(CurrentGrabButton)) {
-                    CancelGrab();
-                } else {
-                    Behaviour.OnGrabbing(false, FruityUI.DraggedOverTarget);
-                }
-            }
-        }
 
         private void Hover () {
             Behaviour.OnHovering(!IsHovering);
@@ -79,6 +69,16 @@ namespace LycheeLabs.FruityInterface {
             Behaviour.OnGrabbing(true, null);
             grabStartTime = Time.unscaledTime;
             grabStartPosition = uiPosition;
+        }
+
+        private void UpdateDrag () {
+            if (IsGrabbed) {
+                if (TargetIsClickableOnly(CurrentGrabButton)) {
+                    CancelGrab();
+                } else {
+                    Behaviour.OnGrabbing(false, FruityUI.DraggedOverTarget);
+                }
+            }
         }
 
         private void CompleteGrab() {

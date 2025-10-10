@@ -37,10 +37,8 @@ namespace LycheeLabs.FruityInterface {
 			sets.Add(set);
 
 			foreach (var element in elements) {
-				if (!Contains(currentElements, element)) {
-					element.SetEnterTween(0);
-				}
-			}
+                element.SetEnterTween(0);
+            }
 		}
 
         public void SetMode (T mode) {

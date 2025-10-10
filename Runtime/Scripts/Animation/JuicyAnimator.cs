@@ -147,11 +147,11 @@ namespace LycheeLabs.FruityInterface {
         protected virtual void Apply (ref TransformData transformData) {
             transformData.position += basePosition;
             transformData.rotation += baseRotation;
-            transformData.scale = Vector3.Scale(transformData.scale, baseScale);
+            transformData.scale = Vector3.Scale(baseScale, Attenuate(transformData.scale));
 
             SetPosition(transformData.position);
             transform.localEulerAngles = transformData.rotation;
-            transform.localScale = Attenuate(transformData.scale);
+            transform.localScale = transformData.scale;
         }
 
         private void SetPosition (Vector3 newPosition) {

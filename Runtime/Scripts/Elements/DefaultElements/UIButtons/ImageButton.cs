@@ -22,17 +22,20 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
-        public void Configure (Sprite sprite, float size) {
-            var rectSize = new Vector2(size, size);
-            Configure(sprite, rectSize, rectSize);
-        }
-
-        public void Configure (Sprite sprite, Vector2 rectSize) {
-            Configure (sprite, rectSize, rectSize);
-        }
-
-        public void Configure (Sprite sprite, Vector2 imageSize, Vector2 colliderSize) {
+        public void ConfigureSprite(Sprite sprite) {
             ButtonImage.sprite = sprite;
+        }
+
+        public void ConfigureSize(float size) {
+            var rectSize = new Vector2(size, size);
+            ConfigureSize(rectSize, rectSize);
+        }
+
+        public void ConfigureSize(Vector2 rectSize) {
+            ConfigureSize(rectSize, rectSize);
+        }
+
+        public void ConfigureSize (Vector2 imageSize, Vector2 colliderSize) {
             rectTransform.sizeDelta = imageSize;
             ButtonImage.rectTransform.sizeDelta = imageSize;
             LayoutSizePixels = imageSize;

@@ -41,6 +41,9 @@ namespace LycheeLabs.FruityInterface {
         /// <summary> The current zoom multiplier. </summary>
         public float AppliedZoom => appliedZoom;
 
+        /// <summary> Focusing the camera moves it smoothly to a fixed position. </summary>
+        public bool IsFocused { get; }
+
         /// <summary>
         /// Sets the boundaries of the level space
         /// </summary>

@@ -34,7 +34,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         /// <summary> Queued prompts trigger before queued events </summary>
-        public void Queue(UIPrompt newPrompt) {
+        public void Queue(UIPrompt.Instantiator newPrompt) {
             if (newPrompt == null) {
                 Debug.LogWarning("Event is null");
                 return;
@@ -49,23 +49,28 @@ namespace LycheeLabs.FruityInterface {
         private List<BlockingEvent> WaitingEvents;
         private BlockingEvent ActiveEvent;
 
-        private List<UIPrompt> QueuedPrompts;
+        private UICanvas Canvas;
+        private List<UIPrompt.Instantiator> QueuedPrompts;
         private UIPrompt ActivePrompt;
         private bool PromptIsActive;
 
-        public EventSequencer() {
+        public EventSequencer(UICanvas canvas) {
             PlayingEvents = new List<BlockingEvent>();
             WaitingEvents = new List<BlockingEvent>();
-            QueuedPrompts = new List<UIPrompt>();
+            QueuedPrompts = new List<UIPrompt.Instantiator>();
+            Canvas = canvas;
         }
 
         public void Update() {
 
             // Update active prompt
-            if (ActivePrompt != null && ActivePrompt.ReadyToContinue) {
-                ActivePrompt = null;
+            if (ActivePrompt != null) {
+                ActivePrompt.UpdateFlow();
+                if (ActivePrompt.HasCompleted) {
+                    ActivePrompt = null;
+                }
             }
-            if (PromptIsActive && ActivePrompt == null) {
+            if (ActivePrompt == null && PromptIsActive) {
                 PromptIsActive = false;
                 FruityUI.UnlockUI();
             }
@@ -110,9 +115,11 @@ namespace LycheeLabs.FruityInterface {
         }
 
         private void ActivateNextPrompt() {
-            ActivePrompt = QueuedPrompts[0];
+            ActivePrompt = QueuedPrompts[0].Instantiate(Canvas);
             QueuedPrompts.RemoveAt(0);
             ActivePrompt.Activate();
+            ActivePrompt.UpdateFlow();
+
             FruityUI.LockUI(ActivePrompt);
             FruityUI.DisableInput = false;
             PromptIsActive = true;

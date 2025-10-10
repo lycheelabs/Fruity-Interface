@@ -14,7 +14,14 @@ namespace LycheeLabs.FruityInterface {
         public virtual MouseTarget GetMouseTarget(Vector3 mouseWorldPosition, MouseButton pressedButton) {
             return this as MouseTarget;
         }
-        
+
+        private void OnValidate() {
+            // Default input parent
+            if (inputParent == null && transform.parent != null) {
+                InputParent = transform.parent.GetComponent<InterfaceNode>();
+            }
+        }
+
         public virtual bool InputIsDisabled { get; }
 
         public InterfaceNode InputParent {

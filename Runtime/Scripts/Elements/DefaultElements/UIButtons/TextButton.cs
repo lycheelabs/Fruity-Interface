@@ -9,6 +9,8 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// </summary>
     public class TextButton : ClickButton {
 
+        public float FontScale = 1f;
+
         public static TextButton SpawnDefault () {
             return FruityUIPrefabs.NewTextButton().GetComponent<TextButton>();
         }
@@ -25,15 +27,19 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
-        public void Configure (string text, float height, float maxWidth, bool crop, Sprite icon = null) {
+        public void Configure(string text, bool crop = false, Sprite icon = null) {
+            Configure(text, LayoutSizePixels.y, LayoutSizePixels.x, crop, icon);
+        }
+
+        public void Configure (string text, float height, float maxWidth, bool crop = false, Sprite icon = null) {
             var hasIcon = icon != null;
 
             ButtonText.text = text;
             ButtonIcon.sprite = icon;
             ButtonIcon.gameObject.SetActive (hasIcon);
 
-            ButtonText.fontSizeMax = height * 0.7f;
-            ButtonText.fontSizeMin = height * 0.4f;
+            ButtonText.fontSizeMax = height * 0.7f * FontScale;
+            ButtonText.fontSizeMin = height * 0.4f * FontScale;
 
             ButtonIcon.rectTransform.sizeDelta = new Vector2(height, height) * 0.8f;
             ButtonIcon.rectTransform.localPosition = new Vector3(height * 0.5f, 0);
