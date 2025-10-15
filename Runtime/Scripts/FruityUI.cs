@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
     public static class FruityUI {
@@ -25,6 +26,13 @@ namespace LycheeLabs.FruityInterface {
 
         // Mouse targets
         public static MouseTarget HighlightedTarget { get; internal set; }
+        internal static IReadOnlyList<MouseTarget> HighlightedAncestry => highlightedAncestry;
+        internal static IReadOnlyList<MouseTarget> PreviousHighlightedAncestry => previousHighlightedAncestry;
+
+        internal static readonly List<MouseTarget> HighlightedTargetsBuffer = new List<MouseTarget>(8);
+        private static readonly List<MouseTarget> highlightedAncestry = new List<MouseTarget>(8);
+        private static readonly List<MouseTarget> previousHighlightedAncestry = new List<MouseTarget>(8);
+
         public static ClickTarget SelectedTarget { get; internal set; }
         public static DragTarget DraggedTarget { get; internal set; }
         public static MouseTarget DraggedOverTarget { get; internal set; }
@@ -57,6 +65,18 @@ namespace LycheeLabs.FruityInterface {
         
         public static void TriggerNewClick (ClickTarget target, MouseButton button) {
             FruityUIManager.TriggerNewClick(target, button);
+        }
+
+        internal static void SwapHighlightAncestryBuffers() {
+            previousHighlightedAncestry.Clear();
+            previousHighlightedAncestry.AddRange(highlightedAncestry);
+        }
+
+        internal static void SetHighlightAncestry(List<MouseTarget> ancestry) {
+            highlightedAncestry.Clear();
+            if (ancestry != null) {
+                highlightedAncestry.AddRange(ancestry);
+            }
         }
 
     }

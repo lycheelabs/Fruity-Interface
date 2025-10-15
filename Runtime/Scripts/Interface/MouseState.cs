@@ -85,12 +85,12 @@ namespace LycheeLabs.FruityInterface {
 
             // Raycast
             var button = (press.isPressed) ? press.button : activeButton;
-            Raycaster.CollideAndResolve(button, out var target, out var targetPoint);
+            Raycaster.CollideAndResolve(button, out var target, out var targetNode, out var targetPoint);
             
             if (target == null) {
                 return HighlightParams.blank;
             }     
-            return new HighlightParams(target, targetPoint, button);
+            return new HighlightParams(target, targetNode, targetPoint, button);
         }
 
         private void OverrideHighlight(ref HighlightParams highlightParams) {

@@ -11,11 +11,12 @@ public class MouseRaycaster  {
 
     private RaycastHit[] RaycastBuffer = new RaycastHit[MAX_HITS];
     private RaycastHit2D[] RaycastBuffer2D = new RaycastHit2D[MAX_HITS];
-    private List<MouseTarget> resolutionStack = new List<MouseTarget>();
 
-    public void CollideAndResolve (MouseButton button, out MouseTarget target, out Vector3 targetPoint) {
+    public void CollideAndResolve (MouseButton button, out MouseTarget target, out InterfaceNode targetNode, out Vector3 targetPoint) {
         target = null;
+        targetNode = null;
         targetPoint = Vector3.zero; 
+
         if (!FruityUI.MouseIsOnscreen) {
             return;
         }
@@ -34,6 +35,7 @@ public class MouseRaycaster  {
                 if (node != null && node.InputEnabledInHierarchy) {
                     target = node.GetMouseTarget(hit.point, button);
                     if (target != null) {
+                        targetNode = node;
                         targetPoint = hit.point;
                         bestDistance = hit.distance;
                     }
@@ -47,6 +49,7 @@ public class MouseRaycaster  {
                 if (node != null && node.InputEnabledInHierarchy) {
                     target = node.GetMouseTarget(hit.point, button);
                     if (target != null) {
+                        targetNode = node;
                         targetPoint = hit.point;
                         bestDistance = hit.distance;
                     }

@@ -39,7 +39,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                     if (isClosed) {
                         State = States.CLOSED;
                         HasCompleted = true;
-                        Deactivate();
+                        OnDestroy();
                         Destroy(gameObject);
                     }
                     break;
@@ -62,11 +62,11 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         // ------------------ Abstract lifecycle ------------------
 
-        public abstract void Activate();
+        public abstract void StartOpening();
         protected abstract void AnimateOpening(out bool isComplete);
         protected abstract void StartClosing();
         protected abstract void AnimateClosing(out bool isComplete);
-        protected abstract void Deactivate();
+        protected abstract void OnDestroy();
 
     }
 

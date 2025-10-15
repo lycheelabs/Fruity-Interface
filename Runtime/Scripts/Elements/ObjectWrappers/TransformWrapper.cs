@@ -61,6 +61,8 @@ namespace LycheeLabs.FruityInterface.Elements {
 			get { return gameObject.layer; }
 		}
 
+		public bool IsDestroyed => gameObject == null;
+
 		public void Destroy () {
 			UnityEngine.Object.Destroy(gameObject);
 		}

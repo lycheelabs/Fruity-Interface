@@ -19,7 +19,8 @@ namespace LycheeLabs.FruityInterface.Elements {
                 if (!node.gameObject.activeSelf) { continue; }
 
                 var newHeight = node.TotalHeightPixels;
-                var newPosition = new Vector3(0, -(y - containedHeight / 2f + newHeight / 2f));
+                var shift = y - containedHeight / 2f + newHeight / 2f;
+                var newPosition = new Vector3(0, -shift);
                 node.rectTransform.SetAnchorAndPosition(newPosition);
                 y += newHeight;
             }

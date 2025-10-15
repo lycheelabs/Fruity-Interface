@@ -9,14 +9,18 @@ namespace LycheeLabs.FruityInterface.Elements {
             float containedWidth = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
+                if (!node.gameObject.activeSelf) { continue; }
                 containedWidth += node.TotalWidthPixels;
             }
 
             float x = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
-                var newWidth = node.TotalHeightPixels;
-                var newPosition = new Vector3((x - containedWidth / 2f + newWidth / 2f), 0);
+                if (!node.gameObject.activeSelf) { continue; }
+
+                var newWidth = node.TotalWidthPixels;
+                var shift = x - containedWidth / 2f + newWidth / 2f;
+                var newPosition = new Vector3(shift, 0);
                 node.rectTransform.SetAnchorAndPosition(newPosition);
                 x += newWidth;
             }

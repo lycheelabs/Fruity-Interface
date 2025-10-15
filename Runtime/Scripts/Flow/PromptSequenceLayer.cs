@@ -56,7 +56,7 @@ namespace LycheeLabs.FruityInterface {
             if (!IsBlockedByLayersAbove) {
                 if (ActivePrompt == null && QueuedPrompt != null) {
                     ActivePrompt = QueuedPrompt.Instantiate(this);
-                    ActivePrompt.Activate();
+                    ActivePrompt.StartOpening();
                     ActivePrompt.UpdateFlow(IsBlockedByLayersAbove);
                     QueuedPrompt = null;
 
