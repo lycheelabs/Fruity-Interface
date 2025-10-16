@@ -7,109 +7,104 @@ namespace LycheeLabs.FruityInterface {
 
         public HighlightParams Params;
 
-        public void Activate(bool logging) {
-            var newTarget = Params.Target;
-            if (newTarget != FruityUI.HighlightedTarget) {
-                ApplyHierarchyChange(newTarget, logging);
+        private readonly struct HighlightLink {
+            public HighlightLink(MouseTarget target, InterfaceNode node) {
+                Target = target;
+                Node = node;
             }
-            else {
-                ApplyHoverChain(firstFrame: false);
-            }
+
+            public MouseTarget Target { get; }
+            public InterfaceNode Node { get; }
         }
 
-        private void ApplyHierarchyChange(MouseTarget newTarget, bool logging) {
-            FruityUI.SwapHighlightAncestryBuffers();
+        private static readonly List<HighlightLink> currentAncestry = new List<HighlightLink>(8);
+        private static readonly List<HighlightLink> previousAncestry = new List<HighlightLink>(8);
 
-            var currentBuffer = FruityUI.HighlightedTargetsBuffer;
-            BuildAncestry(currentBuffer);
+        public void Activate(bool logging) {
+            BuildAncestry(currentAncestry);
 
-            var previousBuffer = FruityUI.PreviousHighlightedAncestry;
-            var sharedDepth = FindSharedDepth(currentBuffer, previousBuffer);
+            var newTarget = Params.Target;
+            var sameTarget = newTarget == FruityUI.HighlightedTarget;
+            var branchFirstFrame = !sameTarget && newTarget != null;
 
-            // End highlights no longer part of the ancestry
-            for (var i = previousBuffer.Count - 1; i >= sharedDepth; i--) {
-                previousBuffer[i]?.MouseHoverEnd();
+            DiffAndApply(newTarget, logging, sameTarget, branchFirstFrame);
+
+            previousAncestry.Clear();
+            previousAncestry.AddRange(currentAncestry);
+        }
+
+        private void DiffAndApply(MouseTarget newTarget, bool logging, bool isSameTarget, bool branchFirstFrame) {
+            var sharedTailCount = FindSharedTailCount(currentAncestry, previousAncestry);
+            var previousUniqueCount = previousAncestry.Count - sharedTailCount;
+            var currentUniqueCount = currentAncestry.Count - sharedTailCount;
+
+            for (var i = 0; i < previousUniqueCount; i++) {
+                previousAncestry[i].Target?.MouseHoverEnd();
             }
 
-            FruityUI.HighlightedTarget = newTarget;
+            if (!isSameTarget) {
+                FruityUI.HighlightedTarget = newTarget;
+            }
 
-            // Re-apply shared chain with firstFrame=false
-            ApplyHoverSegment(currentBuffer, sharedDepthExclusiveEnd: sharedDepth, firstFrame: false);
+            ApplyHoverSegment(currentAncestry, 0, currentUniqueCount, branchFirstFrame);
+            ApplyHoverSegment(currentAncestry, currentUniqueCount, currentAncestry.Count, firstFrame: false);
 
-            // Apply newly highlighted branch; includes root
-            ApplyHoverSegment(currentBuffer, startIndexInclusive: sharedDepth, firstFrame: true);
-
-            FruityUI.SetHighlightAncestry(currentBuffer);
-
-            if (logging && newTarget != null) {
+            if (logging && newTarget != null && !isSameTarget) {
                 Debug.Log("Highlight: " + newTarget);
             }
         }
 
-        private void ApplyHoverChain(bool firstFrame) {
-            var currentBuffer = FruityUI.HighlightedTargetsBuffer;
-            currentBuffer.Clear();
+        private void BuildAncestry(List<HighlightLink> ancestry) {
+            ancestry.Clear();
 
-            BuildAncestry(currentBuffer);
-
-            if (!firstFrame) {
-                var existingBuffer = FruityUI.HighlightedAncestry;
-                var sharedDepth = FindSharedDepth(currentBuffer, existingBuffer);
-
-                for (var i = existingBuffer.Count - 1; i >= sharedDepth; i--) {
-                    if (i >= currentBuffer.Count || currentBuffer[i] != existingBuffer[i]) {
-                        existingBuffer[i]?.MouseHoverEnd();
-                    }
-                }
+            var target = Params.Target;
+            var node = Params.Node;
+            if (target != null) {
+                ancestry.Add(new HighlightLink(target, node));
             }
 
-            ApplyHoverSegment(currentBuffer, firstFrame: firstFrame);
-
-            FruityUI.SetHighlightAncestry(currentBuffer);
+            var parentNode = node != null ? node.InputParent : null;
+            while (parentNode != null) {
+                var parentTarget = parentNode.GetMouseTarget(Params.MouseWorldPosition, Params.HeldButton);
+                if (parentTarget != null) {
+                    ancestry.Add(new HighlightLink(parentTarget, parentNode));
+                }
+                parentNode = parentNode.InputParent;
+            }
         }
 
-        private void ApplyHoverSegment(List<MouseTarget> ancestry, 
-                int startIndexInclusive = 0, int sharedDepthExclusiveEnd = -1, bool firstFrame = false) {
+        private void ApplyHoverSegment(List<HighlightLink> ancestry, int startIndexInclusive, int endIndexExclusive, bool firstFrame) {
             if (ancestry == null) {
                 return;
             }
 
-            var endIndex = (sharedDepthExclusiveEnd >= 0) ? Mathf.Min(sharedDepthExclusiveEnd, ancestry.Count) : ancestry.Count;
-            for (var i = startIndexInclusive; i < endIndex; i++) {
-                var target = ancestry[i];
-                if (target == null) continue;
+            var clampedEnd = Mathf.Min(endIndexExclusive, ancestry.Count);
+            for (var i = startIndexInclusive; i < clampedEnd; i++) {
+                var link = ancestry[i];
+                var target = link.Target;
+                if (target == null) {
+                    continue;
+                }
 
-                var isRoot = (i == 0);
-                var parameters = isRoot ? Params : HighlightParams.blank;
+                var parameters = ReferenceEquals(target, Params.Target) ? Params : HighlightParams.blank;
                 target.MouseHovering(firstFrame, parameters);
             }
         }
 
-        private int FindSharedDepth(List<MouseTarget> current, IReadOnlyList<MouseTarget> previous) {
-            var depth = 0;
-            while (depth < current.Count && depth < previous.Count && current[depth] == previous[depth]) {
-                depth++;
-            }
-            return depth;
-        }
+        private static int FindSharedTailCount(List<HighlightLink> current, List<HighlightLink> previous) {
+            var shared = 0;
+            while (shared < current.Count && shared < previous.Count) {
+                var currentLink = current[current.Count - 1 - shared];
+                var previousLink = previous[previous.Count - 1 - shared];
 
-        private void BuildAncestry(List<MouseTarget> buffer) {
-            buffer.Clear();
-
-            if (Params.Target != null) {
-                buffer.Add(Params.Target);
-
-                var parentNode = Params.Node != null ? Params.Node.InputParent : null;
-                while (parentNode != null) {
-                    var target = parentNode.GetMouseTarget(Params.MouseWorldPosition, Params.HeldButton);
-                    if (target != null) {
-                        buffer.Add(target);
-                    }
-                    parentNode = parentNode.InputParent;
+                if (!ReferenceEquals(currentLink.Target, previousLink.Target) ||
+                    !ReferenceEquals(currentLink.Node, previousLink.Node)) {
+                    break;
                 }
+                shared++;
             }
+            return shared;
         }
-
     }
 
 }
