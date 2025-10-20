@@ -12,8 +12,8 @@ namespace LycheeLabs.FruityInterface {
             sequenceLayers = new List<SequenceLayer>();
         }
 
-        protected TransitionSequenceLayer AddTransitionLayer() {
-            var layer = new TransitionSequenceLayer(this);
+        protected GameplaySequenceLayer AddGameplayLayer() {
+            var layer = new GameplaySequenceLayer(this);
             sequenceLayers.Add(layer);
             return layer;
         }
@@ -27,6 +27,12 @@ namespace LycheeLabs.FruityInterface {
         protected PromptSequenceLayer AddPromptLayer (UICanvas canvas) {
             var layer = new PromptSequenceLayer(this, canvas); 
             sequenceLayers.Add(layer); 
+            return layer;
+        }
+
+        protected TransitionSequenceLayer AddTransitionLayer() {
+            var layer = new TransitionSequenceLayer(this);
+            sequenceLayers.Add(layer);
             return layer;
         }
 
@@ -51,7 +57,7 @@ namespace LycheeLabs.FruityInterface {
 
         public void ClearLayersBelow(SequenceLayer targetLayer) {
             var clear = false;
-            for (int i = 0; i < sequenceLayers.Count; i++) {
+            for (int i = sequenceLayers.Count - 1; i >= 0; i--) {
                 var layer = sequenceLayers[i];
                 if (layer == targetLayer) {
                     clear = true;

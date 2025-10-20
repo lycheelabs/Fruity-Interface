@@ -14,18 +14,20 @@ namespace LycheeLabs.FruityInterface {
     public class TwoTierMenuSequencer : EventSequencer {
 
         public bool IsIdle => !IsAnimating && !IsPrompting;
-        public bool IsAnimating => GameEvents.IsAnimating;
+        public bool IsAnimating => BlockingGameplay.IsAnimating;
         public bool IsPrompting => GamePrompts.IsPrompting || OverlayPrompts.IsPrompting;
 
         private TransitionSequenceLayer Transitions;
         private PromptSequenceLayer OverlayPrompts;
         private PromptSequenceLayer GamePrompts;
-        private EventSequenceLayer GameEvents;
+        private EventSequenceLayer BlockingGameplay;
+        private GameplaySequenceLayer Gameplay;
 
         public TwoTierMenuSequencer(UICanvas gamePromptCanvas, UICanvas overlayPromptCanvas) {
             // Instantiate layers from bottom to top
+            Gameplay = AddGameplayLayer();
             Transitions = AddTransitionLayer();
-            GameEvents = AddEventLayer();
+            BlockingGameplay = AddEventLayer();
             GamePrompts = AddPromptLayer(gamePromptCanvas);
             OverlayPrompts = AddPromptLayer(overlayPromptCanvas);
         }
@@ -34,16 +36,20 @@ namespace LycheeLabs.FruityInterface {
             Transitions.Transition(newEvent);
         }
 
-        public void Queue (BlockingEvent newEvent) {
-            GameEvents.Queue(newEvent);
-        }
-
         public void Prompt(UIPrompt.Instantiator newPrompt, TwoTierMenuLayer layer) {
             if (layer == TwoTierMenuLayer.OVERLAY) {
                 OverlayPrompts.Prompt(newPrompt);
             } else {
                 GamePrompts.Prompt(newPrompt);
             }
+        }
+
+        public void Queue(BlockingEvent newEvent) {
+            BlockingGameplay.Queue(newEvent);
+        }
+
+        public void Execute(GameplayEvent newEvent) { 
+            Gameplay.Execute(newEvent);
         }
 
     }
