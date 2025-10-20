@@ -4,7 +4,7 @@ namespace LycheeLabs.FruityInterface {
 
     public static class FruityUIPrefabs {
 
-        private const string PREFABS_PATH = "LycheeUIPrefabs/";
+        private const string PREFABS_PATH = "FruityPrefabs/";
 
         public static void Initialise () { }
 

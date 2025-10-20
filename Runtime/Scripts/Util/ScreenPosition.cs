@@ -79,8 +79,17 @@ namespace LycheeLabs.FruityInterface {
 			return screenPosition + (Vector3)offset / ScreenBounds.UIScaling;
         }
 
-		/// <summary> Returns the position as a worldspace position.</summary>
-		public Vector3 WorldVector () => WorldVector(Camera.main);
+        /// <summary> Returns the position as a raw viewport vector, relative to the screen corner.</summary>
+        public Vector3 RawViewportVector() => RawViewportVector(Camera.main);
+
+        /// <summary> Returns the position as a raw viewport vector, relative to the screen corner.</summary>
+        public Vector2 RawViewportVector(Camera camera) {
+            var rawVector = RawScreenVector(camera);
+			return new Vector2(rawVector.x / Screen.width, rawVector.y / Screen.height);
+        }
+
+        /// <summary> Returns the position as a worldspace position.</summary>
+        public Vector3 WorldVector () => WorldVector(Camera.main);
 
         /// <summary> Returns the position as a worldspace position.</summary>
         public Vector3 WorldVector (Camera camera) {

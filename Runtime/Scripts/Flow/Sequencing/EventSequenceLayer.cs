@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
+
     public class EventSequenceLayer : SequenceLayer {
 
         public bool IsBlockingLayersBelow => IsAnimating;

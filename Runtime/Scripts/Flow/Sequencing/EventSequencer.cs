@@ -12,6 +12,12 @@ namespace LycheeLabs.FruityInterface {
             sequenceLayers = new List<SequenceLayer>();
         }
 
+        protected TransitionSequenceLayer AddTransitionLayer() {
+            var layer = new TransitionSequenceLayer(this);
+            sequenceLayers.Add(layer);
+            return layer;
+        }
+
         protected EventSequenceLayer AddEventLayer() {
             var layer = new EventSequenceLayer(this);
             sequenceLayers.Add(layer);

@@ -1,4 +1,6 @@
 ﻿using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.FruityInterface.Flow;
+using System;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -15,15 +17,21 @@ namespace LycheeLabs.FruityInterface {
         public bool IsAnimating => GameEvents.IsAnimating;
         public bool IsPrompting => GamePrompts.IsPrompting || OverlayPrompts.IsPrompting;
 
+        private TransitionSequenceLayer Transitions;
         private PromptSequenceLayer OverlayPrompts;
         private PromptSequenceLayer GamePrompts;
         private EventSequenceLayer GameEvents;
 
         public TwoTierMenuSequencer(UICanvas gamePromptCanvas, UICanvas overlayPromptCanvas) {
             // Instantiate layers from bottom to top
+            Transitions = AddTransitionLayer();
             GameEvents = AddEventLayer();
             GamePrompts = AddPromptLayer(gamePromptCanvas);
             OverlayPrompts = AddPromptLayer(overlayPromptCanvas);
+        }
+
+        public void Transition(TransitionEvent newEvent) {
+            Transitions.Transition(newEvent);
         }
 
         public void Queue (BlockingEvent newEvent) {

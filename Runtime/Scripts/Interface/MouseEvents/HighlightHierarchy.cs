@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
+
     // Reuses ancestry buffers to diff highlight chains without per-frame allocations.
     public class HighlightHierarchy {
 
