@@ -5,8 +5,8 @@ namespace LycheeLabs.FruityInterface {
         public void Update(bool isPaused, out bool isComplete) {
             isComplete = true;
         }
-        public void Deactivate() { }
-
+        public void Deactivate() {}
+        public void Cancel() {}
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using LycheeLabs.FruityInterface.Flow;
+using System;
 
 namespace LycheeLabs.FruityInterface {
     public class TransitionSequenceLayer : SequenceLayer {
@@ -16,7 +17,7 @@ namespace LycheeLabs.FruityInterface {
         public void Transition (TransitionEvent transition) {
             if (ActiveEvent == null) { 
                 ActiveEvent = transition;
-                Sequencer.RefreshLayers(); // Not actually needed here
+                ActiveEvent.Callbacks = this;
             }
         }
 
@@ -27,6 +28,14 @@ namespace LycheeLabs.FruityInterface {
                     ActiveEvent = null;
                 }
             }
+        }
+
+        public void OnTransitionApplied() {
+            Sequencer.ClearLayersBelow(this);
+        }
+
+        public void Clear() {
+            // Don't clear the transition layer
         }
 
     }

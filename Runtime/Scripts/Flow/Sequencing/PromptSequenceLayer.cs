@@ -68,6 +68,14 @@ namespace LycheeLabs.FruityInterface {
 
         }
 
+        public void Clear() {
+            if (ActivePrompt != null) {
+                ActivePrompt.Close();
+            }
+            ActivePrompt = null;
+            QueuedPrompt = null;
+        }
+
     }
 
 }

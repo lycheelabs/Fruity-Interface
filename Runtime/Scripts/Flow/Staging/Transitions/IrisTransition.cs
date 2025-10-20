@@ -1,9 +1,14 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Flow {
 
-    public class IrisTransition : ScreenTransition {
+    public class IrisTransition : ScreenTransitionNode {
+
+        public const string TargetKey = "Target";
+
+        // --------------------------------------
 
         public Image image;
         private Material material;
@@ -29,6 +34,16 @@ namespace LycheeLabs.FruityInterface.Flow {
             colorB = color;
         }
 
+        protected override void Configure(ScreenTransitionConfig config) {
+            material.SetVector("_Origin", new Vector2(0.5f, 0.5f));
+
+            if (config.TryGetConfig(TargetKey, out var target)) {
+                if (target is ScreenPosition targetPosition) {
+                    material.SetVector("_Origin", targetPosition.RawViewportVector());
+                }
+            }
+        }
+
         protected override void Refresh(bool isEntering, float tween) {
             if (image != null) {
                 image.material.SetFloat("_Tween", Tweens.EaseOutQuad(tween));
@@ -39,10 +54,6 @@ namespace LycheeLabs.FruityInterface.Flow {
 
         public void ClearTargetPoint() {
             //
-        }
-
-        public void SetTargetPoint(Vector2 viewportOrigin) {
-            material.SetVector("_Origin", viewportOrigin);
         }
 
     }

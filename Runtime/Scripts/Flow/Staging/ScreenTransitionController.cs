@@ -4,9 +4,10 @@ namespace LycheeLabs.FruityInterface.Flow {
 
     public class ScreenTransitionController : MonoBehaviour {
 
-        private ScreenTransition entering;
-        private ScreenTransition exiting;
-        private ScreenTransition bufferedExit;
+        private ScreenTransitionNode entering;
+        private ScreenTransitionNode exiting;
+        private ScreenTransitionNode bufferedExit;
+        private ScreenTransitionConfig bufferedConfig;
 
         private Color activeColor;
 
@@ -15,13 +16,20 @@ namespace LycheeLabs.FruityInterface.Flow {
 
         private void Update() {
 
-			// If an exit is buffered and the active transition has fully entered, perform the exit
+            // Update entering transition
+            if (entering != null) {
+                entering.SetColor(activeColor);
+            }
+
+            // If an exit is buffered and the active transition has fully entered, perform the exit
             if (HasFullyEntered && bufferedExit != null && exiting == null) {
                 ApplyExit();
             }
 
-			// Clear exiting transition
+            // Update exiting transition
             if (exiting != null) {
+                exiting.SetColor(activeColor);
+
                 if (exiting.ExitIsComplete) {
                     exiting = null;
                 }
@@ -29,46 +37,49 @@ namespace LycheeLabs.FruityInterface.Flow {
 
         }
 
-        public void Enter(ScreenTransition transition, Color color, bool jump = false) {
+        public void Enter(ScreenTransitionNode transition, ScreenTransitionConfig config, Color color, bool jump = false) {
             if (entering == null && exiting == null) {
-                ApplyEnter(transition, color, jump);
+                ApplyEnter(transition, config, color, jump);
                 return;
             }
         }
 
-        public void Exit(ScreenTransition transition = null) {
+        public void Exit(ScreenTransitionNode transition, ScreenTransitionConfig config) {
             if (transition == null && entering == null) {
                 return; // nothing to exit
             }
             bufferedExit = transition ?? entering;
+            bufferedConfig = config;
         }
 
         // ------------------------------------------------------
 
-        private void ApplyEnter(ScreenTransition transition, Color color, bool jump) {
+        private void ApplyEnter(ScreenTransitionNode transition, ScreenTransitionConfig config, Color color, bool jump) {
             if (transition == null) {
                 return;
             }
 
             entering = transition;
             activeColor = color;
-            transition.Enter(jump);
+            transition.Enter(config, jump);
+            transition.SetColor(activeColor);
         }
 
-		private void ApplyExit() {
-			if (bufferedExit == null || exiting != null) return;
+        private void ApplyExit() {
+            if (bufferedExit == null || exiting != null) return;
 
             exiting = bufferedExit;
 
             if (entering != exiting) {
-                entering?.Exit(jump: true);
-                exiting.Enter(jump: true);
+                entering?.Exit(bufferedConfig, jump: true);
+                exiting.Enter(bufferedConfig, jump: true);
             }
-            exiting.Exit();
+            exiting.Exit(bufferedConfig);
+            exiting.SetColor(activeColor);
 
             bufferedExit = null;
             entering = null;
-		}
+        }
 
     }
 

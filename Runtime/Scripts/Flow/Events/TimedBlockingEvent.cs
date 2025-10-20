@@ -11,6 +11,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public abstract void Activate();
+
         public void Update(bool isPaused, out bool isComplete) {
             isComplete = false;
             if (!isPaused) {
@@ -18,7 +19,9 @@ namespace LycheeLabs.FruityInterface {
                 isComplete = (time >= duration);
             }
         }
+
         public void Deactivate() { }
+
     }
 
 }

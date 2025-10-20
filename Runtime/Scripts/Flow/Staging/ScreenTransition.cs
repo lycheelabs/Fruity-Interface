@@ -1,57 +1,22 @@
-﻿using UnityEngine;
+﻿namespace LycheeLabs.FruityInterface.Flow {
 
-namespace LycheeLabs.FruityInterface.Flow {
-    public abstract class ScreenTransition : InterfaceNode {
+    public struct ScreenTransition {
 
-        public enum Mode { ENTER, EXIT }
+        public readonly ScreenTransitionNode Transition;
+        public readonly ScreenTransitionController Controller;
+        public readonly ScreenTransitionConfig Config;
 
-        public float Tween => entryTween;
-        public bool IsEntering => currentMode == Mode.ENTER;
-        public bool EntryIsComplete => IsEntering && entryTween >= 1;
-        public bool ExitIsComplete => !IsEntering && entryTween <= 0;
-
-        [SerializeField] private Mode currentMode;
-        [SerializeField] [Range(0, 1)] private float entryTween;
-        [SerializeField] private Color color;
-
-        private void OnValidate() {
-            Refresh(IsEntering, entryTween);
-            SetColor(color);
+        public ScreenTransition(ScreenTransitionNode transition, ScreenTransitionController controller) {
+            Transition = transition;
+            Controller = controller;
+            Config = new ScreenTransitionConfig();
         }
 
-        private void Awake() {
-            currentMode = Mode.EXIT;
-            entryTween = 0;
-            Refresh(IsEntering, entryTween);
-            SetColor(color);
+        public ScreenTransition SetConfig (string key, object value) {
+            Config.SetConfig(key, value);
+            return this;
         }
-
-        internal void Enter(bool jump = false) {
-            currentMode = Mode.ENTER;
-            if (jump) {
-                entryTween = 1;
-            }
-            Refresh(IsEntering, entryTween);
-        }
-
-        internal void Exit(bool jump = false) {
-            currentMode = Mode.EXIT;
-            if (jump) {
-                entryTween = 0;
-            }
-            Refresh(IsEntering, entryTween);
-        }
-
-        public void LateUpdate() {
-            entryTween = entryTween.MoveTowards(IsEntering, TransitionSpeed);
-            Refresh(IsEntering, entryTween);
-        }
-
-        protected abstract float TransitionSpeed { get; }
-        protected abstract void Refresh(bool isEntering, float tween);
-        public abstract void SetColor(Color color);
 
     }
-
 
 }

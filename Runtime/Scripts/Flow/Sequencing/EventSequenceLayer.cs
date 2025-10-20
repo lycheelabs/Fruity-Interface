@@ -53,6 +53,14 @@ namespace LycheeLabs.FruityInterface {
 
         }
 
+        public void Clear() {
+            if (ActiveEvent != null) {
+                ActiveEvent.Deactivate();
+                ActiveEvent = null;
+            }
+            QueuedEvents.Clear();
+        }
+
         private void ActivateNextEvent(List<BlockingEvent> queue) {
             ActiveEvent = queue[0];
             queue.RemoveAt(0);

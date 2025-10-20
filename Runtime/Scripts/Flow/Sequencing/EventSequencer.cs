@@ -49,6 +49,20 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
+        public void ClearLayersBelow(SequenceLayer targetLayer) {
+            var clear = false;
+            for (int i = 0; i < sequenceLayers.Count; i++) {
+                var layer = sequenceLayers[i];
+                if (layer == targetLayer) {
+                    clear = true;
+                    continue;
+                }
+                if (clear) {
+                    layer.Clear();
+                }
+            }
+        }
+
     }
 
 }
