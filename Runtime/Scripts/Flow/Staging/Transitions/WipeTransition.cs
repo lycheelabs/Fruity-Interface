@@ -1,19 +1,18 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Flow {
 
-    public class IrisTransition : ScreenTransitionNode {
+    public class WipeTransition : ScreenTransitionNode {
 
-        public const string TargetKey = "Target";
+        public const string AngleKey = "Angle";
 
         // --------------------------------------
 
         public Image image;
         private Material material;
-        private Color colorA;
-        private Color colorB;
+
+        public float angle = -45;
 
         protected override float TransitionSpeed => 1.9f;
 
@@ -30,24 +29,23 @@ namespace LycheeLabs.FruityInterface.Flow {
         }
 
         public override void SetColor(Color color) {
-            colorA = color;
-            colorB = color;
+            image.color = color;
         }
 
         protected override void Configure(ScreenTransitionConfig config) {
-            material.SetVector("_Origin", new Vector2(0.5f, 0.5f));
-
-            if (config.TryGetConfig(TargetKey, out var target)) {
-                if (target is ScreenPosition targetPosition) {
-                    material.SetVector("_Origin", targetPosition.RawViewportVector());
+            angle = -45;
+            if (config.TryGetConfig(AngleKey, out var target)) {
+                if (target is float targetAngle) {
+                    angle = targetAngle;
                 }
             }
         }
 
         protected override void Refresh(bool isEntering, float tween) {
             if (image != null) {
-                image.material.SetFloat("_Tween", Tweens.EaseOutQuad(tween));
-                image.color = Color.Lerp(colorA, colorB, Tweens.EaseInOutQuad(tween));
+                image.material.SetFloat("_Tween", Tweens.EaseOutQuad(tween / 2));
+                image.material.SetFloat("_Angle", angle);
+                image.material.SetFloat("_Flip", isEntering ? 0 : 1);
                 image.enabled = tween > 0;
             }
         }
