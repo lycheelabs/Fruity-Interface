@@ -51,6 +51,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         public bool HasCompleted { get; private set; }
 
         public PromptSequenceLayer PromptLayer { get; private set; }
+        public abstract bool RestrictMouseInput { get;  }
+
         public void AttachToLayer (PromptSequenceLayer layer) {
             PromptLayer = layer;
             PromptLayer.Canvas.Attach(this);

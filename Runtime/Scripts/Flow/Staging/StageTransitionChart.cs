@@ -2,6 +2,7 @@
 using System;
 
 namespace LycheeLabs.FruityInterface.Flow {
+
     public class StageTransitionChart {
 
         private HashSet<StageTransitionLink> stages = new();
@@ -30,6 +31,12 @@ namespace LycheeLabs.FruityInterface.Flow {
 
             CurrentStage = nextStage;
             nextStage.Open();
+        }
+
+        public void Update () {
+            if (CurrentStage != null) {
+                CurrentStage.Update();
+            }
         }
 
     }

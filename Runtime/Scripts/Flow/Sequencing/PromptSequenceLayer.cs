@@ -8,10 +8,8 @@ namespace LycheeLabs.FruityInterface {
         public bool IsPrompting => ActivePrompt != null || QueuedPrompt != null;
         public bool IsBlockedByLayersAbove { get; set; }
 
-        public bool CurrentPromptIs<T>() where T : UIPrompt => ActivePrompt != null && ActivePrompt is T;
-
-        /// <summary> Queued prompts trigger before queued events </summary>
-
+        public bool IsRestrictingMouseInput => ActivePrompt != null && ActivePrompt.RestrictMouseInput;
+        public InterfaceNode ActiveNode => ActivePrompt;
 
         // ---------------------------------------------------
 
@@ -34,8 +32,6 @@ namespace LycheeLabs.FruityInterface {
 
             QueuedPrompt = newPrompt;
             Sequencer.RefreshLayers();
-
-            //FruityUI.DisableInput = ActivePrompt == null;
         }
 
         public void Update() {
@@ -59,9 +55,6 @@ namespace LycheeLabs.FruityInterface {
                     ActivePrompt.StartOpening();
                     ActivePrompt.UpdateFlow(IsBlockedByLayersAbove);
                     QueuedPrompt = null;
-
-                    //FruityUI.LockUI(ActivePrompt);
-                    //FruityUI.DisableInput = false;
                     return;
                 }
             }

@@ -23,6 +23,8 @@ namespace LycheeLabs.FruityInterface {
         private EventSequenceLayer BlockingGameplay;
         private GameplaySequenceLayer Gameplay;
 
+        private InterfaceNode currentPromptNode;
+
         public TwoTierMenuSequencer(UICanvas gamePromptCanvas, UICanvas overlayPromptCanvas) {
             // Instantiate layers from bottom to top
             Gameplay = AddGameplayLayer();

@@ -22,7 +22,7 @@ namespace LycheeLabs.FruityInterface.Animation {
             value = value.MoveTowards(0, speedScale * timeScaling);
             var tweened = (tween != null) ? tween.ApplyInverted(value) : value;
 
-            var squash = Mathf.Sin(tweened * Mathf.PI * cycles) * tweened * sizeScale;
+            var squash = Mathf.Sin(tweened * Mathf.PI * cycles) * tweened * sizeScale * sizeScale;
             var squashScale = new Vector3(1 - squash, 1 + squash, 1);
 
             var existingScale = transform.scale;
