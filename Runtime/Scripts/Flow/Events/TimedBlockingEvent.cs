@@ -6,7 +6,7 @@ namespace LycheeLabs.FruityInterface {
         private float time;
         private float duration;
 
-        public TimedBlockingEvent (float duration) {
+        public TimedBlockingEvent(float duration) {
             this.duration = duration;
         }
 
@@ -14,13 +14,14 @@ namespace LycheeLabs.FruityInterface {
 
         public void Update(bool isPaused, out bool isComplete) {
             isComplete = false;
-            if (!isPaused) {
+            if (!isPaused || IgnoresPause) {
                 time += Time.deltaTime;
                 isComplete = (time >= duration);
             }
         }
 
         public void Deactivate() { }
+        protected abstract bool IgnoresPause { get; }
 
     }
 

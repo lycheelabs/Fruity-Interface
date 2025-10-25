@@ -8,7 +8,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// </summary>
     public abstract class UIPrompt : InterfaceNode {
 
-        public interface Instantiator {
+        public interface PromptInstantiator {
             UIPrompt Instantiate(PromptSequenceLayer layer);
         }
 

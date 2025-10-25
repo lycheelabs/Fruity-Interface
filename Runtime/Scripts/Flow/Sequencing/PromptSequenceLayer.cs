@@ -17,14 +17,14 @@ namespace LycheeLabs.FruityInterface {
         public readonly UICanvas Canvas;
 
         private UIPrompt ActivePrompt;
-        private UIPrompt.Instantiator QueuedPrompt;
+        private UIPrompt.PromptInstantiator QueuedPrompt;
 
         public PromptSequenceLayer (EventSequencer sequencer, UICanvas canvas) {
             Sequencer = sequencer;
             Canvas = canvas;
         }
 
-        public void Prompt(UIPrompt.Instantiator newPrompt) {
+        public void Prompt(UIPrompt.PromptInstantiator newPrompt) {
             if (newPrompt == null) {
                 Debug.LogWarning("Prompt is null");
                 return;

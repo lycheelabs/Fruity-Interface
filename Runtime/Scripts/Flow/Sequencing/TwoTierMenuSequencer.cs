@@ -38,7 +38,7 @@ namespace LycheeLabs.FruityInterface {
             Transitions.Transition(newEvent);
         }
 
-        public void Prompt(UIPrompt.Instantiator newPrompt, TwoTierMenuLayer layer) {
+        public void Prompt(UIPrompt.PromptInstantiator newPrompt, TwoTierMenuLayer layer) {
             if (layer == TwoTierMenuLayer.OVERLAY) {
                 OverlayPrompts.Prompt(newPrompt);
             } else {
