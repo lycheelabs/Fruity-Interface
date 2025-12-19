@@ -21,8 +21,8 @@ namespace LycheeLabs.FruityInterface.Animation {
             this.speedScale = Mathf.Max(speedScale, 0.1f) * 8f;
         }
 
-        public override void Update (ref TransformData transform, float timeScaling) {
-            value = value.MoveTowards(0, speedScale * timeScaling);
+        public override void Update (ref TransformData transform, float deltaTime) {
+            value = value.MoveTowardsDelta(0, speedScale * deltaTime);
 
             var nudge = Mathf.Sin(value * Mathf.PI) * sizeScale;
             var nudgePos = nudge * direction;

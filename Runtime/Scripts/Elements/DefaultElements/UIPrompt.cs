@@ -28,7 +28,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                     break;
 
                 case States.OPEN:
-                    if (closeQueued && !isPaused) {
+                    if (closeQueued) {
                         State = States.CLOSING;
                         StartClosing();
                     }
@@ -60,6 +60,12 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public void Close () {
             closeQueued = true;
+        }
+
+        public void CloseImmediately () {
+            StartClosing();
+            OnDestroy();
+            Destroy(gameObject);
         }
 
         // ------------------ Abstract lifecycle ------------------

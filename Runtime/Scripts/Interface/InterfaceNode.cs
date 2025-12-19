@@ -9,7 +9,8 @@ namespace LycheeLabs.FruityInterface {
     public abstract class InterfaceNode : MonoBehaviour {
 
         [SerializeField] private InterfaceNode inputParent;
-        private bool validatedParent;
+        [SerializeField] private bool ignoresInterfaceLock;
+        private bool hasValidatedParent;
 
         public virtual MouseTarget GetMouseTarget(Vector3 mouseWorldPosition, MouseButton pressedButton) {
             return this as MouseTarget;
@@ -26,7 +27,7 @@ namespace LycheeLabs.FruityInterface {
 
         public InterfaceNode InputParent {
             get {
-                if (!validatedParent) {
+                if (!hasValidatedParent) {
                     ValidateParent(inputParent);
                 } 
                 return inputParent;
@@ -47,7 +48,7 @@ namespace LycheeLabs.FruityInterface {
                 var foundLockRoot = false;
                 while (node != null) {
                     if (node.InputIsDisabled) return false;
-                    foundLockRoot |= (node == FruityUI.LockedNode);
+                    foundLockRoot |= (node == FruityUI.LockedNode || node.ignoresInterfaceLock);
                     node = node.inputParent;
                 }
                 if (FruityUI.LockedNode != null && !foundLockRoot) {
@@ -62,7 +63,7 @@ namespace LycheeLabs.FruityInterface {
                 Debug.LogError(string.Format("This parent would cause a loop in the InputNode hierarchy: {0} <-- {1}", newParent, this));
                 return;
             }
-            validatedParent = true;
+            hasValidatedParent = true;
         }
 
         private bool ParentCausesHierarchyLoop (InterfaceNode node) {

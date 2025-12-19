@@ -1,5 +1,3 @@
-using LycheeLabs.FruityInterface.Animation;
-using TMPro;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
@@ -35,8 +33,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void Update () {
-            highlightTween = highlightTween.MoveTowards(IsHighlighted, 8);
-            heldTween = heldTween.MoveTowards(IsHeld, 8);
+            highlightTween = highlightTween.MoveTowardsUnscaled(IsHighlighted, 8);
+            heldTween = heldTween.MoveTowardsUnscaled(IsHeld, 8);
             Animate(highlightTween, heldTween);
             OnUpdate();
         }
@@ -52,7 +50,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             IsHeld = highlightParams.HeldButton != MouseButton.None;
             OnHighlight(firstFrame, highlightParams);
         }
-
 
         public void MouseHoverEnd () {
             IsHighlighted = false;

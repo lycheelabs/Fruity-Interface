@@ -8,10 +8,6 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// </summary>
     public class ImageButton : ClickButton {
 
-        public static ImageButton SpawnDefault () {
-            return FruityUIPrefabs.NewImageButton().GetComponent<ImageButton>();
-        }
-
         public Image ButtonImage;
 
         private BoxCollider boxCollider;
@@ -22,24 +18,41 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
+        [SerializeField] private Sprite sprite = null;
+        [SerializeField] private Vector2 size = new Vector2(50, 50);
+        [SerializeField] private float colliderPadding = 10;
+
+        private void OnValidate () {
+            RefreshLayout();
+        }
+
         public void ConfigureSprite(Sprite sprite) {
-            ButtonImage.sprite = sprite;
+            this.sprite = sprite;
+            RefreshLayout();
         }
 
         public void ConfigureSize(float size) {
-            var rectSize = new Vector2(size, size);
-            ConfigureSize(rectSize, rectSize);
+            this.size = new Vector2(size, size);
+            RefreshLayout();
         }
 
-        public void ConfigureSize(Vector2 rectSize) {
-            ConfigureSize(rectSize, rectSize);
+        public void ConfigureSize(Vector2 size) {
+            this.size = size;
+            RefreshLayout();
         }
 
-        public void ConfigureSize (Vector2 imageSize, Vector2 colliderSize) {
-            rectTransform.sizeDelta = imageSize;
-            ButtonImage.rectTransform.sizeDelta = imageSize;
-            LayoutSizePixels = imageSize;
-            BoxCollider.size = colliderSize;
+        public void RefreshLayout () {
+            ButtonImage.sprite = sprite;
+            ApplySizeDeferred();
+        }
+
+        protected override void ApplySize () {
+            if (this != null) {
+                rectTransform.sizeDelta = size;
+                ButtonImage.rectTransform.sizeDelta = size;
+                LayoutSizePixels = size;
+                BoxCollider.size = size + new Vector2(colliderPadding, colliderPadding);
+            }
         }
 
     }

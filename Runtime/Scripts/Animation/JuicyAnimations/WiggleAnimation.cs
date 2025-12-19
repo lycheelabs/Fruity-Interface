@@ -16,8 +16,8 @@ namespace LycheeLabs.FruityInterface.Animation {
             flip = (Random.value > 0.5f) ? 1 : -1;
         }
 
-        public override void Update(ref TransformData transform, float timeScaling) {
-            value = value.MoveTowards(0, speedScale * timeScaling);
+        public override void Update(ref TransformData transform, float deltaTime) {
+            value = value.MoveTowardsDelta(0, speedScale * deltaTime);
 
             var wiggle = Mathf.Sin(value * Mathf.PI * 2) * sizeScale * flip * value;
             transform.rotation += new Vector3(0, 0, wiggle);
@@ -41,8 +41,8 @@ namespace LycheeLabs.FruityInterface.Animation {
             flip = (Random.value > 0.5f) ? 1 : -1;
         }
 
-        public override void Update(ref TransformData transform, float timeScaling) {
-            value = value.MoveTowards(0, speedScale * timeScaling);
+        public override void Update(ref TransformData transform, float deltaTime) {
+            value = value.MoveTowardsDelta(0, speedScale * deltaTime);
 
             var wiggle = Mathf.Sin(value * Mathf.PI * 3) * sizeScale * flip;
             transform.position += new Vector3(wiggle, 0);

@@ -70,7 +70,7 @@ namespace LycheeLabs.FruityInterface {
 
             // Resolve mouse highlighting
             var highlightParams = GetRaycast();
-            
+
             // Override
             FruityUI.DraggedOverTarget = highlightParams.Target;
             OverrideHighlight(ref highlightParams);
@@ -115,7 +115,7 @@ namespace LycheeLabs.FruityInterface {
             if (Input.GetMouseButtonDown((int)MouseButton.Left)) newPressedButton = MouseButton.Left;
             if (Input.GetMouseButtonDown((int)MouseButton.Right)) newPressedButton = MouseButton.Right;
 
-            if (!press.isPressed && newPressedButton != MouseButton.None && Time.time > lastPressTime + 0.05f) {
+            if (!press.isPressed && newPressedButton != MouseButton.None && Time.unscaledTime > lastPressTime + 0.05f) {
                 press.pressPosition = highlightParams.MouseWorldPosition;
 
                 var pressed = false;
@@ -182,7 +182,7 @@ namespace LycheeLabs.FruityInterface {
 
         private void PressClick(ClickTarget clickTarget, MouseButton pressedButton) {
             press.StartClick(clickTarget, pressedButton);
-            lastPressTime = Time.time;
+            lastPressTime = Time.unscaledTime;
             
             OnNewPress?.Invoke(clickTarget);
         }

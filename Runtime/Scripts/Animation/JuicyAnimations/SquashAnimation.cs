@@ -18,8 +18,8 @@ namespace LycheeLabs.FruityInterface.Animation {
             this.tween = tween;
         }
 
-        public override void Update (ref TransformData transform, float timeScaling) {
-            value = value.MoveTowards(0, speedScale * timeScaling);
+        public override void Update (ref TransformData transform, float deltaTime) {
+            value = value.MoveTowardsDelta(0, speedScale * deltaTime);
             var tweened = (tween != null) ? tween.ApplyInverted(value) : value;
 
             var squash = Mathf.Sin(tweened * Mathf.PI * cycles) * tweened * sizeScale * sizeScale;

@@ -85,7 +85,7 @@ namespace LycheeLabs.FruityInterface {
 
 				// Transition old element out
 				if (exiting) {
-					transitionCurve = Mathf.Max(transitionCurve - 6f * Time.deltaTime, 0f);
+					transitionCurve = Mathf.Max(transitionCurve - 6f * Time.unscaledDeltaTime, 0f);
 					var tween = Tweens.EaseOutQuad(transitionCurve);
 
 					foreach (EnteringElement element in previousElements) {

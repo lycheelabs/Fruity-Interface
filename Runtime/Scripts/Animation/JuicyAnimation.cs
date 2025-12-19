@@ -8,13 +8,13 @@ namespace LycheeLabs.FruityInterface.Animation {
 
     public interface JuicyAnimation {
         public JuicyAnimationMode Mode { get; }
-        void Update (ref TransformData transform, float timeScaling);
+        void Update (ref TransformData transform, float deltaTime);
         bool ReadyToFinish { get; }
     }
 
     public abstract class SimpleJuicyAnimation : JuicyAnimation {
         public virtual JuicyAnimationMode Mode => JuicyAnimationMode.LAYER;
-        public abstract void Update (ref TransformData transform, float timeScaling);
+        public abstract void Update (ref TransformData transform, float deltaTime);
         public abstract bool ReadyToFinish { get; }
     }
 

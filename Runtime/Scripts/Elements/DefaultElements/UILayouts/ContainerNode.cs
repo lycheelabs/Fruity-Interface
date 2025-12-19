@@ -4,10 +4,12 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface.Elements {
 
     [RequireComponent(typeof(RectTransform))]
-    public abstract class UILayout : LayoutNode {
-
+    public abstract class ContainerNode : LayoutNode {
+        
         public readonly List<LayoutNode> ChildNodes = new List<LayoutNode>();
         public int ChildCount => ChildNodes.Count;
+
+        public Vector2 minimumSize = new Vector2(100, 100);
 
         public void RebuildChildNodes () {
             ChildNodes.Clear();

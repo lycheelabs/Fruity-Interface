@@ -1,4 +1,6 @@
-﻿namespace LycheeLabs.FruityInterface {
+﻿using UnityEngine;
+
+namespace LycheeLabs.FruityInterface {
 
     public class HighlightEvent : InterfaceEvent {
 

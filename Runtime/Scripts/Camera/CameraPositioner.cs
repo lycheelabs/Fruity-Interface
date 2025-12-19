@@ -20,7 +20,8 @@ namespace LycheeLabs.FruityInterface {
         private CameraFitMode fitMode;
         private float zoom = 1;
 
-        private Vector3 fudgeOffset;
+        private Vector3 adjustShift;
+        private float adjustZoom = 1;
 
         private Vector3 appliedCameraSize;
         private Vector3 appliedCameraPosition;
@@ -29,8 +30,9 @@ namespace LycheeLabs.FruityInterface {
 
         private bool isFocused;
         private Vector3 focusPosition;
-        private float focusZoom;
+        private float focusZoom = 1;
         private float focusTween;
+        private float focusSpeed = 1;
 
         /// <summary> The world point at the center of the camera view </summary>
         public Vector3 WorldViewCentre => appliedCameraPosition;
@@ -97,6 +99,15 @@ namespace LycheeLabs.FruityInterface {
         }
 
         /// <summary>
+        /// Sets the zoom factor of the camera. 1 = no zoom.
+        /// The manual adjustment scales the zoom even when focusing.
+        /// </summary>
+        public void Adjust (Vector3 shiftAdjustment = default, float zoomAdjustment = 1f) {
+            adjustShift = shiftAdjustment;
+            adjustZoom = zoomAdjustment;
+        }
+
+        /// <summary>
         /// Sets the size of the HUD margins, relative to a 1080 pixel window height
         /// </summary>
         public void SetUIMargins(float top, float bottom, float left, float right) {
@@ -106,25 +117,26 @@ namespace LycheeLabs.FruityInterface {
             uiMarginRight = right;
         }
 
-        public void SetFudgeOffset(Vector3 fudgeOffset) {
-            this.fudgeOffset = fudgeOffset;
-        }
-
-        public void Focus(Vector3 worldPosition, float zoom = 1f) {
+        public void Focus(Vector3 worldPosition, float zoom = 1f, float speed = 1f, bool jump = false) {
             isFocused = true;
             focusPosition = worldPosition;
             focusZoom = zoom;
+            focusSpeed = speed;
+            if (jump) {
+                focusTween = 1f;
+            }
         }
 
-        public void ReleaseFocus(bool keepCameraPosition = false) {
+        public void ReleaseFocus(bool keepCameraPosition = false, float speed = 1f) {
             isFocused = false;
+            focusSpeed = speed;
             if (keepCameraPosition) {
                 cameraPosition = appliedCameraPosition;
             }
         }
 
         public void UpdateAndApply(Camera camera, float viewDistance = 60) {
-            focusTween = focusTween.MoveTowards(isFocused, 0.75f);
+            focusTween = focusTween.MoveTowards(isFocused, 0.7f * focusSpeed);
             var focusEase = Tweens.EaseInOutCube(focusTween);
 
             if (isConfigured) {
@@ -161,8 +173,8 @@ namespace LycheeLabs.FruityInterface {
 
                 // Apply to camera
                 var position = finalCameraPosition + marginShift / 2f - camera.transform.forward * viewDistance;
-                camera.transform.localPosition = position + fudgeOffset;
-                camera.orthographicSize = scaling;
+                camera.transform.localPosition = position + adjustShift;
+                camera.orthographicSize = scaling * adjustZoom;
 
                 appliedCameraSize = fitSize;
                 appliedCameraPosition = finalCameraPosition;

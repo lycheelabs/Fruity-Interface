@@ -1,6 +1,5 @@
 ﻿using LycheeLabs.FruityInterface.Elements;
 using LycheeLabs.FruityInterface.Flow;
-using System;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -13,9 +12,11 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public class TwoTierMenuSequencer : EventSequencer {
 
-        public bool IsIdle => !IsAnimating && !IsPrompting;
+        public bool IsIdle => !IsAnimating && !IsPrompting && !IsTransitioning;
+        public bool IsTransitioning => Transitions.IsTransitioning;
         public bool IsAnimating => BlockingGameplay.IsAnimating;
         public bool IsPrompting => GamePrompts.IsPrompting || OverlayPrompts.IsPrompting;
+        public bool IsOverlayPrompting => OverlayPrompts.IsPrompting;
 
         private TransitionSequenceLayer Transitions;
         private PromptSequenceLayer OverlayPrompts;
@@ -23,16 +24,16 @@ namespace LycheeLabs.FruityInterface {
         private EventSequenceLayer BlockingGameplay;
         private GameplaySequenceLayer Gameplay;
 
-        private InterfaceNode currentPromptNode;
-
         public TwoTierMenuSequencer(UICanvas gamePromptCanvas, UICanvas overlayPromptCanvas) {
             // Instantiate layers from bottom to top
             Gameplay = AddGameplayLayer();
-            Transitions = AddTransitionLayer();
             BlockingGameplay = AddEventLayer();
             GamePrompts = AddPromptLayer(gamePromptCanvas);
             OverlayPrompts = AddPromptLayer(overlayPromptCanvas);
+            Transitions = AddTransitionLayer();
         }
+
+        public bool PauseAllGameplay => OverlayPrompts.IsPrompting;
 
         public void Transition(TransitionEvent newEvent) {
             Transitions.Transition(newEvent);
@@ -44,6 +45,10 @@ namespace LycheeLabs.FruityInterface {
             } else {
                 GamePrompts.Prompt(newPrompt);
             }
+        }
+
+        public void CloseOverlayPrompt () {
+            OverlayPrompts.Close();
         }
 
         public void Queue(BlockingEvent newEvent) {

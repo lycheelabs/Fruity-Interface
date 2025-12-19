@@ -13,6 +13,7 @@ namespace LycheeLabs.FruityInterface {
         public void Start(GameplaySequenceLayer layer) {
             Layer = layer;
             Activate();
+            IsActivated = true;
         }
 
         protected abstract void Activate();

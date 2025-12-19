@@ -5,7 +5,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary>
     /// Implementation of a UIButton that passes behaviour to a ClickButtonEffect component.
-    /// This class makes it easier to create simple button types because they can share prefabs. 
+    /// This class makes it easier to create simple button types because they can share prefabs 
     /// (For example, using the ImageButton and TextButton subclasses.)
     /// More complex buttons should implement UIButton directly.
     /// </summary>

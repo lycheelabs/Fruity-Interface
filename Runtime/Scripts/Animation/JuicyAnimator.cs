@@ -53,7 +53,8 @@ namespace LycheeLabs.FruityInterface {
         public bool IsIdle => isIdle;
 
         /// <summary> Affects the deltaTime of all my animations. </summary>
-        public float timeScaling = 1f;
+        public float speedScaling = 1f;
+        public bool useUnscaledTime = false;
 
         [SerializeField] private Vector3 basePosition;
         [SerializeField] private Vector3 baseRotation;
@@ -110,6 +111,7 @@ namespace LycheeLabs.FruityInterface {
 
             if (isIdle) return;
 
+            var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             var transformData = new TransformData {
                 position = animatePosition,
                 rotation = animateRotation,
@@ -118,7 +120,7 @@ namespace LycheeLabs.FruityInterface {
 
             // Base animation
             if (BaseAnimation != null) {
-                BaseAnimation.Update(ref transformData, timeScaling);
+                BaseAnimation.Update(ref transformData, deltaTime * speedScaling);
                 if (BaseAnimation.ReadyToFinish) {
                     BaseAnimation = null;
                 }
@@ -127,7 +129,7 @@ namespace LycheeLabs.FruityInterface {
             // Layered animations
             for (int i = LayeredAnimations.Count - 1; i >= 0; i--) {
                 var animation = LayeredAnimations[i];
-                animation.Update(ref transformData, timeScaling);
+                animation.Update(ref transformData, deltaTime * speedScaling);
                 if (animation.ReadyToFinish) {
                     LayeredAnimations.RemoveAt(i);
                 }

@@ -11,8 +11,11 @@ namespace LycheeLabs.FruityInterface.Flow {
 
         private Color activeColor;
 
-        public bool HasFullyEntered => entering != null && entering.EntryIsComplete;
+        public bool HasFullyEntered => entering != null && entering.EntryIsComplete && !PreventCompleteExit;
         public bool HasFullyExited => entering == null && exiting == null;
+
+        public bool PreventStartEntry;
+        public bool PreventCompleteExit;
 
         private void Update() {
 

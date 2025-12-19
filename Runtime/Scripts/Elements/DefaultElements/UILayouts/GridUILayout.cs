@@ -3,7 +3,7 @@
 namespace LycheeLabs.FruityInterface.Elements {
 
     [ExecuteAlways]
-    public class GridUILayout : UILayout {
+    public class GridUILayout : ContainerNode {
 
         public int MaxColumns = 5;
         public Vector2 GridCellSize = new Vector2(100, 100);

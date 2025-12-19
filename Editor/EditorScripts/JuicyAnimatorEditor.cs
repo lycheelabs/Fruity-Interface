@@ -8,13 +8,17 @@ namespace LycheeLabs.FruityInterface.Animation {
         SerializedProperty BasePosition;
         SerializedProperty BaseRotation;
         SerializedProperty BaseScale;
+
+        SerializedProperty SpeedScaling;
         SerializedProperty TimeScaling;
 
         void OnEnable() {
             BasePosition = serializedObject.FindProperty("basePosition");
             BaseRotation = serializedObject.FindProperty("baseRotation");
             BaseScale = serializedObject.FindProperty("baseScale");
-            TimeScaling = serializedObject.FindProperty("timeScaling");
+
+            SpeedScaling = serializedObject.FindProperty("speedScaling");
+            TimeScaling = serializedObject.FindProperty("useUnscaledTime");
         }
 
         public override void OnInspectorGUI() {
@@ -22,6 +26,8 @@ namespace LycheeLabs.FruityInterface.Animation {
             EditorGUILayout.PropertyField(BasePosition);
             EditorGUILayout.PropertyField(BaseRotation);
             EditorGUILayout.PropertyField(BaseScale);
+
+            EditorGUILayout.PropertyField(SpeedScaling);
             EditorGUILayout.PropertyField(TimeScaling);
             serializedObject.ApplyModifiedProperties();
         }

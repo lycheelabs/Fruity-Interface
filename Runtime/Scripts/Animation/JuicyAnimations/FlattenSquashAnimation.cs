@@ -11,8 +11,8 @@ namespace LycheeLabs.FruityInterface.Animation {
             this.speedScale = Mathf.Max(speedScale, 0.1f) * 3f;
         }
 
-        public override void Update(ref TransformData transform, float timeScaling) {
-            value = value.MoveTowards(0, speedScale * timeScaling);
+        public override void Update(ref TransformData transform, float deltaTime) {
+            value = value.MoveTowardsDelta(0, speedScale * deltaTime);
             var tweened = Mathf.Sin(Tweens.EaseOutQuad(1 - value) * Mathf.PI);
 
             var squashScale = new Vector3(1, 1 - tweened * 0.9f, 1);

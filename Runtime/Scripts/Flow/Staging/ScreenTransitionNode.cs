@@ -8,8 +8,8 @@ namespace LycheeLabs.FruityInterface.Flow {
 
         public float Tween => entryTween;
         public bool IsEntering => currentMode == Mode.ENTER;
-        public bool EntryIsComplete => IsEntering && entryTween >= 1;
-        public bool ExitIsComplete => !IsEntering && entryTween <= 0;
+        public bool EntryIsComplete => IsEntering && entryTween >= 1 && !BlockingCompletion;
+        public bool ExitIsComplete => !IsEntering && entryTween <= 0 && !BlockingCompletion;
 
         [SerializeField] private Mode currentMode;
         [SerializeField] [Range(0, 1)] private float entryTween;
@@ -47,7 +47,7 @@ namespace LycheeLabs.FruityInterface.Flow {
 
 
         public void LateUpdate() {
-            entryTween = entryTween.MoveTowards(IsEntering, TransitionSpeed);
+            entryTween = entryTween.MoveTowardsUnscaled(IsEntering, TransitionSpeed);
             Refresh(IsEntering, entryTween);
         }
 
@@ -55,6 +55,8 @@ namespace LycheeLabs.FruityInterface.Flow {
         protected abstract void Configure(ScreenTransitionConfig config);
         protected abstract void Refresh(bool isEntering, float tween);
         public abstract void SetColor(Color color);
+
+        protected virtual bool BlockingCompletion => false;
 
     }
 

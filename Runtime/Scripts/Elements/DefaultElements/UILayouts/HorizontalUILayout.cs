@@ -3,14 +3,17 @@
 namespace LycheeLabs.FruityInterface.Elements {
 
     [ExecuteAlways]
-    public class HorizontalUILayout : UILayout {
+    public class HorizontalUILayout : ContainerNode {
 
         protected override void Layout () {
             float containedWidth = 0;
+            float containedHeight = 0;
+
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
                 if (!node.gameObject.activeSelf) { continue; }
                 containedWidth += node.TotalWidthPixels;
+                containedHeight = Mathf.Max(containedHeight, node.TotalHeightPixels);
             }
 
             float x = 0;
@@ -25,7 +28,10 @@ namespace LycheeLabs.FruityInterface.Elements {
                 x += newWidth;
             }
 
-            LayoutSizePixels = new Vector2(containedWidth, LayoutSizePixels.y);
+            containedWidth = Mathf.Max(containedWidth, minimumSize.x);
+            containedHeight = Mathf.Max(containedHeight, minimumSize.y);
+
+            LayoutSizePixels = new Vector2(containedWidth, containedHeight);
             rectTransform.sizeDelta = TotalSizePixels;
         }
 

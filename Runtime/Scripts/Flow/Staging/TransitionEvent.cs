@@ -11,9 +11,12 @@ namespace LycheeLabs.FruityInterface.Flow {
         private ScreenTransition screenIn;
         private ScreenTransition screenOut;
 
-        private bool hasStarted;
+        private bool triggerEntry;
         private bool hasTransitioned;
+        private bool triggerExit;
         private Color color;
+
+        private int delayEntryFrames;
 
         public TransitionEvent(StageTransition newStage) {
             this.newStage = newStage;
@@ -49,19 +52,26 @@ namespace LycheeLabs.FruityInterface.Flow {
         }
 
         public void Update () {
-            if (!hasStarted) {
-                hasStarted = true;
+            if (!triggerEntry) {
+                triggerEntry = true;
                 screenIn.Controller.Enter(screenIn.Transition, screenIn.Config, color);
             }
-            if (hasStarted && !hasTransitioned && screenIn.Controller.HasFullyEntered) {
+            if (triggerEntry && !hasTransitioned && screenIn.Controller.HasFullyEntered) {
                 hasTransitioned = true;
                 Callbacks?.OnTransitionApplied();
                 newStage.Apply();
-                screenIn.Controller.Exit(screenOut.Transition, screenOut.Config);
+            }
+            if (hasTransitioned && !triggerExit && !screenOut.Controller.PreventStartEntry) {
+                if (delayEntryFrames > 3) { // Short buffer to ease loading stutter
+                    triggerExit = true;
+                    screenIn.Controller.Exit(screenOut.Transition, screenOut.Config);
+                }
+                delayEntryFrames++;
             }
         }
 
-        public bool IsComplete => hasTransitioned;
+        public bool IsExiting => hasTransitioned;
+        public bool IsComplete => triggerExit;
 
     }
 
