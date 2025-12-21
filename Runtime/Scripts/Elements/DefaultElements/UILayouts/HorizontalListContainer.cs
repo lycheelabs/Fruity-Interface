@@ -3,7 +3,7 @@
 namespace LycheeLabs.FruityInterface.Elements {
 
     [ExecuteAlways]
-    public class VerticalUILayout : ContainerNode {
+    public class HorizontalListContainer : ContainerNode {
 
         protected override void Layout () {
             float containedWidth = 0;
@@ -12,31 +12,26 @@ namespace LycheeLabs.FruityInterface.Elements {
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
                 if (!node.gameObject.activeSelf) { continue; }
-                containedHeight += node.TotalHeightPixels;
-                containedWidth = Mathf.Max(containedWidth, node.TotalWidthPixels);
+                containedWidth += node.TotalWidthPixels;
+                containedHeight = Mathf.Max(containedHeight, node.TotalHeightPixels);
             }
 
-            float y = 0;
+            float x = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
                 if (!node.gameObject.activeSelf) { continue; }
 
-                var newHeight = node.TotalHeightPixels;
-                var shift = y - containedHeight / 2f + newHeight / 2f;
-                var newPosition = new Vector3(0, -shift);
+                var newWidth = node.TotalWidthPixels;
+                var shift = x - containedWidth / 2f + newWidth / 2f;
+                var newPosition = new Vector3(shift, 0);
                 node.rectTransform.SetAnchorAndPosition(newPosition);
-                y += newHeight;
+                x += newWidth;
             }
 
             containedWidth = Mathf.Max(containedWidth, minimumSize.x);
             containedHeight = Mathf.Max(containedHeight, minimumSize.y);
 
             LayoutSizePixels = new Vector2(containedWidth, containedHeight);
-            rectTransform.sizeDelta = TotalSizePixels;
-        }
-
-        public void SetWidth (float newWidth) {
-            LayoutSizePixels = new Vector2(newWidth, LayoutSizePixels.y);
             rectTransform.sizeDelta = TotalSizePixels;
         }
 

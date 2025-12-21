@@ -8,9 +8,9 @@ namespace LycheeLabs.FruityInterface.Elements {
         public bool PrefabFoldout;
 
         public override void OnInspectorGUI () {
+            DrawConfigProperties(serializedObject);
             InterfaceNodeDrawer.DrawNodeTreeProperties(serializedObject);
             InterfaceNodeDrawer.DrawLayoutProperties(serializedObject, restrictSize: true);
-            DrawConfigProperties(serializedObject);
             DrawPrefabProperties(serializedObject, ref PrefabFoldout);
         }
 

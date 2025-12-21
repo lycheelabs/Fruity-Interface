@@ -2,7 +2,7 @@ using UnityEditor;
 
 namespace LycheeLabs.FruityInterface {
 
-    [CustomEditor(typeof(LayoutNode))]
+    [CustomEditor(typeof(InterfaceNode))]
     public class InterfaceNodeEditor : Editor {
 
         public override void OnInspectorGUI () {

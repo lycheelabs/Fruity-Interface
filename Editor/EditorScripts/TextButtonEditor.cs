@@ -10,10 +10,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         public override void OnInspectorGUI () {
             var driver = serializedObject.FindProperty("layoutDriver").objectReferenceValue;
 
+            DrawConfigProperties(serializedObject);
             InterfaceNodeDrawer.DrawNodeTreeProperties(serializedObject);
             InterfaceNodeDrawer.DrawLayoutProperties(serializedObject, 
                 restrictSize: true, restrictPadding: driver != null);
-            DrawConfigProperties(serializedObject);
             DrawPrefabProperties(serializedObject, ref PrefabFoldout);
         }
 

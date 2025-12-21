@@ -8,10 +8,9 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// <summary>
     /// This box adjusts its rect size and collider size to fit the ContentsNode's size (with padding).
     /// </summary>
-    public class UIBox : LayoutNode, ClickTarget {
+    public class PromptContainerNode : ContainerNode, ClickTarget {
 
         public LayoutNode ContentsNode;
-        public float Padding = 12f;
 
         private BoxCollider _boxCollider;
         public BoxCollider boxCollider {
@@ -21,19 +20,24 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
-        public void Update() {
+        public override bool InputIsDisabled => inputDisabled;
+        private bool inputDisabled;
+
+        public void LateUpdate () {
+            Layout();
+        }
+
+        protected override void Layout () {
             if (ContentsNode != null) {
-                var padSize = Padding + 5;
-                var size = ContentsNode.TotalSizePixels + new Vector2(padSize, padSize);
-                if (rectTransform != null) rectTransform.sizeDelta = size;
-                if (boxCollider != null) boxCollider.size = new Vector3(size.x, size.y, 1);
+                LayoutSizePixels = ContentsNode.TotalSizePixels;
+                var paddedSize = TotalSizePixels;
+                if (rectTransform != null) rectTransform.sizeDelta = paddedSize;
+                if (boxCollider != null) boxCollider.size = new Vector3(paddedSize.x, paddedSize.y, 1);
             }
         }
 
-        public override bool InputIsDisabled => disabled;
-        private bool disabled = false;
         public void SetInputDisabled(bool disabled) {
-            this.disabled = disabled;
+            inputDisabled = disabled;
         }
 
         public void MouseHovering(bool firstFrame, HighlightParams highlightParams) {}
