@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
+
     public abstract class ButtonEffect : MonoBehaviour {
 
         public abstract void MouseOver();
@@ -14,13 +15,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         protected abstract void UpdateLayout();
-
-    }
-
-    public abstract class ClickButtonEffect : ButtonEffect {
-
-        public abstract void Activate(MouseButton clickButton);
-        public virtual bool TryUnclick(MouseButton clickButton) => true;
 
     }
 

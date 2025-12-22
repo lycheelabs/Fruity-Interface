@@ -29,9 +29,9 @@ namespace LycheeLabs.FruityInterface {
         private static readonly GameObject letterbox = Load(ROOT_FOLDER, "UILetterbox");
         private static readonly GameObject fullscreenButton = Load(ROOT_FOLDER, "UIFullscreenButton");
         private static readonly GameObject rect = Load(ROOT_FOLDER, "UIRect");
-        private static readonly GameObject imageButton = Load(ROOT_FOLDER, "ImageButton");
-        private static readonly GameObject textButton = Load(ROOT_FOLDER, "TextButton");
-        private static readonly GameObject toggleButton = Load(ROOT_FOLDER, "ToggleButton");
+        private static readonly GameObject imageButton = Load(ROOT_FOLDER, "DefaultImageButton");
+        private static readonly GameObject textButton = Load(ROOT_FOLDER, "DefaultImageButton");
+        private static readonly GameObject toggleButton = Load(ROOT_FOLDER, "DefaultImageButton");
         private static readonly GameObject verticalLayout = Load(ROOT_FOLDER, "VerticalLayout");
         private static readonly GameObject horizontalLayout = Load(ROOT_FOLDER, "HorizontalLayout");
 
