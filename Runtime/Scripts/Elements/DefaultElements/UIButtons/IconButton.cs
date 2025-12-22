@@ -4,9 +4,9 @@ using UnityEngine.UI;
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary>
-    /// Implementation of a ClickButton using the ImageButton prefab.
+    /// Implementation of a ClickButton using the IconButton prefab.
     /// </summary>
-    public class ImageButton : ClickButton {
+    public class IconButton : ClickButton {
 
         public Image ButtonImage;
 
@@ -23,36 +23,34 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private float colliderPadding = 10;
 
         private void OnValidate () {
-            RefreshLayout();
+            RefreshLayoutDeferred();
+        }
+
+        private void OnEnable () {
+            RefreshLayoutDeferred();
         }
 
         public void ConfigureSprite(Sprite sprite) {
             this.sprite = sprite;
-            RefreshLayout();
+            ButtonImage.sprite = sprite;
+            RefreshLayoutDeferred();
         }
 
         public void ConfigureSize(float size) {
             this.size = new Vector2(size, size);
-            RefreshLayout();
+            RefreshLayoutDeferred();
         }
 
         public void ConfigureSize(Vector2 size) {
             this.size = size;
-            RefreshLayout();
+            RefreshLayoutDeferred();
         }
 
-        public void RefreshLayout () {
-            ButtonImage.sprite = sprite;
-            ApplySizeDeferred();
-        }
-
-        protected override void ApplySize () {
-            if (this != null) {
-                rectTransform.sizeDelta = size;
-                ButtonImage.rectTransform.sizeDelta = size;
-                LayoutSizePixels = size;
-                BoxCollider.size = size + new Vector2(colliderPadding, colliderPadding);
-            }
+        protected override void RefreshLayout () {
+            rectTransform.sizeDelta = size;
+            ButtonImage.rectTransform.sizeDelta = size;
+            LayoutSizePixels = size;
+            BoxCollider.size = size + new Vector2(colliderPadding, colliderPadding);
         }
 
     }

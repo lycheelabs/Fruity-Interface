@@ -9,21 +9,22 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public override void OnInspectorGUI () {
             var driver = serializedObject.FindProperty("layoutDriver").objectReferenceValue;
+            var isDriven = (driver as ButtonLayoutStyle)?.isActiveAndEnabled == true;
 
-            DrawConfigProperties(serializedObject);
+            DrawConfigProperties(serializedObject, isDriven);
             InterfaceNodeDrawer.DrawNodeTreeProperties(serializedObject);
             InterfaceNodeDrawer.DrawLayoutProperties(serializedObject, 
-                restrictSize: true, restrictPadding: driver != null);
+                restrictSize: true, restrictPadding: isDriven);
             DrawPrefabProperties(serializedObject, ref PrefabFoldout);
         }
 
-        public static void DrawConfigProperties (SerializedObject so) {
+        public static void DrawConfigProperties (SerializedObject so, bool isDriven) {
             so.Update();
             EditorGUILayout.LabelField("Config", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
             EditorGUILayout.PropertyField(so.FindProperty("layoutDriver"));
-            var disabled = so.FindProperty("layoutDriver").objectReferenceValue != null;
+            var disabled = isDriven;
 
             EditorGUI.BeginDisabledGroup(disabled);
             EditorGUILayout.PropertyField(so.FindProperty("maxWidth"));

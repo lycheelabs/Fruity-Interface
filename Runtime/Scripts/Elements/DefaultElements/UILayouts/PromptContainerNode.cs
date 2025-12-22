@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
@@ -23,19 +24,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         public override bool InputIsDisabled => inputDisabled;
         private bool inputDisabled;
 
-        public void LateUpdate () {
-            Layout();
-        }
-
-        protected override void Layout () {
-            if (ContentsNode != null) {
-                LayoutSizePixels = ContentsNode.TotalSizePixels;
-                var paddedSize = TotalSizePixels;
-                if (rectTransform != null) rectTransform.sizeDelta = paddedSize;
-                if (boxCollider != null) boxCollider.size = new Vector3(paddedSize.x, paddedSize.y, 1);
-            }
-        }
-
         public void SetInputDisabled(bool disabled) {
             inputDisabled = disabled;
         }
@@ -43,6 +31,18 @@ namespace LycheeLabs.FruityInterface.Elements {
         public void MouseHovering(bool firstFrame, HighlightParams highlightParams) {}
         public void MouseHoverEnd() { }
         public void MouseClick(ClickParams clickParams) { }
+
+        public void LateUpdate () {
+            RefreshLayoutDeferred();
+        }
+
+        protected override void RefreshLayout () {
+            LayoutSizePixels = ContentsNode.TotalSizePixels;
+            var paddedSize = TotalSizePixels;
+            if (rectTransform != null) rectTransform.sizeDelta = paddedSize;
+            if (boxCollider != null) boxCollider.size = new Vector3(paddedSize.x, paddedSize.y, 1);
+        }
+
 
     }
 

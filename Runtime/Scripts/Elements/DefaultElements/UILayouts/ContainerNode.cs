@@ -1,15 +1,34 @@
 using System.Collections.Generic;
+
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
+    [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
     public abstract class ContainerNode : LayoutNode {
         
         public readonly List<LayoutNode> ChildNodes = new List<LayoutNode>();
         public int ChildCount => ChildNodes.Count;
+        [SerializeField] private int prevChildCount = -1;
 
         public Vector2 minimumSize = new Vector2(100, 100);
+
+        private void LateUpdate () {
+            RefreshChildren();
+        }
+
+        private void RefreshChildren () {
+            if (transform.childCount != prevChildCount || true) {
+                prevChildCount = transform.childCount;
+                RebuildChildNodes();
+            }
+        }
+
+        protected override void OnNewChildAttached () {
+            RebuildChildNodes();
+        }
 
         public void RebuildChildNodes () {
             ChildNodes.Clear();
@@ -20,20 +39,10 @@ namespace LycheeLabs.FruityInterface.Elements {
                     ChildNodes.Add(childNode);
                 }
             }
+            RefreshLayoutDeferred();
         }
 
-        private void OnEnable () {
-            RebuildChildNodes();
-        }
-
-        private void Update () {
-            if (!Application.isPlaying) {
-                RebuildChildNodes();
-            }
-            Layout();
-        }
-
-        protected abstract void Layout ();
+        protected abstract override void RefreshLayout ();
 
     }
 

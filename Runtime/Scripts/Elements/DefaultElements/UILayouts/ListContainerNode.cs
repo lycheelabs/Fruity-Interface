@@ -2,33 +2,27 @@
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [ExecuteAlways]
     public class ListContainerNode : ContainerNode {
 
         public enum Orientations { Vertical, Horizontal }
 
         public Orientations Orientation;
 
-        public void LateUpdate () {
-            Layout();
-        }
-
-        protected override void Layout () {
+        protected override void RefreshLayout () {
             if (Orientation == Orientations.Vertical) {
-                VerticalLayout();
+                LayoutVertical();
             } else {
-                HorizontalLayout();
+                LayoutHorizontal();
             }
-            rectTransform.sizeDelta = LayoutSizePixels;
         }
 
-        private void VerticalLayout () {
+        private void LayoutVertical () {
             float containedWidth = 0;
             float containedHeight = 0;
 
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
-                if (!node.gameObject.activeSelf) { continue; }
+                if (!node || !node.gameObject.activeSelf) { continue; }
                 containedHeight += node.TotalHeightPixels;
                 containedWidth = Mathf.Max(containedWidth, node.TotalWidthPixels);
             }
@@ -36,7 +30,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             float y = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
-                if (!node.gameObject.activeSelf) { continue; }
+                if (!node || !node.gameObject.activeSelf) { continue; }
 
                 var newHeight = node.TotalHeightPixels;
                 var shift = y - containedHeight / 2f + newHeight / 2f;
@@ -52,7 +46,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             rectTransform.sizeDelta = TotalSizePixels;
         }
 
-        private void HorizontalLayout () {
+        private void LayoutHorizontal () {
             float containedWidth = 0;
             float containedHeight = 0;
 

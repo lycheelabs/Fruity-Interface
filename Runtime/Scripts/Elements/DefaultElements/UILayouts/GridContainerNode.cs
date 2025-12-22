@@ -3,12 +3,12 @@
 namespace LycheeLabs.FruityInterface.Elements {
 
     [ExecuteAlways]
-    public class GridUILayout : ContainerNode {
+    public class GridContainerNode : ContainerNode {
 
         public int MaxColumns = 5;
         public Vector2 GridCellSize = new Vector2(100, 100);
 
-        protected override void Layout() {
+        protected override void RefreshLayout() {
             var numItems = ChildNodes.Count;
             var numColumns = Mathf.Max(1, Mathf.Min(numItems, MaxColumns));
             var numRows = Mathf.Max(1, Mathf.CeilToInt(numItems / (float)MaxColumns));

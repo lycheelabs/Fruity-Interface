@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -88,33 +89,31 @@ namespace LycheeLabs.FruityInterface {
             return target.NodeIsAParent(this);
         }
 
+        protected void AttachTo (InterfaceNode target, Transform transform) {
+            if (target != null && !target.ParentCausesHierarchyLoop(this)) {
+                target.transform.SetParent(transform, false);
+                target.InputParent = this;
+                target.OnNewChildAttached();
+            }
+        }
+
         public void Attach (InterfaceNode target) {
             if (target != null && !target.ParentCausesHierarchyLoop(this)) {
                 target.transform.SetParent(AttachTarget.transform, false);
                 target.InputParent = this;
+                OnNewChildAttached();
             }
         }
 
         public void Attach(GameObject target) {
             if (target != null) {
                 target.transform.SetParent(AttachTarget.transform, false);
-            }
-        }
-
-        protected void AttachTo(InterfaceNode target, Transform transform) {
-            if (target != null && !target.ParentCausesHierarchyLoop(this)) {
-                target.transform.SetParent(transform, false);
-                target.InputParent = this;
-            }
-        }
-
-        protected void AttachTo(GameObject target, Transform transform) {
-            if (target != null) {
-                target.transform.SetParent(transform, false);
+                OnNewChildAttached();
             }
         }
 
         protected virtual Transform AttachTarget => transform;
+        protected virtual void OnNewChildAttached () { }
 
     }
 

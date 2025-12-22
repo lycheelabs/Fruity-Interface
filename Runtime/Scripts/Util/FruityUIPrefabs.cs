@@ -20,7 +20,6 @@ namespace LycheeLabs.FruityInterface {
         // ----------------------------------------------------------------
 
         private const string ROOT_FOLDER = "";
-        private const string BUTTON_FOLDER = "Buttons/";
 
         // ----------------------------------------------------------------
 
@@ -28,12 +27,6 @@ namespace LycheeLabs.FruityInterface {
         private static readonly GameObject shadow = Load(ROOT_FOLDER, "UIShadow");
         private static readonly GameObject letterbox = Load(ROOT_FOLDER, "UILetterbox");
         private static readonly GameObject fullscreenButton = Load(ROOT_FOLDER, "UIFullscreenButton");
-        private static readonly GameObject rect = Load(ROOT_FOLDER, "UIRect");
-        private static readonly GameObject imageButton = Load(ROOT_FOLDER, "DefaultImageButton");
-        private static readonly GameObject textButton = Load(ROOT_FOLDER, "DefaultImageButton");
-        private static readonly GameObject toggleButton = Load(ROOT_FOLDER, "DefaultImageButton");
-        private static readonly GameObject verticalLayout = Load(ROOT_FOLDER, "VerticalLayout");
-        private static readonly GameObject horizontalLayout = Load(ROOT_FOLDER, "HorizontalLayout");
 
         public static GameObject NewUICanvas () {
             return Object.Instantiate(canvas);
@@ -49,30 +42,6 @@ namespace LycheeLabs.FruityInterface {
 
         public static GameObject NewUIFullscreenButton () {
             return Object.Instantiate(fullscreenButton);
-        }
-
-        public static GameObject NewUIRect () {
-            return Object.Instantiate(rect);
-        }
-
-        public static GameObject NewImageButton () {
-            return Object.Instantiate(imageButton);
-        }
-
-        public static GameObject NewTextButton () {
-            return Object.Instantiate(textButton);
-        }
-
-        public static GameObject NewToggleButton() {
-            return Object.Instantiate(toggleButton);
-        }
-
-        public static GameObject NewVerticalLayout () {
-            return Object.Instantiate(verticalLayout);
-        }
-
-        public static GameObject NewHorizontalLayout () {
-            return Object.Instantiate(horizontalLayout);
         }
 
     }

@@ -1,10 +1,10 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface {
 
     [RequireComponent(typeof(RectTransform))]
-    public class LayoutNode : InterfaceNode {
+    public class LayoutNode : InterfaceNode, ILayoutElement, ILayoutController {
 
         public Vector2 LayoutSizePixels;
         public Vector2 LayoutPaddingPixels;
@@ -14,34 +14,36 @@ namespace LycheeLabs.FruityInterface {
         public float TotalHeightPixels => LayoutSizePixels.y + LayoutPaddingPixels.y;
 
         private RectTransform _rectTransform;
-        public RectTransform rectTransform {
-            get {
-                if (this == null) return null;
-                _rectTransform = _rectTransform ?? GetComponent<RectTransform>();
-                return _rectTransform;
-            }
+        public RectTransform rectTransform => _rectTransform ??= GetComponent<RectTransform>();
+        
+        private void OnValidate () {
+            if (!rectTransform) return;
+            RefreshLayoutDeferred();
         }
 
-        /// <summary>
-        /// Can be called safely during OnValidate to apply size changes to the prefab.
-        /// </summary>
-        protected void ApplySizeDeferred () {
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) {
-                EditorApplication.delayCall += ApplySize;
-            } else {
-                ApplySize();
-            }
-#else
-            ApplySize();
-#endif
+        protected void RefreshLayoutDeferred () {
+            LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
         }
 
-        protected virtual void ApplySize () {
-            if (this != null) {
-                rectTransform.sizeDelta = LayoutSizePixels;
-            }
-        }
+        // ILayoutElement API
+        public float minWidth => TotalSizePixels.x;
+        public float preferredWidth => TotalSizePixels.x;
+        public float flexibleWidth => -1;
+
+        public float minHeight => TotalSizePixels.y;
+        public float preferredHeight => TotalSizePixels.y;
+        public float flexibleHeight => -1;
+
+        public int layoutPriority => 1;
+
+        // Obsolete API
+        public void CalculateLayoutInputHorizontal () { }
+        public void CalculateLayoutInputVertical () { }
+
+        public void SetLayoutHorizontal () { RefreshLayout(); }
+        public void SetLayoutVertical () { RefreshLayout(); }
+
+        protected virtual void RefreshLayout () { }
 
     }
 

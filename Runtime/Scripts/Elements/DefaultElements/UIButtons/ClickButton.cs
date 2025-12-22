@@ -9,7 +9,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// (For example, using the ImageButton and TextButton subclasses.)
     /// More complex buttons should implement UIButton directly.
     /// </summary>
-    public class ClickButton : InterfaceButton, ClickTarget, EnteringElement {
+    public class ClickButton : ButtonNode, ClickTarget, EnteringElement {
 
         private ClickButtonEffect _effect;
         public ClickButtonEffect TryGetEffect {

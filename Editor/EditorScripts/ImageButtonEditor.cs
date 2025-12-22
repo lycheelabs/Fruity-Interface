@@ -2,7 +2,7 @@ using UnityEditor;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [CustomEditor(typeof(ImageButton))]
+    [CustomEditor(typeof(IconButton))]
     public class ImageButtonEditor : Editor {
 
         public bool PrefabFoldout;

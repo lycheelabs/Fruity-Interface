@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary> Abstract implementation of a simple button. </summary>
-    public abstract class InterfaceButton : LayoutNode, ClickTarget {
+    public abstract class ButtonNode : LayoutNode, ClickTarget {
 
         public float BaseScale = 1f;
         public float AnimationScaling = 1f;

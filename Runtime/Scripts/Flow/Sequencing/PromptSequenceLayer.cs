@@ -1,4 +1,6 @@
 ﻿using LycheeLabs.FruityInterface.Elements;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -18,10 +20,13 @@ namespace LycheeLabs.FruityInterface {
 
         private UIPrompt ActivePrompt;
         private UIPrompt.PromptInstantiator QueuedPrompt;
+        private UIPrompt ReopenPrompt;
+        private List<UIPrompt> NavigationStack;
 
         public PromptSequenceLayer (EventSequencer sequencer, UICanvas canvas) {
             Sequencer = sequencer;
             Canvas = canvas;
+            NavigationStack = new List<UIPrompt>();
         }
 
         public void Prompt(UIPrompt.PromptInstantiator newPrompt) {
@@ -31,7 +36,18 @@ namespace LycheeLabs.FruityInterface {
             }
 
             QueuedPrompt = newPrompt;
+            ReopenPrompt = null;
             Sequencer.RefreshLayers();
+        }
+
+        public void GoBack () {
+            if (ActivePrompt != null) {
+                ActivePrompt.Close();
+                if (NavigationStack.Count > 0) {
+                    ReopenPrompt = NavigationStack[NavigationStack.Count - 1];
+                    NavigationStack.RemoveAt(NavigationStack.Count - 1);
+                }
+            }
         }
 
         public void Update() {
@@ -40,11 +56,24 @@ namespace LycheeLabs.FruityInterface {
             if (ActivePrompt != null) {
                 ActivePrompt.UpdateFlow(IsBlockedByLayersAbove);
 
-                if (QueuedPrompt != null) {
+                if (QueuedPrompt != null && !ActivePrompt.IsClosing) {
                     ActivePrompt.Close();
                 }
-                if (ActivePrompt.HasCompleted) {
+
+                if (ActivePrompt.HasPaused) {
+                    // Pause this prompt
+                    NavigationStack.Add(ActivePrompt);
                     ActivePrompt = null;
+                }
+                else if (ActivePrompt.HasCompleted) {
+                    ActivePrompt = null;
+                    if (ReopenPrompt != null) {
+                        // Reopen paused prompt
+                        ActivePrompt = ReopenPrompt;
+                        ActivePrompt.Reopen();
+                    } else { 
+                        NavigationStack.Clear();
+                    }
                 }
             }
 
@@ -66,6 +95,8 @@ namespace LycheeLabs.FruityInterface {
                 ActivePrompt.Close();
             }
             QueuedPrompt = null;
+            ReopenPrompt = null;
+            NavigationStack.Clear();
         }
 
         public void Clear() {
@@ -74,6 +105,8 @@ namespace LycheeLabs.FruityInterface {
                 ActivePrompt = null;
             }
             QueuedPrompt = null;
+            ReopenPrompt = null;
+            NavigationStack.Clear();
         }
 
     }
