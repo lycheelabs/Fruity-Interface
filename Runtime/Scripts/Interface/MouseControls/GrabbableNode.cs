@@ -32,7 +32,9 @@ namespace LycheeLabs.FruityInterface {
         public void MouseDragging (bool isFirstFrame, DragParams dragParams) { }
         public void CompleteMouseDrag(DragParams dragParams) { }
         public void CancelMouseDrag() { }
-        public DragTarget.DragMode GetDragMode(MouseButton dragButton) => DragTarget.DragMode.Hold;
+        
+        // This implements DragTarget.GetDragMode - returns DragOnly as default stub
+        public virtual DragTarget.DragMode GetDragMode(MouseButton dragButton) => DragTarget.DragMode.DragOnly;
 
         // The grabber will call these methods back
         public abstract void OnHovering (bool isFirstFrame);
@@ -45,8 +47,11 @@ namespace LycheeLabs.FruityInterface {
 
         // These configuration properties can be overridden if desired
         public virtual bool GrabbingIsEnabled => InputEnabledInHierarchy;
-        public virtual GrabBehaviour.Mode GetMode(MouseButton mouseButton) =>
-            (mouseButton == MouseButton.Left) ? GrabBehaviour.Mode.GRAB : GrabBehaviour.Mode.DISABLED;
+        
+        // This implements GrabBehaviour.GetDragMode - override this to change behavior per button
+        DragTarget.DragMode GrabBehaviour.GetDragMode(MouseButton mouseButton) =>
+            (mouseButton == MouseButton.Left) ? DragTarget.DragMode.DragOrPickUp : DragTarget.DragMode.Disabled;
+            
         public virtual bool CanMultiPlace(MouseTarget target) => false;
         public virtual bool CanPassGrabTo(GrabTarget clickDragger) => false;
 

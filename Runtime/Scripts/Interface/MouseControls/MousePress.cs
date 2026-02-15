@@ -7,7 +7,7 @@ namespace LycheeLabs.FruityInterface  {
         public bool pressIsClick;
         public bool pressIsDrag;
 
-        public bool isLatchedDrag;
+        public bool isPickUpDrag;
         public DragTarget.DragMode dragMode;
         public int pressStartFrame;
         
@@ -22,7 +22,7 @@ namespace LycheeLabs.FruityInterface  {
             pressIsClick = true;
             button = pressedButton;
             dragMode = DragTarget.DragMode.Disabled;
-            isLatchedDrag = false;
+            isPickUpDrag = false;
             pressStartFrame = Time.frameCount;
         }
 
@@ -32,7 +32,8 @@ namespace LycheeLabs.FruityInterface  {
             pressIsDrag = true;
             button = pressedButton;
             dragMode = mode;
-            isLatchedDrag = (mode == DragTarget.DragMode.Grab);
+            // Only PickUpOnly is truly latched - DragOrPickUp completes on mouse-up (handled by DragTarget)
+            isPickUpDrag = (mode == DragTarget.DragMode.PickUpOnly);
             pressStartFrame = Time.frameCount;
         }
 
@@ -47,7 +48,7 @@ namespace LycheeLabs.FruityInterface  {
             pressIsDrag = false;
             button = MouseButton.None;
             dragMode = DragTarget.DragMode.Disabled;
-            isLatchedDrag = false;
+            isPickUpDrag = false;
             pressStartFrame = 0;
         }
 

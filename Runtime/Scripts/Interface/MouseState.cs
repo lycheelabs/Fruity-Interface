@@ -125,8 +125,9 @@ namespace LycheeLabs.FruityInterface {
                     dragMode = dragTarget.GetDragMode(newPressedButton);
                 }
 
-                // Grab mode skips click handling (grab takes over completely)
-                var allowClick = (dragMode != DragTarget.DragMode.Grab);
+                // Click events are only sent when drag mode is Disabled or DragOnly
+                // PickUpOnly and DragOrPickUp modes use clicking to start pickup, not to trigger click events
+                var allowClick = (dragMode == DragTarget.DragMode.Disabled || dragMode == DragTarget.DragMode.DragOnly);
 
                 // Start a click-press (if applicable)
                 if (clickTarget != null && allowClick) {
@@ -169,8 +170,8 @@ namespace LycheeLabs.FruityInterface {
                     dragPosition, Input.mousePosition, press.button);
             }
 
-            // Latched drag: complete on second click of same button (not same frame)
-            if (press.pressIsDrag && press.isLatchedDrag) {
+            // PickUp drag: complete on second click of same button (not same frame)
+            if (press.pressIsDrag && press.isPickUpDrag) {
                 if (Input.GetMouseButtonDown((int)press.button) && press.pressStartFrame != Time.frameCount) {
                     QueueDragCompleteEvent(dragParams);
                     press.Clear();
@@ -178,8 +179,8 @@ namespace LycheeLabs.FruityInterface {
                 }
             }
 
-            // Non-latched: release on mouse up
-            if (press.isPressed && !press.isLatchedDrag && !Input.GetMouseButton((int)press.button)) {
+            // Non-pickup: release on mouse up
+            if (press.isPressed && !press.isPickUpDrag && !Input.GetMouseButton((int)press.button)) {
                 if (press.pressIsDrag) {
                     QueueDragCompleteEvent(dragParams);
                 }
@@ -215,7 +216,7 @@ namespace LycheeLabs.FruityInterface {
             if (currentMode == DragTarget.DragMode.Disabled) {
                 QueueDragCancelEvent();
                 press.pressIsDrag = false;
-                press.isLatchedDrag = false;
+                press.isPickUpDrag = false;
                 return;
             }
 
@@ -229,7 +230,7 @@ namespace LycheeLabs.FruityInterface {
             } else {
                 QueueDragCancelEvent();
                 press.pressIsDrag = false;
-                press.isLatchedDrag = false;
+                press.isPickUpDrag = false;
             }
         }
 

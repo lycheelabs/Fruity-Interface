@@ -8,10 +8,15 @@
         public enum DragMode {
             /// <summary>No drag behavior for this button.</summary>
             Disabled,
-            /// <summary>Standard drag: press and hold to drag, release to complete.</summary>
-            Hold,
-            /// <summary>Grab drag: click to pick up, click again to place.</summary>
-            Grab
+            
+            /// <summary>Standard press-and-hold drag behavior.</summary>
+            DragOnly,
+            
+            /// <summary>Click once to pick up, click again to place (no press-and-hold drag).</summary>
+            PickUpOnly,
+            
+            /// <summary>Supports both press-and-hold drag AND click-to-pickup behaviors.</summary>
+            DragOrPickUp
         }
 
         /// <summary>

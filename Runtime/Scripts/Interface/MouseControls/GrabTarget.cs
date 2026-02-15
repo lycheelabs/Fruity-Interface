@@ -5,7 +5,7 @@ namespace LycheeLabs.FruityInterface {
 
     /// <summary>
     /// A MouseTarget (both ClickTarget and Dragtarget) that converts basic mouse events 
-    /// into grab events, which are  passed to a GrabBehaviour instance.
+    /// into grab events, which are passed to a GrabBehaviour instance.
     /// 'Grabbing' means the object can be dragged normally, 
     /// and also dragged indirectly by clicking once to pick up and clicking again to place.
     /// </summary>
@@ -49,30 +49,23 @@ namespace LycheeLabs.FruityInterface {
             if (!Behaviour.GrabbingIsEnabled) {
                 return DragTarget.DragMode.Disabled;
             }
-
-            var mode = Behaviour.GetMode(dragButton);
-            switch (mode) {
-                case GrabBehaviour.Mode.GRAB:
-                    return DragTarget.DragMode.Grab;
-                case GrabBehaviour.Mode.ONLY_DRAG:
-                    return DragTarget.DragMode.Hold;
-                default:
-                    return DragTarget.DragMode.Disabled;
-            }
+            return Behaviour.GetDragMode(dragButton);
         }
 
-        private bool TargetIsDisabled(MouseButton button) => !Behaviour.GrabbingIsEnabled ||
-            Behaviour.GetMode(button) == GrabBehaviour.Mode.DISABLED;
+        private bool TargetIsDisabled(MouseButton button) => 
+            !Behaviour.GrabbingIsEnabled ||
+            Behaviour.GetDragMode(button) == DragTarget.DragMode.Disabled;
 
-        private bool TargetIsDraggable(MouseButton button) => Behaviour.GrabbingIsEnabled &&
-            (Behaviour.GetMode(button) == GrabBehaviour.Mode.GRAB ||
-            Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_DRAG);
+        private bool TargetIsDraggable(MouseButton button) {
+            if (!Behaviour.GrabbingIsEnabled) return false;
+            var mode = Behaviour.GetDragMode(button);
+            return mode == DragTarget.DragMode.DragOnly || 
+                   mode == DragTarget.DragMode.DragOrPickUp;
+        }
 
-        private bool TargetIsDraggableOnly (MouseButton button) => Behaviour.GrabbingIsEnabled &&
-            Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_DRAG;
-
-        private bool TargetIsClickableOnly(MouseButton button) => Behaviour.GrabbingIsEnabled &&
-            Behaviour.GetMode(button) == GrabBehaviour.Mode.ONLY_CLICK;
+        private bool TargetIsDragOnly(MouseButton button) => 
+            Behaviour.GrabbingIsEnabled &&
+            Behaviour.GetDragMode(button) == DragTarget.DragMode.DragOnly;
 
         private void Hover () {
             Behaviour.OnHovering(!IsHovering);
@@ -88,7 +81,13 @@ namespace LycheeLabs.FruityInterface {
 
         private void UpdateDrag () {
             if (IsGrabbed) {
-                if (TargetIsClickableOnly(CurrentGrabButton)) {
+                // Restore DraggedTarget if we're in clicked/picked-up state
+                // (It gets cleared by EndDragEvent after converting from drag to pickup)
+                if (FruityUI.DraggedTarget == null) {
+                    FruityUI.DraggedTarget = this;
+                }
+                
+                if (TargetIsDisabled(CurrentGrabButton)) {
                     CancelGrab();
                 } else {
                     Behaviour.OnGrabbing(false, FruityUI.DraggedOverTarget);
@@ -134,45 +133,24 @@ namespace LycheeLabs.FruityInterface {
 
         public void MouseClick (ClickParams clickParams) {
             if (grabEndFrame == Time.frameCount) return;
-
-            // Trigger button-mode click
-            if (TargetIsClickableOnly(clickParams.ClickButton)) {
-                if (!TargetIsDisabled(clickParams.ClickButton)) {
-                    Behaviour.OnButtonClick(clickParams.ClickButton);
-                }
+            
+            // Disabled mode - trigger button click if also a ClickTarget
+            if (TargetIsDisabled(clickParams.ClickButton)) {
+                Behaviour.OnButtonClick(clickParams.ClickButton);
                 return;
             }
 
-            // Start a grab (on injected click event)
-            if (TargetIsDraggable(clickParams.ClickButton) && CurrentGrabbedInstance == null && !isReleasing) {
-                StartGrab(clickParams.ClickButton, clickParams.MouseUIPosition);
-                clickedInstance = this;
-            }
-            isReleasing = false;
-
-            // Pass grab state from 'dragging' over to 'clicked'
-            if (IsGrabbed) {
-                clickedInstance = this;
-            }
-
-            // Grabs are completed from CompleteMouseDrag(), not here.
-            // Once grabbed, all drag events are overridden with this target.
-            // Therefore my drag events will trigger upon a second (placement) click.
-
+            // This shouldn't be called for draggable modes (MouseState blocks clicks)
+            // But if it is, ignore it
         }
 
         public bool TryMouseUnclick (ClickParams clickParams) {
             if (CurrentGrabbedInstance == this) {
                 if (clickParams.ClickButton == CurrentGrabButton) {
                     if (Behaviour.CanMultiPlace (FruityUI.HighlightedTarget)) {
-
-                        // Complete but don't end
                         Behaviour.OnGrabCompleted(FruityUI.HighlightedTarget);
                         return false;
-
                     } else {
-
-                        // Complete and end
                         CompleteGrab();
                         var newDragger = FruityUI.HighlightedTarget as GrabTarget;
                         return newDragger != null && !Behaviour.CanPassGrabTo(newDragger);
@@ -196,7 +174,7 @@ namespace LycheeLabs.FruityInterface {
             }
 
             if (isFirstFrame) {
-                // Complete a grab (on second click, mouse down)
+                // Complete a grab (on second click, mouse down) - for PickUp modes
                 if (CurrentGrabbedInstance == this) {
                     CompleteGrab();
                     isReleasing = true;
@@ -211,24 +189,37 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public void CompleteMouseDrag (DragParams dragParams) {
-            // Complete a grab (on drag)
-            if (draggedInstance != null) {
-                if (DragIsClick(dragParams) || TargetIsDraggableOnly(dragParams.DragButton)) {
+            // Complete a grab (on drag release)
+            if (draggedInstance == this) {
+                // DragOnly mode always completes on release
+                // DragOrPickUp mode only completes if it was a real drag (not a quick click)
+                if (TargetIsDragOnly(dragParams.DragButton) || WasRealDrag(dragParams)) {
                     CompleteGrab();
+                } else {
+                    // Short click in DragOrPickUp mode - convert to clicked/picked-up state
+                    clickedInstance = this;
+                    draggedInstance = null;
+                    // Don't complete - wait for second click
+                    // Note: FruityUI.DraggedTarget will be cleared by EndDragEvent, 
+                    // but we'll restore it in UpdateDrag()
                 }
+            }
+            
+            // If we just converted to clicked state, restore the DraggedTarget that was cleared
+            if (clickedInstance == this && FruityUI.DraggedTarget == null) {
+                FruityUI.DraggedTarget = this;
             }
         }
 
         public void CancelMouseDrag () {
-            // Cancel a grab (on drag)
             if (draggedInstance == this) {
                 CancelGrab();
             }
             draggedInstance = null;
         }
 
-        private bool DragIsClick(DragParams dragParams) {
-            return IsGrabbed && (ExceedsClickDuration() || ExceedsClickDistance(dragParams.MouseUIPosition));
+        private bool WasRealDrag(DragParams dragParams) {
+            return ExceedsClickDuration() || ExceedsClickDistance(dragParams.MouseUIPosition);
         }
 
         private bool ExceedsClickDistance(Vector2 mousePosition) {

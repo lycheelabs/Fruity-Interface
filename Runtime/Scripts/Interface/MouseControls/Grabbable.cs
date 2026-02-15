@@ -35,8 +35,10 @@ namespace LycheeLabs.FruityInterface {
 
         // These configuration properties can be overridden if desired
         public virtual bool GrabbingIsEnabled => true;
-        public virtual GrabBehaviour.Mode GetMode(MouseButton mouseButton) =>
-            (mouseButton == MouseButton.Left) ? GrabBehaviour.Mode.GRAB : GrabBehaviour.Mode.DISABLED;
+        
+        public virtual DragTarget.DragMode GetDragMode(MouseButton mouseButton) =>
+            (mouseButton == MouseButton.Left) ? DragTarget.DragMode.DragOrPickUp : DragTarget.DragMode.Disabled;
+            
         public virtual bool CanMultiPlace(MouseTarget target) => false;
         public virtual bool CanPassGrabTo(GrabTarget clickDragger) => false;
 
