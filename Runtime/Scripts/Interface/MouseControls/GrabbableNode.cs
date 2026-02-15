@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface {
 
     /// <summary>
-    /// An abstract UINode that provides grabbing (drag and pickup) behaviour to GameObjects.
+    /// An abstract UINode that provides drag and pickup behaviour to GameObjects.
     /// The actual drag/pickup logic is handled by MouseState - this class just provides the interface.
     /// </summary>
     public abstract class GrabbableNode : InterfaceNode, ClickTarget, DragTarget {
@@ -37,7 +37,6 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public void MouseClick(ClickParams clickParams) {
-            // Only called when DragMode is Disabled
             OnButtonClick(clickParams.ClickButton);
         }
 

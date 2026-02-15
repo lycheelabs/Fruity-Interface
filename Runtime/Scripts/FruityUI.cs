@@ -58,6 +58,16 @@ namespace LycheeLabs.FruityInterface {
             FruityUIManager.TriggerNewClick(target, button);
         }
 
+        /// <summary>
+        /// Cancel the current drag operation if the specified target is being dragged.
+        /// </summary>
+        public static void CancelDrag(DragTarget target) {
+            if (DraggedTarget == target) {
+                DraggedTarget.CancelMouseDrag();
+                DraggedTarget = null;
+            }
+        }
+
     }
 
 }
