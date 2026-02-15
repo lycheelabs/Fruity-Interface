@@ -1,20 +1,26 @@
 ﻿namespace LycheeLabs.FruityInterface {
 
+    /// <summary>
+    /// Interface for objects that can be clicked with the mouse.
+    /// Extends MouseTarget to also receive hover events.
+    /// </summary>
     public interface ClickTarget : MouseTarget {
 
         /// <summary>
-        /// Called when this target is clicked (default = mouse button up)
+        /// Called when this target is clicked.
+        /// By default, this is called on mouse button up.
+        /// Override ClickOnMouseDown to change to mouse button down.
         /// </summary>
-        void MouseClick (ClickParams clickParams);
+        void MouseClick(ClickParams clickParams);
 
         /// <summary>
-        /// Called when this target was clicked last, and now a different target has been clicked (default =mouse button up).
-        /// If false is returned, the click target won't change and the new target wont be clicked.
+        /// Called when a different target is being clicked while this target was the last selected.
+        /// Return false to block the new click and keep this target selected.
         /// </summary>
-        bool TryMouseUnclick (ClickParams clickParams) { return true; }
+        bool TryMouseUnclick(ClickParams clickParams) { return true; }
 
         /// <summary>
-        /// Override this method to make the click events happen on mouse down
+        /// When true, MouseClick is called on mouse button down instead of up.
         /// </summary>
         bool ClickOnMouseDown { get => false; }
 
