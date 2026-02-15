@@ -44,7 +44,6 @@ namespace LycheeLabs.FruityInterface {
             bounds.Update(MinAspectRatio, MaxAspectRatio);
             mouseState.Update();
             events.Update(LogEvents);
-            GrabTarget.UpdateCurrentGrab();
         }
 
     }

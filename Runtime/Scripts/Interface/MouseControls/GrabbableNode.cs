@@ -3,57 +3,65 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface {
 
     /// <summary>
-    /// An abstract UINode that implements GrabBehaviour. 
-    /// Since this is a MonoBehaviour, inheriting classes can provide grabbing behaviour to GameObjects.
+    /// An abstract UINode that provides grabbing (drag and pickup) behaviour to GameObjects.
+    /// The actual drag/pickup logic is handled by MouseState - this class just provides the interface.
     /// </summary>
-    public abstract class GrabbableNode : InterfaceNode, ClickTarget, DragTarget, GrabBehaviour {
+    public abstract class GrabbableNode : InterfaceNode, ClickTarget, DragTarget {
 
-        public bool IsHighlighted => GrabTarget.IsHovering;
-        public bool IsDragging => GrabTarget.IsGrabbed;
+        private bool _isHovering;
 
-        // Create a Grabber pointing back to this instance
-        private GrabTarget _grabber;
-        protected GrabTarget GrabTarget {
-            get {
-                if (_grabber == null) {
-                    _grabber = new GrabTarget(this);
-                }
-                return _grabber;
+        public bool IsHighlighted => _isHovering;
+        public bool IsDragging => FruityUI.DraggedTarget == this;
+
+        // DragTarget implementation - can be overridden
+        public virtual DragTarget.DragMode GetDragMode(MouseButton dragButton) =>
+            (dragButton == MouseButton.Left) ? DragTarget.DragMode.DragOrPickUp : DragTarget.DragMode.Disabled;
+
+        // ClickTarget implementation
+        public virtual bool ClickOnMouseDown => false;
+
+        public void MouseHovering(bool isFirstFrame, HighlightParams highlightParams) {
+            // Don't hover if something else is being dragged
+            if (FruityUI.DraggedTarget != null && FruityUI.DraggedTarget != this) {
+                MouseHoverEnd();
+                return;
             }
+            
+            OnHovering(!_isHovering);
+            _isHovering = true;
         }
 
-        // Pass mouse events onto the grabber
-        public override MouseTarget GetMouseTarget(Vector3 mouseWorldPosition, MouseButton pressedButton) => GrabTarget;
+        public void MouseHoverEnd() {
+            OnHoverEnd();
+            _isHovering = false;
+        }
 
-        // Stub my mouse events (delegated to GrabTarget)
-        public void MouseHovering (bool isFirstFrame, HighlightParams highlightParams) {}
-        public void MouseHoverEnd () {}
-        public void MouseClick (ClickParams clickParams) { }
-        public void MouseDragging (bool isFirstFrame, DragParams dragParams) { }
-        public void CompleteMouseDrag(DragParams dragParams) { }
-        public void CancelMouseDrag() { }
-        
-        // This implements DragTarget.GetDragMode - returns DragOnly as default stub
-        public virtual DragTarget.DragMode GetDragMode(MouseButton dragButton) => DragTarget.DragMode.DragOnly;
+        public void MouseClick(ClickParams clickParams) {
+            // Only called when DragMode is Disabled
+            OnButtonClick(clickParams.ClickButton);
+        }
 
-        // The grabber will call these methods back
-        public abstract void OnHovering (bool isFirstFrame);
-        public abstract void OnHoverEnd ();
+        public bool TryMouseUnclick(ClickParams clickParams) => true;
+
+        public void MouseDragging(bool isFirstFrame, DragParams dragParams) {
+            OnGrabbing(isFirstFrame, FruityUI.DraggedOverTarget);
+        }
+
+        public void CompleteMouseDrag(DragParams dragParams) {
+            OnGrabCompleted(FruityUI.DraggedOverTarget);
+        }
+
+        public void CancelMouseDrag() {
+            OnGrabCancelled();
+        }
+
+        // Abstract methods for subclasses to implement
+        public abstract void OnHovering(bool isFirstFrame);
+        public abstract void OnHoverEnd();
         public abstract void OnButtonClick(MouseButton button);
-
-        public abstract void OnGrabbing (bool isFirstFrame, MouseTarget draggingOver);
-        public abstract void OnGrabCompleted (MouseTarget draggingOver);
+        public abstract void OnGrabbing(bool isFirstFrame, MouseTarget draggingOver);
+        public abstract void OnGrabCompleted(MouseTarget draggingOver);
         public abstract void OnGrabCancelled();
-
-        // These configuration properties can be overridden if desired
-        public virtual bool GrabbingIsEnabled => InputEnabledInHierarchy;
-        
-        // This implements GrabBehaviour.GetDragMode - override this to change behavior per button
-        DragTarget.DragMode GrabBehaviour.GetDragMode(MouseButton mouseButton) =>
-            (mouseButton == MouseButton.Left) ? DragTarget.DragMode.DragOrPickUp : DragTarget.DragMode.Disabled;
-            
-        public virtual bool CanMultiPlace(MouseTarget target) => false;
-        public virtual bool CanPassGrabTo(GrabTarget clickDragger) => false;
 
     }
 

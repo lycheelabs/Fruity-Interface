@@ -146,9 +146,10 @@ namespace LycheeLabs.FruityInterface {
                 // Start a drag (if applicable)
                 if (dragTarget != null && dragMode != DragTarget.DragMode.Disabled) {
                     var dragPosition = Camera.main.WorldToScreenPoint(press.pressPosition);
+                    var screenPosition = (Vector2)Input.mousePosition;
                     var dragParams = new DragParams(dragTarget, mouseTarget,
-                        dragPosition, Input.mousePosition, newPressedButton);
-                    StartDrag(dragParams, dragMode);
+                        dragPosition, screenPosition, newPressedButton);
+                    StartDrag(dragParams, dragMode, screenPosition);
                     dragged = true;
                 }
 
@@ -182,6 +183,15 @@ namespace LycheeLabs.FruityInterface {
             // Non-pickup: release on mouse up
             if (press.isPressed && !press.isPickUpDrag && !Input.GetMouseButton((int)press.button)) {
                 if (press.pressIsDrag) {
+                    // For DragOrPickUp mode: check if it was a short click (convert to pickup)
+                    if (press.dragMode == DragTarget.DragMode.DragOrPickUp) {
+                        var currentScreenPos = (Vector2)Input.mousePosition;
+                        if (!press.WasRealDrag(currentScreenPos)) {
+                            // Convert to pickup mode - don't complete yet
+                            press.ConvertToPickUp();
+                            return;
+                        }
+                    }
                     QueueDragCompleteEvent(dragParams);
                 }
                 if (press.pressIsClick && press.target == clickTarget) {
@@ -204,8 +214,8 @@ namespace LycheeLabs.FruityInterface {
             OnNewPress?.Invoke(clickTarget);
         }
 
-        private void StartDrag(DragParams dragParams, DragTarget.DragMode dragMode) {
-            press.StartDrag(dragParams.Target, dragParams.DragButton, dragMode);
+        private void StartDrag(DragParams dragParams, DragTarget.DragMode dragMode, Vector2 screenPosition) {
+            press.StartDrag(dragParams.Target, dragParams.DragButton, dragMode, screenPosition);
             QueueDragStartEvent(dragParams);
         }
 
