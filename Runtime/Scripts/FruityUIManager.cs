@@ -6,9 +6,9 @@ namespace LycheeLabs.FruityInterface {
 
         public static FruityUIManager Instance { get; private set; }
 
-        public static void TriggerNewClick (ClickTarget target, MouseButton button) {
+        public static void TriggerNewClick (MouseTarget target, MouseButton button) {
             if (Instance != null && target != null) {
-                Instance.mouseState.ClickNow(target, button);
+                Instance.mouseState.QueueClick(target, button);
             }
         }
 

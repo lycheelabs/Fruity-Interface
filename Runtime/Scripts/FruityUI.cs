@@ -99,9 +99,12 @@ namespace LycheeLabs.FruityInterface {
         
         /// <summary>
         /// Programmatically trigger a click on a target.
-        /// This bypasses normal mouse input and immediately queues a click event.
+        /// The click is buffered and processed as synthetic input in the next available frame.
+        /// Supports both click and drag behaviors based on the target's implemented interfaces.
+        /// If a press is currently active, it will be force-completed before the buffered click is processed.
+        /// Targets that don't implement ClickTarget or DragTarget are silently ignored.
         /// </summary>
-        public static void TriggerNewClick(ClickTarget target, MouseButton button) {
+        public static void TriggerNewClick(MouseTarget target, MouseButton button) {
             FruityUIManager.TriggerNewClick(target, button);
         }
 
