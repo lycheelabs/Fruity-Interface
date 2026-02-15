@@ -39,6 +39,13 @@ namespace LycheeLabs.FruityInterface.Flow {
             }
         }
 
+        public void Shutdown () {
+            if (CurrentStage != null) {
+                CurrentStage.Close();
+                CurrentStage = null;
+            }
+        }
+
     }
 
 }

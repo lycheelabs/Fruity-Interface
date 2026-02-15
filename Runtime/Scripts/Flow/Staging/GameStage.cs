@@ -1,3 +1,4 @@
+
 namespace LycheeLabs.FruityInterface.Flow {
 
     public interface GameStage {

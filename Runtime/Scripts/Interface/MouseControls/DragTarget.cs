@@ -3,9 +3,21 @@
     public interface DragTarget : MouseTarget {
 
         /// <summary>
-        /// If false, this target will not recieve drag events (and any current drag will be cancelled)
+        /// Describes how a drag target responds to drag input.
         /// </summary>
-        bool DraggingIsEnabled (MouseButton dragButton);
+        public enum DragMode {
+            /// <summary>No drag behavior for this button.</summary>
+            Disabled,
+            /// <summary>Standard drag: press and hold to drag, release to complete.</summary>
+            Hold,
+            /// <summary>Grab drag: click to pick up, click again to place.</summary>
+            Grab
+        }
+
+        /// <summary>
+        /// Determines how this target responds to drag input for a mouse button.
+        /// </summary>
+        DragMode GetDragMode (MouseButton dragButton);
 
         /// <summary>
         /// Called on every frame of a mouse drag

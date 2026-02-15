@@ -71,7 +71,7 @@ namespace LycheeLabs.FruityInterface {
             // Resolve mouse highlighting
             var highlightParams = GetRaycast();
 
-            // Override
+            // Override highlight with active drag target
             FruityUI.DraggedOverTarget = highlightParams.Target;
             OverrideHighlight(ref highlightParams);
             return highlightParams;
@@ -94,11 +94,9 @@ namespace LycheeLabs.FruityInterface {
         }
 
         private void OverrideHighlight(ref HighlightParams highlightParams) {
+            // Use single drag target source for highlight override
             if (FruityUI.DraggedTarget != null) {
                 highlightParams.Target = FruityUI.DraggedTarget;
-            }
-            else if (GrabTarget.CurrentGrabbedInstance != null) {
-                highlightParams.Target = GrabTarget.CurrentGrabbedInstance;
             }
         }
         
@@ -121,8 +119,17 @@ namespace LycheeLabs.FruityInterface {
                 var pressed = false;
                 var dragged = false;
 
+                // Determine drag mode
+                var dragMode = DragTarget.DragMode.Disabled;
+                if (dragTarget != null) {
+                    dragMode = dragTarget.GetDragMode(newPressedButton);
+                }
+
+                // Grab mode skips click handling (grab takes over completely)
+                var allowClick = (dragMode != DragTarget.DragMode.Grab);
+
                 // Start a click-press (if applicable)
-                if (clickTarget != null) {
+                if (clickTarget != null && allowClick) {
                     PressClick(clickTarget, newPressedButton);
                     pressed = true;
 
@@ -136,11 +143,11 @@ namespace LycheeLabs.FruityInterface {
                 }
 
                 // Start a drag (if applicable)
-                if (dragTarget != null && dragTarget.DraggingIsEnabled(newPressedButton)) {
+                if (dragTarget != null && dragMode != DragTarget.DragMode.Disabled) {
                     var dragPosition = Camera.main.WorldToScreenPoint(press.pressPosition);
                     var dragParams = new DragParams(dragTarget, mouseTarget,
                         dragPosition, Input.mousePosition, newPressedButton);
-                    StartDrag(dragParams);
+                    StartDrag(dragParams, dragMode);
                     dragged = true;
                 }
 
@@ -162,8 +169,17 @@ namespace LycheeLabs.FruityInterface {
                     dragPosition, Input.mousePosition, press.button);
             }
 
-            // Release mouse press
-            if (press.isPressed && !Input.GetMouseButton((int)press.button)) {
+            // Latched drag: complete on second click of same button (not same frame)
+            if (press.pressIsDrag && press.isLatchedDrag) {
+                if (Input.GetMouseButtonDown((int)press.button) && press.pressStartFrame != Time.frameCount) {
+                    QueueDragCompleteEvent(dragParams);
+                    press.Clear();
+                    return;
+                }
+            }
+
+            // Non-latched: release on mouse up
+            if (press.isPressed && !press.isLatchedDrag && !Input.GetMouseButton((int)press.button)) {
                 if (press.pressIsDrag) {
                     QueueDragCompleteEvent(dragParams);
                 }
@@ -174,7 +190,7 @@ namespace LycheeLabs.FruityInterface {
                 return;
             }
 
-            // Update or cancel drag
+            // Update or cancel active drag
             if (press.pressIsDrag && FruityUI.DraggedTarget != null) {
                 UpdateDrag(dragParams);
             }
@@ -187,20 +203,23 @@ namespace LycheeLabs.FruityInterface {
             OnNewPress?.Invoke(clickTarget);
         }
 
-        private void StartDrag(DragParams dragParams) {
-            press.StartDrag(dragParams.Target, dragParams.DragButton);
+        private void StartDrag(DragParams dragParams, DragTarget.DragMode dragMode) {
+            press.StartDrag(dragParams.Target, dragParams.DragButton, dragMode);
             QueueDragStartEvent(dragParams);
         }
 
         private void UpdateDrag(DragParams dragParams) {
 
-            // Check drag is enabled
-            if (!FruityUI.DraggedTarget.DraggingIsEnabled(dragParams.DragButton)) {
+            // Check drag mode is still enabled
+            var currentMode = FruityUI.DraggedTarget.GetDragMode(dragParams.DragButton);
+            if (currentMode == DragTarget.DragMode.Disabled) {
                 QueueDragCancelEvent();
                 press.pressIsDrag = false;
+                press.isLatchedDrag = false;
+                return;
             }
 
-            // Check for manual drag cancel
+            // Check for manual drag cancel (opposite button pressed)
             var manualDragCancel =
                    (dragParams.DragButton == MouseButton.Left && Input.GetMouseButtonDown((int)MouseButton.Right)) ||
                    (dragParams.DragButton == MouseButton.Right && Input.GetMouseButtonDown((int)MouseButton.Left));
@@ -210,6 +229,7 @@ namespace LycheeLabs.FruityInterface {
             } else {
                 QueueDragCancelEvent();
                 press.pressIsDrag = false;
+                press.isLatchedDrag = false;
             }
         }
 

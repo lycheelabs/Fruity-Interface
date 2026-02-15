@@ -41,6 +41,10 @@ namespace LycheeLabs.FruityInterface {
             Squash(animator, sizeScale * 2f, speedScale * 0.66f, 6);
         }
 
+        public static void ExtraCrazySquash (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
+            Squash(animator, sizeScale * 2f, speedScale * 0.33f, 12);
+        }
+
         public static void FlattenSquash(this JuicyAnimator animator, float speedScale = 1f) {
             animator?.Play(new FlattenSquashAnimation(speedScale));
         }

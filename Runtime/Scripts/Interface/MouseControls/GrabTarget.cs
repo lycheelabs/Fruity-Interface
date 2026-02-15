@@ -44,7 +44,22 @@ namespace LycheeLabs.FruityInterface {
 
         public bool IsHovering { get; private set; }
         public bool IsGrabbed => draggedInstance == this || clickedInstance == this;
-        public bool DraggingIsEnabled(MouseButton dragButton) => true;// TargetIsDraggable(dragButton);
+
+        public DragTarget.DragMode GetDragMode(MouseButton dragButton) {
+            if (!Behaviour.GrabbingIsEnabled) {
+                return DragTarget.DragMode.Disabled;
+            }
+
+            var mode = Behaviour.GetMode(dragButton);
+            switch (mode) {
+                case GrabBehaviour.Mode.GRAB:
+                    return DragTarget.DragMode.Grab;
+                case GrabBehaviour.Mode.ONLY_DRAG:
+                    return DragTarget.DragMode.Hold;
+                default:
+                    return DragTarget.DragMode.Disabled;
+            }
+        }
 
         private bool TargetIsDisabled(MouseButton button) => !Behaviour.GrabbingIsEnabled ||
             Behaviour.GetMode(button) == GrabBehaviour.Mode.DISABLED;
