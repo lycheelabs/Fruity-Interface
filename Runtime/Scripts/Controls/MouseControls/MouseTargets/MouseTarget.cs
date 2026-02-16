@@ -12,12 +12,12 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         /// <param name="isFirstFrame">True on the first frame of hover.</param>
         /// <param name="highlightParams">Contains mouse position and button state.</param>
-        void MouseHovering(bool isFirstFrame, HoverParams highlightParams);
+        void UpdateMouseHover(bool isFirstFrame, HoverParams highlightParams);
 
         /// <summary>
         /// Called when the mouse stops hovering over this target.
         /// </summary>
-        void MouseHoverEnd();
+        void EndMouseHover();
 
     }
 

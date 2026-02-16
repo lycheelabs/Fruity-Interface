@@ -28,9 +28,9 @@ namespace LycheeLabs.FruityInterface.Elements {
             inputDisabled = disabled;
         }
 
-        public void MouseHovering(bool firstFrame, HoverParams highlightParams) {}
-        public void MouseHoverEnd() { }
-        public void MouseClick(ClickParams clickParams) { }
+        public void UpdateMouseHover(bool firstFrame, HoverParams highlightParams) {}
+        public void EndMouseHover() { }
+        public void ApplyMouseClick(ClickParams clickParams) { }
 
         public void LateUpdate () {
             RefreshLayoutDeferred();

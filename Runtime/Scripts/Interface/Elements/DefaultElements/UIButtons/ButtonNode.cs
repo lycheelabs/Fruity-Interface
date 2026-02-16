@@ -45,20 +45,20 @@ namespace LycheeLabs.FruityInterface.Elements {
             ButtonAnimator.BaseScale = Vector3.one * highlightScale * BaseScale;
         }
 
-        public void MouseHovering (bool firstFrame, HoverParams highlightParams) {
+        public void UpdateMouseHover (bool firstFrame, HoverParams highlightParams) {
             IsHighlighted = true;
             IsHeld = highlightParams.PressButton != MouseButton.None;
             OnHighlight(firstFrame, highlightParams);
         }
 
-        public void MouseHoverEnd () {
+        public void EndMouseHover () {
             IsHighlighted = false;
             IsHeld = false;
             OnDehighlight();
         }
 
         protected virtual void OnUpdate() { }
-        public abstract void MouseClick (ClickParams clickParams);
+        public abstract void ApplyMouseClick (ClickParams clickParams);
         protected abstract void OnHighlight (bool firstFrame, HoverParams highlightParams);
         protected abstract void OnDehighlight ();
 

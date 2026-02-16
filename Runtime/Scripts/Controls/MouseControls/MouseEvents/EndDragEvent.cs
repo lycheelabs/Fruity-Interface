@@ -26,7 +26,7 @@ namespace LycheeLabs.FruityInterface {
                 FruityUI.DraggedTarget.CancelMouseDrag();
             } else {
                 if (logging) Debug.Log("Complete Drag: " + FruityUI.DraggedTarget);
-                FruityUI.DraggedTarget.CompleteMouseDrag(Params);
+                FruityUI.DraggedTarget.ApplyMouseDrag(Params);
             }
             
             FruityUI.DraggedTarget = null;

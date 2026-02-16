@@ -29,7 +29,7 @@ namespace LycheeLabs.FruityInterface {
             if (logging) Debug.Log("Click: " + Target);
 
             FruityUI.SelectedTarget = Target;
-            FruityUI.SelectedTarget?.MouseClick(Params);
+            FruityUI.SelectedTarget?.ApplyMouseClick(Params);
         }
     }
 }

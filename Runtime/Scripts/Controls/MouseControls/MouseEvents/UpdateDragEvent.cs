@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface {
                 return;
             }
             
-            FruityUI.DraggedTarget.MouseDragging(false, Params);
+            FruityUI.DraggedTarget.UpdateMouseDragging(false, Params);
         }
     }
 }

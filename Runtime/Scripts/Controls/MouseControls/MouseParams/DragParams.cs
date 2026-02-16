@@ -12,7 +12,7 @@ namespace LycheeLabs.FruityInterface {
         public static readonly DragParams Null = new DragParams(null, null, Vector2.zero, Vector2.zero, MouseButton.None);
 
         private readonly DragTarget target;
-        private readonly DragOverTarget draggingOver;
+        private readonly DraggedOverTarget draggingOver;
         private readonly Vector2 startScreenPos;
         private readonly Vector2 currentScreenPos;
         private readonly MouseButton dragButton;
@@ -22,7 +22,7 @@ namespace LycheeLabs.FruityInterface {
         /// <param name="startScreenPos">Screen position where the drag started.</param>
         /// <param name="currentScreenPos">Current mouse screen position.</param>
         /// <param name="dragButton">Which mouse button is being used for the drag.</param>
-        public DragParams(DragTarget target, DragOverTarget draggingOver, Vector2 startScreenPos, Vector2 currentScreenPos, MouseButton dragButton) {
+        public DragParams(DragTarget target, DraggedOverTarget draggingOver, Vector2 startScreenPos, Vector2 currentScreenPos, MouseButton dragButton) {
             this.target = target;
             this.draggingOver = draggingOver;
             this.startScreenPos = startScreenPos;
@@ -38,7 +38,7 @@ namespace LycheeLabs.FruityInterface {
         /// Use this to detect what the dragged item would be dropped onto.
         /// Null if the mouse is not over a valid drop target.
         /// </summary>
-        public DragOverTarget DraggingOver => draggingOver;
+        public DraggedOverTarget DraggingOver => draggingOver;
         
         /// <summary>Which mouse button is being used for the drag.</summary>
         public MouseButton DragButton => dragButton;

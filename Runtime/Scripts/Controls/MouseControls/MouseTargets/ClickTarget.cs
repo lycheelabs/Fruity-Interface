@@ -11,7 +11,7 @@
         /// By default, this is called on mouse button up.
         /// Override ClickOnMouseDown to change to mouse button down.
         /// </summary>
-        void MouseClick(ClickParams clickParams);
+        void ApplyMouseClick(ClickParams clickParams);
 
         /// <summary>
         /// Called when a different target is being clicked while this target was the last selected.

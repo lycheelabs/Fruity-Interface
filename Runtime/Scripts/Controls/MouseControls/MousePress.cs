@@ -24,7 +24,7 @@ namespace LycheeLabs.FruityInterface  {
 
         // Drag-specific state
         public bool isPickUpDrag;
-        public DragTarget.DragMode dragMode;
+        public MouseDragMode dragMode;
 
         // Timing
         public int pressStartFrame;
@@ -43,13 +43,13 @@ namespace LycheeLabs.FruityInterface  {
             target = pressedTarget;
             pressIsClick = true;
             button = pressedButton;
-            dragMode = DragTarget.DragMode.Disabled;
+            dragMode = MouseDragMode.Disabled;
             isPickUpDrag = false;
             pressStartFrame = Time.frameCount;
             pressStartTime = Time.unscaledTime;
         }
 
-        public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, DragTarget.DragMode mode, Vector3 worldPosition, Vector2 screenPosition) {
+        public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, MouseDragMode mode, Vector3 worldPosition, Vector2 screenPosition) {
             isPressed = true;
             target = pressedTarget;
             pressIsDrag = true;
@@ -57,7 +57,7 @@ namespace LycheeLabs.FruityInterface  {
             dragMode = mode;
             // Only PickUpOnly starts as latched pickup
             // DragOrPickUp starts as normal drag, may convert to pickup on mouse-up if it was a short click
-            isPickUpDrag = (mode == DragTarget.DragMode.PickUpOnly);
+            isPickUpDrag = (mode == MouseDragMode.PickUpOnly);
             pressStartFrame = Time.frameCount;
             pressStartTime = Time.unscaledTime;
             pressWorldPosition = worldPosition;
@@ -92,7 +92,7 @@ namespace LycheeLabs.FruityInterface  {
             pressIsClick = false;
             pressIsDrag = false;
             button = MouseButton.None;
-            dragMode = DragTarget.DragMode.Disabled;
+            dragMode = MouseDragMode.Disabled;
             isPickUpDrag = false;
             pressStartFrame = 0;
             pressStartTime = 0;

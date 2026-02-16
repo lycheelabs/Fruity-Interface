@@ -34,11 +34,11 @@ namespace LycheeLabs.FruityInterface {
                 ? hp 
                 : HoverParams.blank;
             
-            target.MouseHovering(firstFrame, hoverParams);
+            target.UpdateMouseHover(firstFrame, hoverParams);
         }
 
         protected override void CallEnd(MouseTarget target) {
-            target?.MouseHoverEnd();
+            target?.EndMouseHover();
         }
 
         protected override void UpdateGlobalState(MouseTarget target) {

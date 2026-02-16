@@ -10,23 +10,23 @@ namespace LycheeLabs.FruityInterface {
 
         protected override bool ShouldIncludeTarget(MouseTarget target) {
             // Only DragOverTargets participate
-            return target is DragOverTarget;
+            return target is DraggedOverTarget;
         }
 
         protected override void CallUpdate<TParams>(MouseTarget target, bool firstFrame, TParams parameters, bool isLeaf) {
-            if (target is DragOverTarget dragOverTarget && parameters is DragParams dragParams) {
-                dragOverTarget.MouseDragOver(firstFrame, dragParams);
+            if (target is DraggedOverTarget dragOverTarget && parameters is DragParams dragParams) {
+                dragOverTarget.UpdateMouseDraggedOver(firstFrame, dragParams);
             }
         }
 
         protected override void CallEnd(MouseTarget target) {
-            if (target is DragOverTarget dragOverTarget) {
-                dragOverTarget.MouseDragOverEnd();
+            if (target is DraggedOverTarget dragOverTarget) {
+                dragOverTarget.EndMouseDraggedOver();
             }
         }
 
         protected override void UpdateGlobalState(MouseTarget target) {
-            FruityUI.DraggedOverTarget = target as DragOverTarget;
+            FruityUI.DraggedOverTarget = target as DraggedOverTarget;
         }
 
         protected override void LogTargetChange(MouseTarget target) {

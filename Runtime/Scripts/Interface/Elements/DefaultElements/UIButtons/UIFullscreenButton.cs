@@ -31,12 +31,12 @@ namespace LycheeLabs.FruityInterface.Elements {
 			collider.size = new Vector3(canvasSize.x, canvasSize.y, 1);
 		}
 
-        public void MouseClick (ClickParams clickParams) {
+        public void ApplyMouseClick (ClickParams clickParams) {
 			Callbacks?.OnFullscreenClick(clickParams);
         }
 
-        public void MouseHovering (bool firstFrame, HoverParams highlightParams) {}
-        public void MouseHoverEnd () {}
+        public void UpdateMouseHover (bool firstFrame, HoverParams highlightParams) {}
+        public void EndMouseHover () {}
 
         public void Disable () {
 			collider.enabled = false;

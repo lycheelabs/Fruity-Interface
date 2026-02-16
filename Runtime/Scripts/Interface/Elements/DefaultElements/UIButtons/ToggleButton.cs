@@ -78,7 +78,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             //
         }
 
-        public sealed override void MouseClick(ClickParams clickParams) {
+        public sealed override void ApplyMouseClick(ClickParams clickParams) {
             ButtonAnimator.Squash();
             if (TryGetEffect != null && TryGetEffect.MouseButtonIsPermitted(clickParams.ClickButton)) {
                 TryGetEffect.Toggle();

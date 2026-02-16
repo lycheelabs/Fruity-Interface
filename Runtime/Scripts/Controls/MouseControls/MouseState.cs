@@ -205,7 +205,7 @@ namespace LycheeLabs.FruityInterface {
         private void ProcessPress(PressEvent pressEvent) {
             var clickTarget = pressEvent.target as ClickTarget;
             var dragTarget = pressEvent.target as DragTarget;
-            var dragMode = dragTarget?.GetDragMode(pressEvent.button) ?? DragTarget.DragMode.Disabled;
+            var dragMode = dragTarget?.GetDragMode(pressEvent.button) ?? MouseDragMode.Disabled;
 
             var pressRemainsActive = false;
 
@@ -215,7 +215,7 @@ namespace LycheeLabs.FruityInterface {
             }
 
             // Start drag if enabled
-            if (dragTarget != null && dragMode != DragTarget.DragMode.Disabled) {
+            if (dragTarget != null && dragMode != MouseDragMode.Disabled) {
                 pressRemainsActive |= TryStartDrag(dragTarget, pressEvent, dragMode);
             }
 
@@ -229,9 +229,9 @@ namespace LycheeLabs.FruityInterface {
         /// Click events are only sent when drag mode is Disabled or DragOnly
         /// (PickUpOnly and DragOrPickUp use clicking to start/complete pickup, not to trigger click events).
         /// </summary>
-        private bool ShouldProcessClick(DragTarget.DragMode dragMode) {
-            return dragMode == DragTarget.DragMode.Disabled || 
-                   dragMode == DragTarget.DragMode.DragOnly;
+        private bool ShouldProcessClick(MouseDragMode dragMode) {
+            return dragMode == MouseDragMode.Disabled || 
+                   dragMode == MouseDragMode.DragOnly;
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace LycheeLabs.FruityInterface {
         /// Attempt to start a drag press.
         /// Returns true if the drag was started successfully.
         /// </summary>
-        private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, DragTarget.DragMode dragMode) {
+        private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, MouseDragMode dragMode) {
             var screenPosition = (Vector2)Input.mousePosition;
             activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition);
 
@@ -397,7 +397,7 @@ namespace LycheeLabs.FruityInterface {
                 if (activePress.pressIsDrag) {
                     // For DragOrPickUp: short click converts to pickup mode
                     var screenPosition = (Vector2)Input.mousePosition;
-                    if (activePress.dragMode == DragTarget.DragMode.DragOrPickUp && !activePress.WasRealDrag(screenPosition)) {
+                    if (activePress.dragMode == MouseDragMode.DragOrPickUp && !activePress.WasRealDrag(screenPosition)) {
                         activePress.ConvertToPickUp();
                         return;
                     }
@@ -430,7 +430,7 @@ namespace LycheeLabs.FruityInterface {
             if (activePress.pressIsDrag && FruityUI.DraggedTarget != null) {
                 // Check if drag mode is still enabled
                 var currentMode = FruityUI.DraggedTarget.GetDragMode(activePress.button);
-                if (currentMode == DragTarget.DragMode.Disabled) {
+                if (currentMode == MouseDragMode.Disabled) {
                     QueueDragCancelEvent();
                     ClearDragOverState();
                     CancelDragPress();
