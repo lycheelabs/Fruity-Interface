@@ -7,6 +7,9 @@ namespace LycheeLabs.FruityInterface {
     /// Manages mouse input state, raycasting, and event generation for the UI system.
     /// </summary>
     public class MouseState {
+    
+        private const float PRESS_DEBOUNCE_TIME = 0.05f;
+        private const int MAX_QUEUED_EVENTS = 10;
 
         /// <summary> Mouse button press event to be processed. </summary>
         private struct PressEvent {
@@ -15,100 +18,25 @@ namespace LycheeLabs.FruityInterface {
             public Vector3 worldPosition;
         }
 
+        // ---------------------------------------------------
+        
         public static bool MouseIsMoving { get; private set; }
         public static bool DisableMouse { get; set; }
-
-        // ---------------------------------------------
-
-        private MouseRaycaster raycaster;
-        private Queue<PressEvent> pressEventQueue;
+        public static event TargetDelegate OnNewPress;
+        public delegate void TargetDelegate(ClickTarget newTarget);
+    
+        private readonly MouseRaycaster raycaster;
+        private readonly Queue<PressEvent> pressEventQueue;
 
         private MouseButton activeButton;
         private MousePress activePress;
         private float lastPressTime;
         private Vector3 oldMousePosition;
 
-        // Delegates
-        public delegate void TargetDelegate (ClickTarget newTarget);
-        public static TargetDelegate OnNewPress;
-
-        public MouseState () {
+        public MouseState() {
             raycaster = new MouseRaycaster();
             pressEventQueue = new Queue<PressEvent>();
             activeButton = MouseButton.None;
-        }
-
-        public void Update () {
-            if (!Application.isFocused || DisableMouse) {
-                return;
-            }
-
-#if UNITY_EDITOR
-            ValidateState();
-#endif
-
-            UpdateActiveButton();
-
-            // Raycasting
-            var raycastTarget = GetRaycastTarget(out var raycastNode, out var raycastWorldPos);
-            FruityUI.DraggedOverTarget = raycastTarget;
-
-            // Highlighting
-            var highlightTarget = (FruityUI.DraggedTarget != null) ? FruityUI.DraggedTarget : raycastTarget;
-            QueueHighlightEvent(new HighlightParams(highlightTarget, raycastNode, raycastWorldPos, GetRelevantButton()));
-
-            // Check for new real input (only when idle)
-            if (pressEventQueue.Count == 0 && !activePress.isPressed) {
-                CheckForMousePress(raycastTarget, raycastWorldPos);
-            }
-
-            // Process next queued press
-            if (pressEventQueue.Count > 0) {
-                ProcessNextQueuedEvent();
-            }
-
-            // Update ongoing press
-            if (activePress.isPressed) {
-                UpdateMousePress(highlightTarget);
-            }
-        }
-
-        /// <summary>
-        /// Process the next queued press event.
-        /// If a press is active, force-completes it before processing the queued event.
-        /// </summary>
-        private void ProcessNextQueuedEvent () {
-            // Force-complete current press before processing queued event
-            if (activePress.isPressed) {
-                ForceCompleteCurrentPress();
-            }
-
-            // Process queued event
-            var pressEvent = pressEventQueue.Dequeue();
-            ProcessPress(pressEvent);
-        }
-
-        /// <summary>
-        /// Validate state invariants (editor only).
-        /// </summary>
-        private void ValidateState () {
-            // Detect desync between FruityUI.DraggedTarget and press state
-            if (FruityUI.DraggedTarget != null && !activePress.pressIsDrag) {
-                Debug.LogWarning("[MouseState] State desync: DraggedTarget set but no press drag active");
-                FruityUI.DraggedTarget = null;
-            }
-
-            if (activePress.pressIsDrag && FruityUI.DraggedTarget == null) {
-                Debug.LogWarning("[MouseState] State desync: Press drag active but no DraggedTarget");
-                activePress.pressIsDrag = false;
-                activePress.isPickUpDrag = false;
-            }
-
-            // Prevent queue overflow (abuse protection)
-            if (pressEventQueue.Count > 10) {
-                Debug.LogError("[MouseState] Press event queue overflow - clearing to prevent abuse");
-                pressEventQueue.Clear();
-            }
         }
 
         /// <summary>
@@ -116,11 +44,11 @@ namespace LycheeLabs.FruityInterface {
         /// Supports both clicks and drags, based on the MouseTarget's behaviour.
         /// (If the target doesn't implement ClickTarget or DragTarget, it is silently ignored.)
         /// </summary>
-        public void QueueClick (MouseTarget target, MouseButton button) {
-            if (target == null) return;
+        public void QueueClick(MouseTarget target, MouseButton button) {
+            if (target == null || pressEventQueue.Count > MAX_QUEUED_EVENTS) return;
 
             // Only queue if target implements at least one of the required interfaces
-            if ((target is ClickTarget) || (target is DragTarget)) {
+            if (target is ClickTarget || target is DragTarget) {
                 pressEventQueue.Enqueue(new PressEvent {
                     target = target,
                     button = button,
@@ -129,27 +57,207 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        #region Input State
+        public void Update() {
+            if (!Application.isFocused || DisableMouse) return;
 
-        private void UpdateActiveButton () {
+#if UNITY_EDITOR
+            ValidateState();
+#endif
+            // Update input state and detect new mouse presses
+            UpdateInput();
+            
+            // Process any queued synthetic or real mouse presses
+            ProcessQueuedEvents();
+            
+            // Update the ongoing mouse press (if any)
+            UpdateActivePress();
+        }
+
+        /// <summary>
+        /// Update input state: active button, raycasting, highlighting, and detect new real mouse presses.
+        /// </summary>
+        private void UpdateInput() {
+            UpdateActiveButton();
+            UpdateRaycasting();
+            
+            // Only check for new input when idle
+            if (pressEventQueue.Count == 0 && !activePress.isPressed) {
+                CheckForNewPress();
+            }
+        }
+
+        /// <summary>
+        /// Update which mouse button is currently active.
+        /// </summary>
+        private void UpdateActiveButton() {
             if (Input.GetMouseButtonDown((int)MouseButton.Left)) {
                 activeButton = MouseButton.Left;
             } else if (Input.GetMouseButtonDown((int)MouseButton.Right)) {
                 activeButton = MouseButton.Right;
-            } else if (!Input.GetMouseButton((int)MouseButton.Left) && !Input.GetMouseButton((int)MouseButton.Right)) {
+            } else if (!AnyMouseButtonHeld()) {
                 activeButton = MouseButton.None;
             }
         }
 
-        private MouseButton GetRelevantButton () {
-            return activePress.isPressed ? activePress.button : activeButton;
+        /// <summary>
+        /// Check if any mouse button is currently held down.
+        /// </summary>
+        private bool AnyMouseButtonHeld() {
+            return Input.GetMouseButton((int)MouseButton.Left) || 
+                   Input.GetMouseButton((int)MouseButton.Right);
         }
 
-        #endregion
+        /// <summary>
+        /// Perform raycasting and update highlight state.
+        /// Sets FruityUI.DraggedOverTarget to the current raycast result and queues a highlight event.
+        /// </summary>
+        private void UpdateRaycasting() {
+            var raycastTarget = GetRaycastTarget(out var raycastNode, out var raycastWorldPos);
+            FruityUI.DraggedOverTarget = raycastTarget;
+
+            var highlightTarget = FruityUI.DraggedTarget ?? raycastTarget;
+            QueueHighlightEvent(new HighlightParams(
+                highlightTarget, raycastNode, raycastWorldPos, GetRelevantButton()));
+        }
+
+        /// <summary>
+        /// Process the next queued press event.
+        /// If a press is active, force-completes it before processing the queued event.
+        /// </summary>
+        private void ProcessQueuedEvents() {
+            if (pressEventQueue.Count == 0) return;
+
+            // Force-complete current press before processing queued event
+            if (activePress.isPressed) {
+                ForceCompleteCurrentPress();
+            }
+
+            var pressEvent = pressEventQueue.Dequeue();
+            ProcessPress(pressEvent);
+        }
+
+        /// <summary>
+        /// Update the active mouse press (if one exists).
+        /// </summary>
+        private void UpdateActivePress() {
+            if (!activePress.isPressed) return;
+
+            var pressTarget = FruityUI.DraggedTarget ?? FruityUI.DraggedOverTarget;
+            UpdateMousePress(pressTarget);
+        }
+
+        /// <summary>
+        /// Check for a new mouse button press and queue it for processing.
+        /// </summary>
+        private void CheckForNewPress() {
+            // activeButton is already set by UpdateActiveButton() when GetMouseButtonDown fires
+            if (activeButton == MouseButton.None) return;
+            if (Time.unscaledTime <= lastPressTime + PRESS_DEBOUNCE_TIME) return;
+
+            var raycastTarget = FruityUI.DraggedOverTarget;
+            pressEventQueue.Enqueue(new PressEvent {
+                target = raycastTarget,
+                button = activeButton,
+                worldPosition = FruityUI.MouseWorldPosition
+            });
+        }
+
+        /// <summary>
+        /// Process a press event: start a click and/or drag based on the target's configuration.
+        /// </summary>
+        private void ProcessPress(PressEvent pressEvent) {
+            var clickTarget = pressEvent.target as ClickTarget;
+            var dragTarget = pressEvent.target as DragTarget;
+            var dragMode = dragTarget?.GetDragMode(pressEvent.button) ?? DragTarget.DragMode.Disabled;
+
+            var pressRemainsActive = false;
+
+            // Start click if allowed
+            if (clickTarget != null && ShouldProcessClick(dragMode)) {
+                pressRemainsActive |= TryStartClick(clickTarget, pressEvent);
+            }
+
+            // Start drag if enabled
+            if (dragTarget != null && dragMode != DragTarget.DragMode.Disabled) {
+                pressRemainsActive |= TryStartDrag(dragTarget, pressEvent, dragMode);
+            }
+
+            if (!pressRemainsActive) {
+                activePress.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Determine if a click should be processed based on the drag mode.
+        /// Click events are only sent when drag mode is Disabled or DragOnly
+        /// (PickUpOnly and DragOrPickUp use clicking to start/complete pickup, not to trigger click events).
+        /// </summary>
+        private bool ShouldProcessClick(DragTarget.DragMode dragMode) {
+            return dragMode == DragTarget.DragMode.Disabled || 
+                   dragMode == DragTarget.DragMode.DragOnly;
+        }
+
+        /// <summary>
+        /// Attempt to start a click press.
+        /// Returns true if the press was started and remains active, false if it was completed immediately.
+        /// </summary>
+        private bool TryStartClick(ClickTarget clickTarget, PressEvent pressEvent) {
+            activePress.StartClick(clickTarget, pressEvent.button);
+            lastPressTime = Time.unscaledTime;
+            OnNewPress?.Invoke(clickTarget);
+
+            // Handle immediate click (ClickOnMouseDown)
+            if (clickTarget.ClickOnMouseDown) {
+                QueueClickEvent(new ClickParams(clickTarget, pressEvent.worldPosition, pressEvent.button));
+                activePress.ReleaseClick();
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Attempt to start a drag press.
+        /// Returns true if the drag was started successfully.
+        /// </summary>
+        private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, DragTarget.DragMode dragMode) {
+            var screenPosition = (Vector2)Input.mousePosition;
+            activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition);
+
+            var dragParams = new DragParams(dragTarget, dragTarget, screenPosition, screenPosition, pressEvent.button);
+            QueueDragStartEvent(dragParams);
+            return true;
+        }
+
+        /// <summary>
+        /// Validate state invariants (editor only).
+        /// Detects and corrects desyncs between FruityUI drag state and active press state.
+        /// </summary>
+        private void ValidateState() {
+            // Detect desync between FruityUI.DraggedTarget and press state
+            if (FruityUI.DraggedTarget != null && !activePress.pressIsDrag) {
+                Debug.LogWarning("[MouseState] State desync: DraggedTarget set but no press drag active");
+                FruityUI.DraggedTarget = null;
+            }
+
+            if (activePress.pressIsDrag && FruityUI.DraggedTarget == null) {
+                Debug.LogWarning("[MouseState] State desync: Press drag active but no DraggedTarget");
+                CancelDrag();
+            }
+
+            // Prevent queue overflow (abuse protection)
+            if (pressEventQueue.Count > MAX_QUEUED_EVENTS) {
+                Debug.LogError("[MouseState] Press event queue overflow - clearing to prevent abuse");
+                pressEventQueue.Clear();
+            }
+        }
 
         #region Raycasting
 
-        private MouseTarget GetRaycastTarget (out InterfaceNode node, out Vector3 worldPosition) {
+        /// <summary>
+        /// Perform raycasting to find the target under the mouse.
+        /// Also updates MouseIsMoving based on mouse position changes.
+        /// </summary>
+        private MouseTarget GetRaycastTarget(out InterfaceNode node, out Vector3 worldPosition) {
             // Track mouse movement
             var newMousePosition = Input.mousePosition;
             MouseIsMoving = (newMousePosition != oldMousePosition);
@@ -167,75 +275,21 @@ namespace LycheeLabs.FruityInterface {
 
         #endregion
 
-        #region Press Handling
+        #region Press Lifecycle
 
-        private void CheckForMousePress (MouseTarget raycastTarget, Vector3 raycastWorldPos) {
-            // Check for new button press
-            var pressedButton = MouseButton.None;
-            if (Input.GetMouseButtonDown((int)MouseButton.Left)) pressedButton = MouseButton.Left;
-            else if (Input.GetMouseButtonDown((int)MouseButton.Right)) pressedButton = MouseButton.Right;
-
-            if (pressedButton == MouseButton.None) return;
-            if (Time.unscaledTime <= lastPressTime + 0.05f) return; // Debounce
-
-            // Queue the real mouse press
-            pressEventQueue.Enqueue(new PressEvent {
-                target = raycastTarget,
-                button = pressedButton,
-                worldPosition = raycastWorldPos
-            });
+        /// <summary>
+        /// Get the mouse button that should be used for raycasting and event generation.
+        /// Returns the active press button if a press is active, otherwise the current active button.
+        /// </summary>
+        private MouseButton GetRelevantButton() {
+            return activePress.isPressed ? activePress.button : activeButton;
         }
 
-        private void ProcessPress (PressEvent pressEvent) {
-            var clickTarget = pressEvent.target as ClickTarget;
-            var dragTarget = pressEvent.target as DragTarget;
-
-            // Determine drag mode
-            var dragMode = DragTarget.DragMode.Disabled;
-            if (dragTarget != null) {
-                dragMode = dragTarget.GetDragMode(pressEvent.button);
-            }
-
-            // Click events are only sent when drag mode is Disabled or DragOnly
-            // (PickUpOnly and DragOrPickUp use clicking to start/complete pickup, not to trigger click events)
-            var allowClick = (dragMode == DragTarget.DragMode.Disabled || dragMode == DragTarget.DragMode.DragOnly);
-
-            var startedClick = false;
-            var startedDrag = false;
-
-            // Start a click
-            if (clickTarget != null && allowClick) {
-                activePress.StartClick(clickTarget, pressEvent.button);
-                lastPressTime = Time.unscaledTime;
-                OnNewPress?.Invoke(clickTarget);
-                startedClick = true;
-
-                // Handle immediate click (ClickOnMouseDown)
-                if (clickTarget.ClickOnMouseDown) {
-                    var clickParams = new ClickParams(clickTarget, pressEvent.worldPosition, pressEvent.button);
-                    QueueClickEvent(clickParams);
-                    activePress.ReleaseClick();
-                    startedClick = false;
-                }
-            }
-
-            // Start a drag
-            if (dragTarget != null && dragMode != DragTarget.DragMode.Disabled) {
-                var screenPosition = (Vector2)Input.mousePosition;
-                activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition);
-
-                // At drag start, Target and DraggingOver are the same (we clicked on the target)
-                var dragParams = new DragParams(dragTarget, dragTarget, screenPosition, screenPosition, pressEvent.button);
-                QueueDragStartEvent(dragParams);
-                startedDrag = true;
-            }
-
-            if (!startedClick && !startedDrag) {
-                activePress.Clear();
-            }
-        }
-
-        private void ForceCompleteCurrentPress () {
+        /// <summary>
+        /// Force-complete the current press (both click and drag components).
+        /// Used when a queued press needs to interrupt an ongoing press.
+        /// </summary>
+        private void ForceCompleteCurrentPress() {
             if (!activePress.isPressed) return;
 
             // Complete drag if active
@@ -254,7 +308,11 @@ namespace LycheeLabs.FruityInterface {
             activePress.Clear();
         }
 
-        private DragParams BuildCurrentDragParams () {
+        /// <summary>
+        /// Build drag parameters for the current active drag.
+        /// Returns DragParams.Null if no valid drag is active.
+        /// </summary>
+        private DragParams BuildCurrentDragParams() {
             if (!activePress.pressIsDrag || FruityUI.DraggedTarget == null) {
                 return DragParams.Null;
             }
@@ -268,8 +326,12 @@ namespace LycheeLabs.FruityInterface {
             );
         }
 
-        private void UpdateMousePress (MouseTarget highlightTarget) {
-            var clickTarget = highlightTarget as ClickTarget;
+        /// <summary>
+        /// Update the ongoing mouse press based on current input state.
+        /// Handles completion, cancellation, and continuation of both clicks and drags.
+        /// </summary>
+        private void UpdateMousePress(MouseTarget pressTarget) {
+            var clickTarget = pressTarget as ClickTarget;
             var dragParams = BuildCurrentDragParams();
 
             // Pickup mode: complete on second click of same button
@@ -282,7 +344,8 @@ namespace LycheeLabs.FruityInterface {
             }
 
             // Normal mode: handle mouse button release
-            if (!activePress.isPickUpDrag && !Input.GetMouseButton((int)activePress.button)) {
+            var buttonWasReleased = !activePress.isPickUpDrag && !Input.GetMouseButton((int)activePress.button);
+            if (buttonWasReleased) {
                 // Complete or convert drag
                 if (activePress.pressIsDrag) {
                     // For DragOrPickUp: short click converts to pickup mode
@@ -312,8 +375,7 @@ namespace LycheeLabs.FruityInterface {
                 var currentMode = FruityUI.DraggedTarget.GetDragMode(activePress.button);
                 if (currentMode == DragTarget.DragMode.Disabled) {
                     QueueDragCancelEvent();
-                    activePress.pressIsDrag = false;
-                    activePress.isPickUpDrag = false;
+                    CancelDrag();
                     return;
                 }
 
@@ -321,8 +383,7 @@ namespace LycheeLabs.FruityInterface {
                 var cancelButton = (activePress.button == MouseButton.Left) ? MouseButton.Right : MouseButton.Left;
                 if (Input.GetMouseButtonDown((int)cancelButton)) {
                     QueueDragCancelEvent();
-                    activePress.pressIsDrag = false;
-                    activePress.isPickUpDrag = false;
+                    CancelDrag();
                     return;
                 }
 
@@ -330,31 +391,39 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
+        /// <summary>
+        /// Cancel the active drag without completing it.
+        /// </summary>
+        private void CancelDrag() {
+            activePress.pressIsDrag = false;
+            activePress.isPickUpDrag = false;
+        }
+
         #endregion
 
         #region Event Queuing
 
-        private static void QueueHighlightEvent (HighlightParams highlightParams) {
+        private static void QueueHighlightEvent(HighlightParams highlightParams) {
             FruityUIManager.Queue(new HighlightEvent { Params = highlightParams });
         }
 
-        private static void QueueClickEvent (ClickParams clickParams) {
+        private static void QueueClickEvent(ClickParams clickParams) {
             FruityUIManager.Queue(new ClickEvent { Params = clickParams });
         }
 
-        private static void QueueDragStartEvent (DragParams dragParams) {
+        private static void QueueDragStartEvent(DragParams dragParams) {
             FruityUIManager.Queue(new StartDragEvent { Params = dragParams });
         }
 
-        private static void QueueDragUpdateEvent (DragParams dragParams) {
+        private static void QueueDragUpdateEvent(DragParams dragParams) {
             FruityUIManager.Queue(new UpdateDragEvent { Params = dragParams });
         }
 
-        private static void QueueDragCompleteEvent (DragParams dragParams) {
+        private static void QueueDragCompleteEvent(DragParams dragParams) {
             FruityUIManager.Queue(new EndDragEvent { Params = dragParams, WasCancelled = false });
         }
 
-        private static void QueueDragCancelEvent () {
+        private static void QueueDragCancelEvent() {
             FruityUIManager.Queue(new EndDragEvent { Params = default, WasCancelled = true });
         }
 
