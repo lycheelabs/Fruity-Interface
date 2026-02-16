@@ -9,14 +9,18 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public class HoverHierarchy : MouseTargetHierarchy {
 
-        // Build method specific to highlight params
-        public void Build(HoverParams hoverParams) {
-            base.Build(hoverParams.Target, hoverParams.Node, hoverParams.MouseWorldPosition, hoverParams.HeldButton);
+        /// <summary>
+        /// Build hierarchy for the given target.
+        /// </summary>
+        public void Build(MouseTarget target, HoverParams hoverParams) {
+            base.Build(target, hoverParams.Node, hoverParams.MouseWorldPosition, hoverParams.PressButton);
         }
 
-        // ApplyDiff method specific to highlight params - use non-generic overload
-        public void ApplyDiff(bool logging, HoverParams highlightParams) {
-            base.ApplyDiff(logging, highlightParams);
+        /// <summary>
+        /// Apply differences between previous and current hover chains.
+        /// </summary>
+        public void ApplyDiff(bool logging, HoverParams hoverParams) {
+            base.ApplyDiff(logging, hoverParams);
         }
 
         protected override bool ShouldIncludeTarget(MouseTarget target) {
@@ -26,11 +30,11 @@ namespace LycheeLabs.FruityInterface {
 
         protected override void CallUpdate<TParams>(MouseTarget target, bool firstFrame, TParams parameters, bool isLeaf) {
             // Only pass full params to the leaf target
-            var highlightParams = isLeaf && parameters is HoverParams hp 
+            var hoverParams = isLeaf && parameters is HoverParams hp 
                 ? hp 
                 : HoverParams.blank;
             
-            target.MouseHovering(firstFrame, highlightParams);
+            target.MouseHovering(firstFrame, hoverParams);
         }
 
         protected override void CallEnd(MouseTarget target) {

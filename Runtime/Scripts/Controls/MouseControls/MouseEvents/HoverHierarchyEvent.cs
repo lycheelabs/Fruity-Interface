@@ -10,10 +10,11 @@ namespace LycheeLabs.FruityInterface {
 
         private static readonly HoverHierarchy hierarchy = new HoverHierarchy();
 
+        public MouseTarget Target;
         public HoverParams Params;
 
         public void Activate(bool logging) {
-            hierarchy.Build(Params);
+            hierarchy.Build(Target, Params);
             hierarchy.ApplyDiff(logging, Params);
         }
 

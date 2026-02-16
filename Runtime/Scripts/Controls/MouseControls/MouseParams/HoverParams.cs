@@ -8,28 +8,25 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public struct HoverParams {
 
-        public static readonly HoverParams blank = new HoverParams(null, null, Vector3.zero, MouseButton.None);
+        public static readonly HoverParams blank = new HoverParams(null, Vector3.zero, MouseButton.None);
 
-        /// <summary>The mouse button currently held, or None.</summary>
-        public MouseButton HeldButton;
+        /// <summary>
+        /// The mouse button for an active press that originated on this target, or None.
+        /// This is None if the user pressed elsewhere then hovered over this target.
+        /// Use this to detect if the user is holding down a button on your UI element.
+        /// </summary>
+        public MouseButton PressButton;
         
         /// <summary>Current mouse position projected onto the world plane.</summary>
         public Vector3 MouseWorldPosition;
         
-        /// <summary>
-        /// The target receiving this highlight event.
-        /// During a drag, this is the dragged target.
-        /// </summary>
-        public MouseTarget Target;
-        
         /// <summary>The InterfaceNode associated with the target, if any.</summary>
         public InterfaceNode Node;
 
-        public HoverParams(MouseTarget target, InterfaceNode node, Vector3 mouseWorldPosition, MouseButton heldButton) {
-            Target = target;
+        public HoverParams(InterfaceNode node, Vector3 mouseWorldPosition, MouseButton pressButton) {
             Node = node;
             MouseWorldPosition = mouseWorldPosition;
-            HeldButton = heldButton;
+            PressButton = pressButton;
         }
 
         /// <summary>Current mouse position in screen/UI coordinates.</summary>

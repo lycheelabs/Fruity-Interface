@@ -31,12 +31,14 @@ namespace LycheeLabs.FruityInterface {
         private MouseButton activeButton;
         private MousePress activePress;
         private float lastPressTime;
+        private int lastReleaseFrame = -1;
         private Vector3 oldMousePosition;
 
         public MouseState() {
             raycaster = new MouseRaycaster();
             pressEventQueue = new Queue<PressEvent>();
             activeButton = MouseButton.None;
+            lastReleaseFrame = -1;
         }
 
         /// <summary>
@@ -116,8 +118,13 @@ namespace LycheeLabs.FruityInterface {
             FruityUI.DraggedOverTarget = raycastTarget;
 
             var hoverTarget = FruityUI.DraggedTarget ?? raycastTarget;
-            QueueHoverEvent(new HoverParams(
-                hoverTarget, raycastNode, raycastWorldPos, GetRelevantButton()));
+            
+            // Only pass button if this target is the one being pressed (dragged or clicked)
+            var pressButton = (hoverTarget == FruityUI.DraggedTarget || hoverTarget == activePress.target) 
+                ? activePress.button 
+                : MouseButton.None;
+            
+            QueueHoverEvent(hoverTarget, new HoverParams(raycastNode, raycastWorldPos, pressButton));
         }
 
         /// <summary>
@@ -152,6 +159,12 @@ namespace LycheeLabs.FruityInterface {
         private void CheckForNewPress() {
             // activeButton is already set by UpdateActiveButton() when GetMouseButtonDown fires
             if (activeButton == MouseButton.None) return;
+            
+            // Frame-based debounce: prevent queueing new press on same frame a press was just cleared
+            // (Fixes double-pickup when pickup completion and new press detection happen in same frame)
+            if (Time.frameCount == lastReleaseFrame) return;
+            
+            // Time-based debounce: prevent rapid re-clicks from faulty hardware
             if (Time.unscaledTime <= lastPressTime + PRESS_DEBOUNCE_TIME) return;
 
             var raycastTarget = FruityUI.DraggedOverTarget;
@@ -160,6 +173,10 @@ namespace LycheeLabs.FruityInterface {
                 button = activeButton,
                 worldPosition = FruityUI.MouseWorldPosition
             });
+            
+            // Update debounce timestamp immediately to prevent same-frame double-press detection
+            // (e.g., pickup completion click being detected as both completion AND new press)
+            lastPressTime = Time.unscaledTime;
         }
 
         /// <summary>
@@ -184,6 +201,7 @@ namespace LycheeLabs.FruityInterface {
 
             if (!pressRemainsActive) {
                 activePress.Clear();
+                lastReleaseFrame = Time.frameCount;
             }
         }
 
@@ -203,7 +221,6 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         private bool TryStartClick(ClickTarget clickTarget, PressEvent pressEvent) {
             activePress.StartClick(clickTarget, pressEvent.button);
-            lastPressTime = Time.unscaledTime;
             OnNewPress?.Invoke(clickTarget);
 
             // Handle immediate click (ClickOnMouseDown)
@@ -307,6 +324,7 @@ namespace LycheeLabs.FruityInterface {
             }
 
             activePress.Clear();
+            lastReleaseFrame = Time.frameCount;
         }
 
         /// <summary>
@@ -348,6 +366,7 @@ namespace LycheeLabs.FruityInterface {
                     }
                     ClearDragOverState();
                     activePress.Clear();
+                    lastReleaseFrame = Time.frameCount;
                     return;
                 }
             }
@@ -385,6 +404,7 @@ namespace LycheeLabs.FruityInterface {
                 }
 
                 activePress.Clear();
+                lastReleaseFrame = Time.frameCount;
                 return;
             }
 
@@ -436,8 +456,11 @@ namespace LycheeLabs.FruityInterface {
 
         #region Event Queuing
 
-        private static void QueueHoverEvent(HoverParams hoverParams) {
-            FruityUIManager.Queue(new HoverHierarchyEvent { Params = hoverParams });
+        private static void QueueHoverEvent(MouseTarget target, HoverParams hoverParams) {
+            FruityUIManager.Queue(new HoverHierarchyEvent { 
+                Target = target,
+                Params = hoverParams 
+            });
         }
 
         private static void QueueClickEvent(ClickParams clickParams) {

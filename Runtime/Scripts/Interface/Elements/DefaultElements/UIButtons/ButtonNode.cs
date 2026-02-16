@@ -47,7 +47,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public void MouseHovering (bool firstFrame, HoverParams highlightParams) {
             IsHighlighted = true;
-            IsHeld = highlightParams.HeldButton != MouseButton.None;
+            IsHeld = highlightParams.PressButton != MouseButton.None;
             OnHighlight(firstFrame, highlightParams);
         }
 
