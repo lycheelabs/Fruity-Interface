@@ -29,7 +29,7 @@ namespace LycheeLabs.FruityInterface {
         private readonly Queue<PressEvent> pressEventQueue;
 
         private MouseButton activeButton;
-        private bool pressedThisFrame;
+        private bool buttonDownThisFrame;
         private MousePress activePress;
         private float lastPressTime;
         private MouseTarget lastRaycastTarget;
@@ -85,7 +85,7 @@ namespace LycheeLabs.FruityInterface {
             UpdateRaycasting();
             
             // Only check for new input when idle
-            if (pressEventQueue.Count == 0 && pressedThisFrame && !activePress.isPressed) {
+            if (pressEventQueue.Count == 0 && buttonDownThisFrame && !activePress.isPressed) {
                 CheckForNewPress();
             }
         }
@@ -94,16 +94,16 @@ namespace LycheeLabs.FruityInterface {
         /// Update which mouse button is currently active.
         /// </summary>
         private void UpdateActiveButton() {
-            pressedThisFrame = false;
+            buttonDownThisFrame = false;
             
             if (Input.GetMouseButtonDown((int)MouseButton.Left)) {
                 activeButton = MouseButton.Left;
-                pressedThisFrame = true;
+                buttonDownThisFrame = true;
                 return;
             } 
             if (Input.GetMouseButtonDown((int)MouseButton.Right)) {
                 activeButton = MouseButton.Right;
-                pressedThisFrame = true;
+                buttonDownThisFrame = true;
                 return;
             } 
 
@@ -121,11 +121,10 @@ namespace LycheeLabs.FruityInterface {
         }
 
         /// <summary>
-        /// Perform raycasting and update hover state.
-        /// Sets FruityUI.DraggedOverTarget to the current raycast result and queues a hover event.
+        /// Perform raycasting and queue hover event.
         /// </summary>
         private void UpdateRaycasting() {
-            lastRaycastTarget = GetRaycastTarget(out lastRaycastNode, out lastRaycastWorldPos);
+            GetRaycastTarget();
             var hoverTarget = FruityUI.DraggedTarget ?? lastRaycastTarget;
 
             // Only pass button if this target is the one being pressed (dragged or clicked)
@@ -278,24 +277,23 @@ namespace LycheeLabs.FruityInterface {
         /// <summary>
         /// Perform raycasting to find the target under the mouse.
         /// Also updates MouseIsMoving based on mouse position changes.
+        /// Stores results in lastRaycastTarget, lastRaycastNode, and lastRaycastWorldPos.
         /// </summary>
-        private MouseTarget GetRaycastTarget(out InterfaceNode node, out Vector3 worldPosition) {
+        private void GetRaycastTarget() {
             // Track mouse movement
             var newMousePosition = Input.mousePosition;
             MouseIsMoving = (newMousePosition != oldMousePosition);
             oldMousePosition = newMousePosition;
 
             if (!FruityUI.MouseIsOnscreen) {
-                node = null;
-                worldPosition = Vector3.zero;
-                return null;
+                lastRaycastTarget = null;
+                lastRaycastNode = null;
+                lastRaycastWorldPos = Vector3.zero;
+                return;
             }
 
-            raycaster.CollideAndResolve(GetRelevantButton(), out var target, out node, out worldPosition);
-            lastRaycastTarget = target;
-            lastRaycastNode = node;
-            lastRaycastWorldPos = worldPosition;
-            return target;
+            raycaster.CollideAndResolve(GetRelevantButton(), 
+                out lastRaycastTarget, out lastRaycastNode, out lastRaycastWorldPos);
         }
 
         #endregion
