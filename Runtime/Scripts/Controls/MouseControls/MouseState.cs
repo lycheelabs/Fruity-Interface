@@ -32,6 +32,9 @@ namespace LycheeLabs.FruityInterface {
         private bool pressedThisFrame;
         private MousePress activePress;
         private float lastPressTime;
+        private MouseTarget lastRaycastTarget;
+        private InterfaceNode lastRaycastNode;
+        private Vector3 lastRaycastWorldPos;
         private Vector3 oldMousePosition;
 
         public MouseState() {
@@ -122,17 +125,15 @@ namespace LycheeLabs.FruityInterface {
         /// Sets FruityUI.DraggedOverTarget to the current raycast result and queues a hover event.
         /// </summary>
         private void UpdateRaycasting() {
-            var raycastTarget = GetRaycastTarget(out var raycastNode, out var raycastWorldPos);
-            FruityUI.DraggedOverTarget = raycastTarget;
+            lastRaycastTarget = GetRaycastTarget(out lastRaycastNode, out lastRaycastWorldPos);
+            var hoverTarget = FruityUI.DraggedTarget ?? lastRaycastTarget;
 
-            var hoverTarget = FruityUI.DraggedTarget ?? raycastTarget;
-            
             // Only pass button if this target is the one being pressed (dragged or clicked)
             var pressButton = (hoverTarget == FruityUI.DraggedTarget || hoverTarget == activePress.target) 
                 ? activePress.button 
                 : MouseButton.None;
             
-            QueueHoverEvent(hoverTarget, new HoverParams(raycastNode, raycastWorldPos, pressButton));
+            QueueHoverEvent(hoverTarget, new HoverParams(lastRaycastNode, lastRaycastWorldPos, pressButton));
         }
 
         /// <summary>
@@ -157,7 +158,7 @@ namespace LycheeLabs.FruityInterface {
         private void UpdateActivePress() {
             if (!activePress.isPressed) return;
 
-            var pressTarget = FruityUI.DraggedTarget ?? FruityUI.DraggedOverTarget;
+            var pressTarget = (MouseTarget)FruityUI.DraggedTarget ?? lastRaycastTarget;
             UpdateMousePress(pressTarget);
         }
 
@@ -171,7 +172,7 @@ namespace LycheeLabs.FruityInterface {
             // Time-based debounce: prevent rapid re-clicks from faulty hardware
             if (Time.unscaledTime <= lastPressTime + PRESS_DEBOUNCE_TIME) return;
 
-            var raycastTarget = FruityUI.DraggedOverTarget;
+            var raycastTarget = lastRaycastTarget;
             pressEventQueue.Enqueue(new PressEvent {
                 target = raycastTarget,
                 button = activeButton,
@@ -228,7 +229,7 @@ namespace LycheeLabs.FruityInterface {
 
             // Handle immediate click (ClickOnMouseDown)
             if (clickTarget.ClickOnMouseDown) {
-                QueueClickEvent(new ClickParams(clickTarget, pressEvent.worldPosition, pressEvent.button));
+                QueueClickEvent(clickTarget, new ClickParams(pressEvent.worldPosition, pressEvent.button));
                 activePress.ReleaseClick();
                 return false;
             }
@@ -291,6 +292,9 @@ namespace LycheeLabs.FruityInterface {
             }
 
             raycaster.CollideAndResolve(GetRelevantButton(), out var target, out node, out worldPosition);
+            lastRaycastTarget = target;
+            lastRaycastNode = node;
+            lastRaycastWorldPos = worldPosition;
             return target;
         }
 
@@ -320,9 +324,9 @@ namespace LycheeLabs.FruityInterface {
 
             // Complete click if active
             if (activePress.pressIsClick && activePress.target is ClickTarget clickTarget) {
-                var clickParams = new ClickParams(clickTarget, activePress.pressWorldPosition, activePress.button);
+                var clickParams = new ClickParams(activePress.pressWorldPosition, activePress.button);
                 clickParams.HeldDuration = Time.unscaledTime - lastPressTime;
-                QueueClickEvent(clickParams);
+                QueueClickEvent(clickTarget, clickParams);
                 activePress.ReleaseClick();
             }
 
@@ -340,7 +344,7 @@ namespace LycheeLabs.FruityInterface {
 
             return new DragParams(
                 FruityUI.DraggedTarget,
-                FruityUI.DraggedOverDragTarget,
+                FruityUI.DraggedOverTarget,
                 activePress.pressScreenPosition,
                 (Vector2)Input.mousePosition,
                 activePress.button
@@ -398,9 +402,9 @@ namespace LycheeLabs.FruityInterface {
 
                 // Complete click
                 if (activePress.pressIsClick && activePress.target == clickTarget) {
-                    var clickParams = new ClickParams(clickTarget, activePress.pressWorldPosition, activePress.button);
+                    var clickParams = new ClickParams(activePress.pressWorldPosition, activePress.button);
                     clickParams.HeldDuration = Time.unscaledTime - lastPressTime;
-                    QueueClickEvent(clickParams);
+                    QueueClickEvent(clickTarget, clickParams);
                     activePress.ReleaseClick();
                 }
 
@@ -428,9 +432,8 @@ namespace LycheeLabs.FruityInterface {
                     return;
                 }
 
-                // Queue drag-over update FIRST (updates FruityUI.DraggedOverDragTarget)
-                // Then build params with the updated value for drag update event
-                QueueDragOverUpdateEvent();
+                // Queue drag-over update with complete raycast results
+                QueueDragOverUpdateEvent(lastRaycastTarget, lastRaycastNode, lastRaycastWorldPos, activePress.button);
                 
                 var dragParams = BuildCurrentDragParams();
                 QueueDragUpdateEvent(dragParams);
@@ -463,8 +466,8 @@ namespace LycheeLabs.FruityInterface {
             });
         }
 
-        private static void QueueClickEvent(ClickParams clickParams) {
-            FruityUIManager.Queue(new ClickEvent { Params = clickParams });
+        private static void QueueClickEvent(ClickTarget target, ClickParams clickParams) {
+            FruityUIManager.Queue(new ClickEvent { Target = target, Params = clickParams });
         }
 
         private static void QueueDragStartEvent(DragParams dragParams) {
@@ -475,16 +478,12 @@ namespace LycheeLabs.FruityInterface {
             FruityUIManager.Queue(new UpdateDragEvent { Params = dragParams });
         }
 
-        private static void QueueDragOverUpdateEvent() {
-            // Queue with minimal params - the event will read FruityUI.DraggedOverTarget directly
+        private static void QueueDragOverUpdateEvent(MouseTarget raycastTarget, InterfaceNode raycastNode, Vector3 mouseWorldPos, MouseButton button) {
             FruityUIManager.Queue(new DragOverHierarchyEvent { 
-                Params = new DragParams(
-                    FruityUI.DraggedTarget,
-                    null, // Will be populated by the hierarchy
-                    Vector2.zero,
-                    (Vector2)Input.mousePosition,
-                    MouseButton.None
-                )
+                RaycastTarget = raycastTarget,
+                RaycastNode = raycastNode,
+                MouseWorldPosition = mouseWorldPos,
+                DragButton = button
             });
         }
 

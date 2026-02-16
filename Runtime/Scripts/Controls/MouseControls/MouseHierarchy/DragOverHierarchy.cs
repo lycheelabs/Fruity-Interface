@@ -26,7 +26,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         protected override void UpdateGlobalState(MouseTarget target) {
-            FruityUI.DraggedOverDragTarget = target as DragOverTarget;
+            FruityUI.DraggedOverTarget = target as DragOverTarget;
         }
 
         protected override void LogTargetChange(MouseTarget target) {

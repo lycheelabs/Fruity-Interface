@@ -8,24 +8,19 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public struct ClickParams {
 
-        public static readonly ClickParams blank = new ClickParams(null, Vector2.zero, MouseButton.None);
+        public static readonly ClickParams blank = new ClickParams(Vector2.zero, MouseButton.None);
 
-        private readonly ClickTarget target;
         private readonly Vector3 mouseWorldPosition;
         private readonly MouseButton clickButton;
         
         /// <summary>How long the mouse button was held before release (seconds).</summary>
         public float HeldDuration;
 
-        public ClickParams(ClickTarget target, Vector3 mouseWorldPosition, MouseButton clickButton) {
-            this.target = target;
+        public ClickParams(Vector3 mouseWorldPosition, MouseButton clickButton) {
             this.mouseWorldPosition = mouseWorldPosition;
             this.clickButton = clickButton;
             this.HeldDuration = 0;
         }
-
-        /// <summary>The target that was clicked.</summary>
-        public ClickTarget Target => target;
         
         /// <summary>Which mouse button was used for the click.</summary>
         public MouseButton ClickButton => clickButton;

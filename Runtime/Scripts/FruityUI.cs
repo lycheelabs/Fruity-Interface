@@ -66,15 +66,8 @@ namespace LycheeLabs.FruityInterface {
         /// The target currently under the mouse cursor (raw raycast result).
         /// During a drag, this is what the dragged item is being dragged over.
         /// </summary>
-        public static MouseTarget DraggedOverTarget { get; internal set; }
+        public static DragOverTarget DraggedOverTarget { get; internal set; }
 
-        /// <summary>
-        /// The DragOverTarget currently under the mouse cursor during a drag.
-        /// This is the filtered version of DraggedOverTarget, only set if it implements DragOverTarget.
-        /// Null when no drag is active or when dragging over non-DragOverTarget objects.
-        /// </summary>
-        public static DragOverTarget DraggedOverDragTarget { get; internal set; }
-        
         // ----------------------- Lock State -----------------------
 
         /// <summary>True if the UI is locked to a specific node hierarchy.</summary>

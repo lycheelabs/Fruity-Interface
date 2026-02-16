@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace LycheeLabs.FruityInterface {
 
     /// <summary>
@@ -8,13 +10,26 @@ namespace LycheeLabs.FruityInterface {
 
         private static readonly DragOverHierarchy hierarchy = new DragOverHierarchy();
 
-        public DragParams Params;
+        public MouseTarget RaycastTarget;
+        public InterfaceNode RaycastNode;
+        public Vector3 MouseWorldPosition;
+        public MouseButton DragButton;
 
         public void Activate(bool logging) {
-            // Build hierarchy from the raycast result (FruityUI.DraggedOverTarget)
-            // The hierarchy filters to only DragOverTarget instances and updates FruityUI.DraggedOverDragTarget
-            hierarchy.Build(FruityUI.DraggedOverTarget, null, Params.MouseWorldPosition, Params.DragButton);
-            hierarchy.ApplyDiff(logging, Params);
+            // Build hierarchy from the raycast data passed to the event
+            // The hierarchy filters to only DragOverTarget instances and updates FruityUI.DraggedOverTarget
+            hierarchy.Build(RaycastTarget, RaycastNode, MouseWorldPosition, DragButton);
+            
+            // ApplyDiff needs DragParams for the callbacks - build it from current global state
+            var dragParams = new DragParams(
+                FruityUI.DraggedTarget,
+                FruityUI.DraggedOverTarget,
+                Vector2.zero,  // Not used by DragOver callbacks
+                (Vector2)Input.mousePosition,
+                DragButton
+            );
+            
+            hierarchy.ApplyDiff(logging, dragParams);
         }
 
         /// <summary>
