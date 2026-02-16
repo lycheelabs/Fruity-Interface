@@ -12,7 +12,7 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        internal static void Queue(InterfaceEvent newEvent) {
+        internal static void Queue(ControlEvent newEvent) {
             if (Instance != null && newEvent != null) {
                 Instance.events.Queue(newEvent);
             }
@@ -25,13 +25,13 @@ namespace LycheeLabs.FruityInterface {
         public bool LogEvents;
 
         private MouseState mouseState;
-        private InterfaceEventQueue events;
+        private ControlEventQueue events;
         private ScreenBounds bounds;
         
         private void Awake () { 
             Instance = this;
             mouseState = new MouseState();
-            events = new InterfaceEventQueue();
+            events = new ControlEventQueue();
             bounds = new ScreenBounds();
             bounds.Update(MinAspectRatio, MaxAspectRatio);
 

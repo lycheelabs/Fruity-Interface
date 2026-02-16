@@ -22,19 +22,19 @@ namespace LycheeLabs.FruityInterface {
         public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * ScreenBounds.UIScaling) - ScreenBounds.LetterboxOffset;
         
         /// <summary>Current mouse position projected onto the world plane.</summary>
-        public static Vector3 MouseWorldPosition => UIHelpers.ScreenPointToWorldPoint(UICamera, Input.mousePosition, WorldPlane);
+        public static Vector3 MouseWorldPosition => InterfaceHelpers.ScreenPointToWorldPoint(UICamera, Input.mousePosition, WorldPlane);
         
         /// <summary>Convert a screen position to world position on the world plane.</summary>
         public static Vector3 ScreenPointToWorldPoint(Vector2 screenPosition) => 
-            UIHelpers.ScreenPointToWorldPoint(UICamera, screenPosition, WorldPlane);
+            InterfaceHelpers.ScreenPointToWorldPoint(UICamera, screenPosition, WorldPlane);
         
         /// <summary>Convert a world position to screen position.</summary>
         public static Vector3 WorldPointToScreenPoint(Vector3 worldPosition) => 
-            UIHelpers.WorldPointToScreenPoint(UICamera, worldPosition);
+            InterfaceHelpers.WorldPointToScreenPoint(UICamera, worldPosition);
         
         /// <summary>Project a world position onto the world plane along the camera's view direction.</summary>
         public static Vector3 IntersectWithWorldPlane(this Vector3 worldPosition) =>
-            UIHelpers.IntersectWithPlane(UICamera, worldPosition, WorldPlane);
+            InterfaceHelpers.IntersectWithPlane(UICamera, worldPosition, WorldPlane);
         
         /// <summary>True if the mouse cursor is within the screen bounds.</summary>
         public static bool MouseIsOnscreen =>
@@ -68,6 +68,13 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         public static MouseTarget DraggedOverTarget { get; internal set; }
 
+        /// <summary>
+        /// The DragOverTarget currently under the mouse cursor during a drag.
+        /// This is the filtered version of DraggedOverTarget, only set if it implements DragOverTarget.
+        /// Null when no drag is active or when dragging over non-DragOverTarget objects.
+        /// </summary>
+        public static DragOverTarget DraggedOverDragTarget { get; internal set; }
+        
         // ----------------------- Lock State -----------------------
 
         /// <summary>True if the UI is locked to a specific node hierarchy.</summary>
