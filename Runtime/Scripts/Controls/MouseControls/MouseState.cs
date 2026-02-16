@@ -61,6 +61,24 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
+        /// <summary>
+        /// Cancel the active drag if it matches the specified target.
+        /// Updates local state and queues a cancellation event to maintain proper event ordering.
+        /// Safe to call at any time - even during event processing.
+        /// </summary>
+        public void CancelDrag(DragTarget target) {
+            if (activePress.pressIsDrag && FruityUI.DraggedTarget == target) {
+                // Queue the cancellation event
+                QueueDragCancelEvent();
+                
+                // Clear drag-over state
+                ClearDragOverState();
+                
+                // Update local press state to prevent further drag updates
+                CancelDragPress();
+            }
+        }
+
         public void Update() {
             //if (!Application.isFocused || DisableMouse) return;
 
@@ -171,16 +189,14 @@ namespace LycheeLabs.FruityInterface {
             // Time-based debounce: prevent rapid re-clicks from faulty hardware
             if (Time.unscaledTime <= lastPressTime + PRESS_DEBOUNCE_TIME) return;
 
-            var raycastTarget = lastRaycastTarget;
-            pressEventQueue.Enqueue(new PressEvent {
-                target = raycastTarget,
-                button = activeButton,
-                worldPosition = FruityUI.MouseWorldPosition
-            });
-            
-            // Update debounce timestamp immediately to prevent same-frame double-press detection
-            // (e.g., pickup completion click being detected as both completion AND new press)
-            lastPressTime = Time.unscaledTime;
+            if (lastRaycastTarget != null) {
+                pressEventQueue.Enqueue(new PressEvent {
+                    target = lastRaycastTarget,
+                    button = activeButton,
+                    worldPosition = FruityUI.MouseWorldPosition
+                });
+                lastPressTime = Time.unscaledTime;
+            }
         }
 
         /// <summary>
@@ -262,7 +278,7 @@ namespace LycheeLabs.FruityInterface {
 
             if (activePress.pressIsDrag && FruityUI.DraggedTarget == null) {
                 Debug.LogWarning("[MouseState] State desync: Press drag active but no DraggedTarget");
-                CancelDrag();
+                CancelDragPress();
             }
 
             // Prevent queue overflow (abuse protection)
@@ -359,7 +375,7 @@ namespace LycheeLabs.FruityInterface {
             // Pickup mode: complete on second click of same button
             if (activePress.pressIsDrag && activePress.isPickUpDrag) {
                 if (Input.GetMouseButtonDown((int)activePress.button) && activePress.pressStartFrame != Time.frameCount) {
-                    // Build params after hierarchy has processed to get current DraggedOverDragTarget
+                    // Build params after hierarchy has processed to get current DraggedOverTarget
                     var dragParams = BuildCurrentDragParams();
                     
                     // Cancel drag if no valid drop target, otherwise complete
@@ -386,7 +402,7 @@ namespace LycheeLabs.FruityInterface {
                         return;
                     }
                     
-                    // Build params after hierarchy has processed
+                    // Build params after hierarchy has processed to get current DraggedOverTarget
                     var dragParams = BuildCurrentDragParams();
                     
                     // Cancel drag if no valid drop target, otherwise complete
@@ -417,7 +433,7 @@ namespace LycheeLabs.FruityInterface {
                 if (currentMode == DragTarget.DragMode.Disabled) {
                     QueueDragCancelEvent();
                     ClearDragOverState();
-                    CancelDrag();
+                    CancelDragPress();
                     return;
                 }
 
@@ -426,7 +442,7 @@ namespace LycheeLabs.FruityInterface {
                 if (Input.GetMouseButtonDown((int)cancelButton)) {
                     QueueDragCancelEvent();
                     ClearDragOverState();
-                    CancelDrag();
+                    CancelDragPress();
                     return;
                 }
 
@@ -440,8 +456,9 @@ namespace LycheeLabs.FruityInterface {
 
         /// <summary>
         /// Cancel the active drag without completing it.
+        /// Clears local drag flags but does not clear the entire press.
         /// </summary>
-        private void CancelDrag() {
+        private void CancelDragPress() {
             activePress.pressIsDrag = false;
             activePress.isPickUpDrag = false;
         }

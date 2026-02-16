@@ -110,11 +110,12 @@ namespace LycheeLabs.FruityInterface {
 
         /// <summary>
         /// Cancel the current drag operation if the specified target is being dragged.
+        /// This queues a cancellation event and updates internal state to ensure proper event ordering.
+        /// Safe to call at any time, even during event processing or from within drag callbacks.
         /// </summary>
         public static void CancelDrag(DragTarget target) {
             if (DraggedTarget == target) {
-                DraggedTarget.CancelMouseDrag();
-                DraggedTarget = null;
+                FruityUIManager.CancelDrag(target);
             }
         }
 
