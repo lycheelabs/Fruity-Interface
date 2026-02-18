@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -114,9 +113,7 @@ namespace LycheeLabs.FruityInterface {
         /// Safe to call at any time, even during event processing or from within drag callbacks.
         /// </summary>
         public static void CancelDrag(DragTarget target) {
-            if (DraggedTarget == target) {
-                FruityUIManager.CancelDrag(target);
-            }
+            FruityUIManager.CancelDrag(target);
         }
 
     }

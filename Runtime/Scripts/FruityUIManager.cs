@@ -7,19 +7,31 @@ namespace LycheeLabs.FruityInterface {
         public static FruityUIManager Instance { get; private set; }
 
         internal static void TriggerNewClick (MouseTarget target, MouseButton button) {
-            if (Instance != null && target != null) {
+            if (Instance == null) {
+                Debug.LogWarning("The scene contains no FruityUIManager!");
+                return;
+            }
+            if (target != null) {
                 Instance.mouseState.QueueClick(target, button);
             }
         }
 
-        internal static void CancelDrag(DragTarget target) {
-            if (Instance != null && target != null) {
+        internal static void CancelDrag (DragTarget target) {
+            if (Instance == null) {
+                Debug.LogWarning("The scene contains no FruityUIManager!");
+                return;
+            }
+            if (target != null) {
                 Instance.mouseState.CancelDrag(target);
             }
         }
 
-        internal static void Queue(ControlEvent newEvent) {
-            if (Instance != null && newEvent != null) {
+        internal static void QueueEvent (ControlEvent newEvent) {
+            if (Instance == null) {
+                Debug.LogWarning("The scene contains no FruityUIManager!");
+                return;
+            }
+            if (newEvent != null) {
                 Instance.events.Queue(newEvent);
             }
         }
