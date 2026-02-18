@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 125, y: 0}
-  m_SizeDelta: {x: 160, y: 40}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4955404835196095891
 MonoBehaviour:
@@ -271,11 +271,14 @@ MonoBehaviour:
   BackingImage: {fileID: 7717136076479044669}
   ButtonText: {fileID: 3892752006021348732}
   IconImage: {fileID: 4955404835196095891}
+  BoxCollider: {fileID: 859855964750334821}
+  layoutDriver: {fileID: 0}
   height: 50
   maxWidth: 200
   cropWidth: 0
   iconSprite: {fileID: 0}
   fontHeightScaling: 1
+  fontHeightShift: 0
 --- !u!65 &859855964750334821
 BoxCollider:
   m_ObjectHideFlags: 0

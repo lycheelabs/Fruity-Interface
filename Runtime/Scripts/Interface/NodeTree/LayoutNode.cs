@@ -10,8 +10,8 @@ namespace LycheeLabs.FruityInterface {
         public Vector2 LayoutPaddingPixels;
 
         public Vector2 TotalSizePixels => LayoutSizePixels + LayoutPaddingPixels;
-        public float TotalWidthPixels => LayoutSizePixels.x + LayoutPaddingPixels.x;
-        public float TotalHeightPixels => LayoutSizePixels.y + LayoutPaddingPixels.y;
+        public float TotalWidthPixels => (LayoutSizePixels.x + LayoutPaddingPixels.x) * transform.localScale.x;
+        public float TotalHeightPixels => (LayoutSizePixels.y + LayoutPaddingPixels.y) * transform.localScale.y;
 
         private RectTransform _rectTransform;
         public RectTransform rectTransform => _rectTransform ??= GetComponent<RectTransform>();

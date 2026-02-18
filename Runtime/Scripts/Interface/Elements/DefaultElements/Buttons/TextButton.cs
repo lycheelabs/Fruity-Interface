@@ -13,21 +13,16 @@ namespace LycheeLabs.FruityInterface.Elements {
         public Image BackingImage;
         public TextMeshProUGUI ButtonText;
         public Image IconImage;
-
-        private BoxCollider _boxCollider;
-        public BoxCollider BoxCollider {
-            get {
-                _boxCollider = _boxCollider ?? GetComponent<BoxCollider>();
-                return _boxCollider;
-            }
-        }
+        public BoxCollider BoxCollider;
 
         [SerializeField] public ButtonLayoutStyle layoutDriver = null;
         [SerializeField] private float height = 50;
         [SerializeField] private float maxWidth = 200;
         [SerializeField] private bool cropWidth = false;
         [SerializeField] private Sprite iconSprite = null;
+
         [Range(0f, 2f)] [SerializeField] private float fontHeightScaling = 1f;
+        [Range(-1f, 1f)][SerializeField] private float fontHeightShift = 0f;
 
         public void OnValidate () {
             // Default layout driver
@@ -98,10 +93,12 @@ namespace LycheeLabs.FruityInterface.Elements {
 
             ButtonText.fontSizeMax = height * 0.7f * fontHeightScaling;
             ButtonText.fontSizeMin = height * 0.4f * fontHeightScaling;
+
+            var offsetMin = ButtonText.rectTransform.offsetMin;
             if (hasIcon) {
-                ButtonText.rectTransform.offsetMin = new Vector2(height + 4, 5);
+                ButtonText.rectTransform.offsetMin = new Vector2(height + 4, offsetMin.y);
             } else {
-                ButtonText.rectTransform.offsetMin = new Vector2(16, 5);
+                ButtonText.rectTransform.offsetMin = new Vector2(16, offsetMin.y);
             }
 
         }

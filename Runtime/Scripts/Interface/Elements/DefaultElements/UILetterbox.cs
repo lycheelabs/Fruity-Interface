@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    public class UILetterbox : MonoBehaviour {
+    public class UILetterbox : InterfaceNode {
 
 		public static UILetterbox Instantiate (Transform parent) {
 			var instance = FruityUIPrefabs.NewUILetterbox().GetComponent<UILetterbox>();

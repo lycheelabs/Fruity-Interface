@@ -4,10 +4,10 @@ using UnityEngine.UI;
 namespace LycheeLabs.FruityInterface.Elements {
 
     [RequireComponent(typeof(Image))]
-    public class UIShadow : MonoBehaviour {
+    public class FullscreenShadowNode : InterfaceNode {
 
-		public static UIShadow Instantiate (Transform parent) {
-			var instance = FruityUIPrefabs.NewUIShadow().GetComponent<UIShadow>();
+		public static FullscreenShadowNode Instantiate (Transform parent) {
+			var instance = FruityUIPrefabs.NewUIShadow().GetComponent<FullscreenShadowNode>();
 			instance.transform.SetParent(parent, false);
 			return instance;
 		}

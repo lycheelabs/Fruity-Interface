@@ -17,6 +17,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void LayoutVertical () {
+            RemoveDestroyedChildren();
+
             float containedWidth = 0;
             float containedHeight = 0;
 
@@ -47,6 +49,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void LayoutHorizontal () {
+            RemoveDestroyedChildren();
+
             float containedWidth = 0;
             float containedHeight = 0;
 
@@ -73,7 +77,17 @@ namespace LycheeLabs.FruityInterface.Elements {
             containedHeight = Mathf.Max(containedHeight, minimumSize.y);
 
             LayoutSizePixels = new Vector2(containedWidth, containedHeight);
-            rectTransform.sizeDelta = TotalSizePixels;
+            rectTransform.sizeDelta = LayoutSizePixels;
+
+        }
+
+        private void RemoveDestroyedChildren () {
+            for (int i = ChildNodes.Count - 1; i >= 0; i--) {
+                var node = ChildNodes[i];
+                if (node == null) {
+                    ChildNodes.RemoveAt(i);
+                }
+            }
         }
 
     }

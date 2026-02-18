@@ -49,6 +49,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 EditorGUILayout.PropertyField(so.FindProperty("BackingImage"));
                 EditorGUILayout.PropertyField(so.FindProperty("ButtonText"));
                 EditorGUILayout.PropertyField(so.FindProperty("IconImage"));
+                EditorGUILayout.PropertyField(so.FindProperty("BoxCollider"));
                 EditorGUILayout.EndVertical();
                 so.ApplyModifiedProperties();
             }
