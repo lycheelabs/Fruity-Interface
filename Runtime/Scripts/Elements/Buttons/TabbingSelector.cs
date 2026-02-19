@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    public class TabbingSelector : ControlNode, ControlLayoutDriver {
+    public enum TabbingSelectorComponent {
+        Main,
+        LeftArrow,
+        RightArrow
+    }
 
-        public enum Component {
-            Main,
-            LeftArrow,
-            RightArrow
-        }
+    public class TabbingSelector : ControlNode, ControlLayoutDriver {
 
         public TextButton MainButton;
         public IconButton LeftArrow;
@@ -18,15 +18,26 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private float width = 200;
         [SerializeField] private float height = 50;
         [SerializeField] private float fontHeightScaling = 1;
+        [SerializeField] private float iconScaling = 1;
         [SerializeField] private float arrowMargin = 20;
 
-        private float ButtonWidth => Mathf.Max(height, width - height * 2 - arrowMargin);
+        private float ButtonWidth => Mathf.Max(height, width - height * iconScaling * 2 - arrowMargin);
 
         public float DrivenWidth => ButtonWidth;
         public float DrivenHeight => height;
         public Vector2 DrivenLayoutPadding => default;
         public bool DrivenCropWidth => false;
         public float DrivenFontHeightScaling => fontHeightScaling;
+        public float DrivenIconScale => iconScaling;
+        public float DrivenInteriorMargins => arrowMargin;
+
+        private TabbingSelectorEffect _effect;
+        public TabbingSelectorEffect TryGetEffect {
+            get {
+                _effect = _effect ?? GetComponent<TabbingSelectorEffect>();
+                return _effect;
+            }
+        }
 
         protected override void RefreshLayout () {
 
@@ -36,6 +47,8 @@ namespace LycheeLabs.FruityInterface.Elements {
                 height = LayoutDriver.height;
                 LayoutPaddingPixels = LayoutDriver.layoutPadding;
                 fontHeightScaling = LayoutDriver.fontHeightScaling;
+                iconScaling = LayoutDriver.iconScaling;
+                arrowMargin = LayoutDriver.interiorMargins;
             }
 
             // Pass layout to children
@@ -45,9 +58,11 @@ namespace LycheeLabs.FruityInterface.Elements {
                 childDriver.height = height;
                 childDriver.layoutPadding = default;
                 childDriver.fontHeightScaling = fontHeightScaling;
+                childDriver.iconScaling = iconScaling;
+                childDriver.interiorMargins = 0;
 
-                LeftArrow.BasePosition = new Vector3(height / 2f, 0);
-                RightArrow.BasePosition = new Vector3(-height / 2f, 0);
+                LeftArrow.BasePosition = new Vector3(height * iconScaling / 2f, 0);
+                RightArrow.BasePosition = new Vector3(-height * iconScaling / 2f, 0);
 
                 MainButton.RefreshLayoutDeferred();
                 LeftArrow.RefreshLayoutDeferred();
@@ -60,15 +75,21 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         }
 
-        public void Activate (Component type, MouseButton clickButton) {
-            //
+        public void Activate (TabbingSelectorComponent type, MouseButton clickButton) {
+            if (TryGetEffect != null) {
+                TryGetEffect.Activate(type, clickButton);
+            } else {
+                Debug.LogWarning("TabbingSelectorEffect component not found on " + name);
+            }
         }
 
-        public void MouseOver (Component type) {
-            //
+        public void MouseOver (TabbingSelectorComponent type) {
+            if (TryGetEffect != null) {
+                TryGetEffect.MouseOver(type);
+            }
         }
 
-        public void UpdateLayout (Component type) {
+        public void UpdateLayout (TabbingSelectorComponent type) {
             //
         }
 

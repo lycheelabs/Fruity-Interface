@@ -29,6 +29,17 @@ namespace LycheeLabs.FruityInterface {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("fontHeightScaling"));
             EditorGUILayout.EndVertical();
 
+            EditorGUILayout.LabelField("Icon Buttons", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("iconScaling"));
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.LabelField("Compound Buttons", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("interiorMargins"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("fontHeightScaling"));
+            EditorGUILayout.EndVertical();
+
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.EndVertical();
             serializedObject.ApplyModifiedProperties();

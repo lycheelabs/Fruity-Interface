@@ -18,6 +18,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private float width = 200;
         [SerializeField] private float height = 50;
         [SerializeField] private float fontHeightScaling = 1;
+        [SerializeField] private float iconScaling = 1;
         [SerializeField] private float fieldMargin = 20;
 
         private float FieldWidth => Mathf.Max(height, width - height - fieldMargin);
@@ -27,6 +28,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         public Vector2 DrivenLayoutPadding => default;
         public bool DrivenCropWidth => false;
         public float DrivenFontHeightScaling => fontHeightScaling;
+        public float DrivenIconScale => iconScaling;
+        public float DrivenInteriorMargins => fieldMargin;
 
         public void SetText (string text) {
             FieldText.text = text;
@@ -58,6 +61,8 @@ namespace LycheeLabs.FruityInterface.Elements {
                 childDriver.height = height;
                 childDriver.layoutPadding = default;
                 childDriver.fontHeightScaling = fontHeightScaling;
+                childDriver.iconScaling = iconScaling;
+                childDriver.interiorMargins = 0;
 
                 ToggleButton.BasePosition = new Vector3(height / 2f, 0);
                 ToggleButton.RefreshLayoutDeferred();
@@ -75,10 +80,10 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         // ------------------------------------------------------------------
 
-        private ToggleButtonEffect _effect;
-        public ToggleButtonEffect TryGetEffect {
+        private ToggleEffect _effect;
+        public ToggleEffect TryGetEffect {
             get {
-                _effect = _effect ?? GetComponent<ToggleButtonEffect>();
+                _effect = _effect ?? GetComponent<ToggleEffect>();
                 return _effect;
             }
         }

@@ -3,7 +3,7 @@ using UnityEditor;
 namespace LycheeLabs.FruityInterface.Elements {
 
     [CustomEditor(typeof(TabbingSelector))]
-    public class TabbingButtonEditor : Editor {
+    public class TabbingSelectorEditor : Editor {
 
         public bool PrefabFoldout;
 
@@ -20,6 +20,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             EditorGUILayout.PropertyField(so.FindProperty("height"));
             EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));
             EditorGUILayout.PropertyField(so.FindProperty("fontHeightScaling"));
+            EditorGUILayout.PropertyField(so.FindProperty("iconScaling"));
             EditorGUILayout.PropertyField(so.FindProperty("arrowMargin"));
         }
 

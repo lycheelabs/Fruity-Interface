@@ -15,6 +15,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private Sprite sprite = null;
         [SerializeField] private Vector2 size = new Vector2(50, 50);
         [SerializeField] private float colliderPadding = 10;
+        [SerializeField] private float iconScaling = 1;
 
         private void OnValidate () {
             RefreshLayoutDeferred();
@@ -25,13 +26,13 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         protected override void AnimateHover (float highlightTween, float heldTween) {
-            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
+            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.14f * Tweens.EaseOutQuad(heldTween);
             float highlightScale = 1 + scaleShift * AnimationScaling;
             ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
         }
 
         protected override void AnimateClick () {
-            ButtonAnimator.Squash(1f);
+            ButtonAnimator.Squash(6f * AnimationScaling);
         }
 
         public void ConfigureSprite(Sprite sprite) {
@@ -45,13 +46,14 @@ namespace LycheeLabs.FruityInterface.Elements {
             // Override sizes
             if (LayoutDriver != null && LayoutDriver.isActiveAndEnabled) {
                 size = new Vector2(LayoutDriver.height, LayoutDriver.height);
+                iconScaling = LayoutDriver.iconScaling;
                 LayoutPaddingPixels = LayoutDriver.layoutPadding;
             }
 
             rectTransform.sizeDelta = size;
-            ButtonImage.rectTransform.sizeDelta = size;
+            ButtonImage.rectTransform.sizeDelta = size * iconScaling;
             LayoutSizePixels = size;
-            BoxCollider.size = size + new Vector2(colliderPadding, colliderPadding);
+            BoxCollider.size = (size * iconScaling) + new Vector2(colliderPadding, colliderPadding);
         }
 
     }

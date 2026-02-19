@@ -17,6 +17,7 @@ namespace LycheeLabs.FruityInterface {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
             EditorGUILayout.PropertyField(so.FindProperty("Size"));
+            EditorGUILayout.PropertyField(so.FindProperty("Orientation"));
 
             EditorGUILayout.EndVertical();
             so.ApplyModifiedProperties();

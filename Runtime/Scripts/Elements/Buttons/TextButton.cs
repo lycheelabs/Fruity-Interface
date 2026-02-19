@@ -50,16 +50,23 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         protected override void AnimateHover (float highlightTween, float heldTween) {
-            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
+            /*var scaleShift = 0.03f * Tweens.EaseOutQuad(highlightTween) - 0.05f * Tweens.EaseOutQuad(heldTween);
+            float highlightScale = 1 + scaleShift * AnimationScaling;
+            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);*/
+
+            var scaleShift = 0.03f * Tweens.EaseOutQuad(highlightTween);
             float highlightScale = 1 + scaleShift * AnimationScaling;
             ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
+
+            var heldShift = new Vector3(0, -Tweens.EaseOutQuad(heldTween), 0) *10 * AnimationScaling;
+            ButtonAnimator.OverlayPosition(heldShift * BaseScale);
         }
 
         protected override void AnimateClick () {
-            ButtonAnimator.Squash(1f);
+            ButtonAnimator.Squash(2.5f * AnimationScaling);
         }
 
-        // -----------------------------------------------
+        // ---------------------------------------------
 
         protected override void RefreshLayout() {
 

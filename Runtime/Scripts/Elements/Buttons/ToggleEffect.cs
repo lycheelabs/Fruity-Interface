@@ -4,7 +4,7 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface.Elements {
 
     [RequireComponent(typeof(ToggleField))]
-    public abstract class ToggleButtonEffect : ButtonEffect {
+    public abstract class ToggleEffect : MonoBehaviour {
 
         public bool IsToggledOn { get; private set; }
 
@@ -39,7 +39,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             UpdateLayout();
         }
 
-        protected override void UpdateLayout() {
+        protected void UpdateLayout() {
             //Button.Configure(Text, Height, Width);
         }
 
@@ -56,6 +56,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             IsToggledOn = value;
         }
 
+        public abstract void MouseOver ();
         protected abstract void ApplyToggle(bool value);
 
     }

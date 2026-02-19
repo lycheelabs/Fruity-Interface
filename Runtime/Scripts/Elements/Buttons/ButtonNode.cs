@@ -33,17 +33,17 @@ namespace LycheeLabs.FruityInterface.Elements {
             set { rectTransform.SetAnchor(value); }
         }
 
-        private ClickButtonEffect _effect;
-        public ClickButtonEffect TryGetEffect {
+        private ButtonEffect _effect;
+        public ButtonEffect TryGetEffect {
             get {
-                _effect = _effect ?? GetComponent<ClickButtonEffect>();
+                _effect = _effect ?? GetComponent<ButtonEffect>();
                 return _effect;
             }
         }
 
         private void Update () {
-            highlightTween = highlightTween.MoveTowardsUnscaled(IsHighlighted, 8);
-            heldTween = heldTween.MoveTowardsUnscaled(IsHeld, 8);
+            highlightTween = highlightTween.MoveTowardsUnscaled(IsHighlighted, 12);
+            heldTween = heldTween.MoveTowardsUnscaled(IsHeld, 12);
             AnimateHover(highlightTween, heldTween);
             OnUpdate();
         }
@@ -86,7 +86,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public void SetEnterTween (float tween) {
             if (TryGetEffect != null) {
-                Offset = (1 - tween) * TryGetEffect.EntryOffset;
+                //Offset = (1 - tween) * TryGetEffect.EntryOffset;
             }
         }
 
