@@ -14,7 +14,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         public TextMeshProUGUI ButtonText;
         public Image IconImage;
         public BoxCollider BoxCollider;
-        public ButtonLayoutStyle layoutDriver;
 
         [SerializeField] private float height = 50;
         [SerializeField] private float maxWidth = 200;
@@ -23,14 +22,6 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         [Range(0f, 2f)] [SerializeField] private float fontHeightScaling = 1f;
         [Range(-1f, 1f)][SerializeField] private float fontHeightShift = 0f;
-
-        public void OnValidate () {
-            // Default layout driver
-            if (layoutDriver == null && transform.parent != null) {
-                layoutDriver = transform.parent.GetComponent<ButtonLayoutStyle>();
-            }
-            RefreshLayoutDeferred();
-        }
 
         private void OnEnable () {
             RefreshLayoutDeferred();
@@ -63,12 +54,12 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected override void RefreshLayout() {
 
             // Override sizes
-            if (layoutDriver != null && layoutDriver.isActiveAndEnabled) {
-                maxWidth = layoutDriver.Width;
-                height = layoutDriver.Height;
-                cropWidth = layoutDriver.CropWidth;
-                LayoutPaddingPixels = layoutDriver.LayoutPadding;
-                fontHeightScaling = layoutDriver.FontHeightScaling;
+            if (LayoutDriver != null && LayoutDriver.isActiveAndEnabled) {
+                maxWidth = LayoutDriver.width;
+                height = LayoutDriver.height;
+                cropWidth = LayoutDriver.cropWidth;
+                LayoutPaddingPixels = LayoutDriver.layoutPadding;
+                fontHeightScaling = LayoutDriver.fontHeightScaling;
             }
 
             // Update icon

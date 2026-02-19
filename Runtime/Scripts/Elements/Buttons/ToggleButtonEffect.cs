@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [RequireComponent(typeof(ToggleButton))]
+    [RequireComponent(typeof(ToggleField))]
     public abstract class ToggleButtonEffect : ButtonEffect {
 
         public bool IsToggledOn { get; private set; }
 
-        private ToggleButton button = null;
-        public ToggleButton Button {
-            get => button ?? GetComponent<ToggleButton>();
+        private ToggleField button = null;
+        public ToggleField Button {
+            get => button ?? GetComponent<ToggleField>();
         }
 
         [SerializeField]
@@ -35,11 +35,12 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         public void OnValidate() {
-            Button.Initialise();
+            //Button.Initialise();
             UpdateLayout();
         }
+
         protected override void UpdateLayout() {
-            Button.Configure(Text, Height, Width);
+            //Button.Configure(Text, Height, Width);
         }
 
         public void SetUpAs(bool value) {

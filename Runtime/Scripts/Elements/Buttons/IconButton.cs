@@ -39,7 +39,14 @@ namespace LycheeLabs.FruityInterface.Elements {
             RefreshLayoutDeferred();
         }
 
-        protected override void RefreshLayout () {
+        protected override void RefreshLayout () {            
+            
+            // Override sizes
+            if (LayoutDriver != null && LayoutDriver.isActiveAndEnabled) {
+                size = new Vector2(LayoutDriver.height, LayoutDriver.height);
+                LayoutPaddingPixels = LayoutDriver.layoutPadding;
+            }
+
             rectTransform.sizeDelta = size;
             ButtonImage.rectTransform.sizeDelta = size;
             LayoutSizePixels = size;

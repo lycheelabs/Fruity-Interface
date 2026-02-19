@@ -42,10 +42,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         bool ClickTarget.TryMouseUnclick(ClickParams clickParams) {
-            if (TryGetEffect == null) {
-                Debug.LogWarning("ClickButton is missing a ClickButtonEffect.");
-                return true;
-            }
             if (TryGetEffect != null) {
                 return TryGetEffect.TryUnclick(clickParams.ClickButton);
             }

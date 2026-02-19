@@ -16,12 +16,12 @@ namespace LycheeLabs.FruityInterface {
         private RectTransform _rectTransform;
         public RectTransform rectTransform => _rectTransform ??= GetComponent<RectTransform>();
         
-        private void OnValidate () {
+        public void OnValidate () {
             if (!rectTransform) return;
             RefreshLayoutDeferred();
         }
 
-        protected void RefreshLayoutDeferred () {
+        public void RefreshLayoutDeferred () {
             LayoutRebuilder.MarkLayoutForRebuild(rectTransform);
         }
 

@@ -1,8 +1,8 @@
 namespace LycheeLabs.FruityInterface.Elements.Buttons {
     public class TabbingButtonClickEffect : ClickButtonEffect {
 
-        public TabbingButton.Component Type;
-        public TabbingButton Parent;
+        public TabbingSelector.Component Type;
+        public TabbingSelector Parent;
 
         public TabbingButtonClickEffect () {
         }

@@ -7,9 +7,9 @@ namespace LycheeLabs.FruityInterface {
     public class TextBoxNodeEditor : Editor {
 
         public override void OnInspectorGUI () {
+            FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             DrawConfigProperties(serializedObject);
-            InterfaceNodeDrawer.DrawNodeTreeProperties(serializedObject);
-            InterfaceNodeDrawer.DrawLayoutProperties(serializedObject, restrictSize: true); 
+            FruityEditorDrawer.DrawLayoutProperties(serializedObject, restrictSize: true); 
         }
 
         public static void DrawConfigProperties (SerializedObject so) {

@@ -1,16 +1,14 @@
 using UnityEditor;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.FruityInterface {
 
-    [CustomEditor(typeof(PromptContainerNode))]
-    public class PromptContainerNodeEditor : Editor {
-
-        public bool PrefabFoldout;
+    [CustomEditor(typeof(SpacerNode))]
+    public class SpacerNodeEditor : Editor {
 
         public override void OnInspectorGUI () {
+            FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             DrawConfigProperties(serializedObject);
-            InterfaceNodeDrawer.DrawNodeTreeProperties(serializedObject);
-            InterfaceNodeDrawer.DrawLayoutProperties(serializedObject, restrictSize: true);
+            FruityEditorDrawer.DrawLayoutProperties(serializedObject, true, true);
         }
 
         public static void DrawConfigProperties (SerializedObject so) {
@@ -18,7 +16,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             EditorGUILayout.LabelField("Config", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-            EditorGUILayout.PropertyField(so.FindProperty("ContentsNode"));
+            EditorGUILayout.PropertyField(so.FindProperty("Size"));
 
             EditorGUILayout.EndVertical();
             so.ApplyModifiedProperties();
