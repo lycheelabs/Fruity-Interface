@@ -3,7 +3,7 @@ using UnityEditor;
 namespace LycheeLabs.FruityInterface.Elements {
 
     [CustomEditor(typeof(IconButton))]
-    public class ImageButtonEditor : Editor {
+    public class IconButtonEditor : Editor {
 
         public bool PrefabFoldout;
 
@@ -31,6 +31,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 so.Update();
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 EditorGUILayout.PropertyField(so.FindProperty("ButtonImage"));
+                EditorGUILayout.PropertyField(so.FindProperty("BoxCollider"));
                 EditorGUILayout.EndVertical();
                 so.ApplyModifiedProperties();
             }

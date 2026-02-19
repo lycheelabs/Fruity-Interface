@@ -31,12 +31,21 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public sealed override void ApplyMouseClick (ClickParams clickParams) {
             ButtonAnimator.Squash(3);
-            if (TryGetEffect != null && TryGetEffect.MouseButtonIsPermitted (clickParams.ClickButton)) {
+
+            if (TryGetEffect == null) {
+                Debug.LogWarning("ClickButton is missing a ClickButtonEffect.");
+                return;
+            }
+            if (TryGetEffect.MouseButtonIsPermitted(clickParams.ClickButton)) {
                 TryGetEffect.Activate(clickParams.ClickButton);
             }
         }
 
         bool ClickTarget.TryMouseUnclick(ClickParams clickParams) {
+            if (TryGetEffect == null) {
+                Debug.LogWarning("ClickButton is missing a ClickButtonEffect.");
+                return true;
+            }
             if (TryGetEffect != null) {
                 return TryGetEffect.TryUnclick(clickParams.ClickButton);
             }

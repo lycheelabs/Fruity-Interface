@@ -9,14 +9,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class IconButton : ClickButton {
 
         public Image ButtonImage;
-
-        private BoxCollider boxCollider;
-        public BoxCollider BoxCollider {
-            get {
-                boxCollider = boxCollider ?? GetComponent<BoxCollider>();
-                return boxCollider;
-            }
-        }
+        public BoxCollider BoxCollider;
 
         [SerializeField] private Sprite sprite = null;
         [SerializeField] private Vector2 size = new Vector2(50, 50);

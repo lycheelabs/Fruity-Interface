@@ -7,6 +7,7 @@ namespace LycheeLabs.FruityInterface {
     /// Handles unclick of previous target and calls MouseClick on the new target.
     /// </summary>
     public class ClickEvent : ControlEvent {
+
         public ClickTarget Target;
         public ClickParams Params;
         
@@ -31,5 +32,7 @@ namespace LycheeLabs.FruityInterface {
             FruityUI.SelectedTarget = Target;
             FruityUI.SelectedTarget?.ApplyMouseClick(Params);
         }
+
     }
+
 }

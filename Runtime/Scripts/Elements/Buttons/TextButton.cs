@@ -14,8 +14,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         public TextMeshProUGUI ButtonText;
         public Image IconImage;
         public BoxCollider BoxCollider;
+        public ButtonLayoutStyle layoutDriver;
 
-        [SerializeField] public ButtonLayoutStyle layoutDriver = null;
         [SerializeField] private float height = 50;
         [SerializeField] private float maxWidth = 200;
         [SerializeField] private bool cropWidth = false;

@@ -42,7 +42,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected virtual void Animate (float highlightTween, float heldTween) {
             var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
             float highlightScale = 1 + scaleShift * AnimationScaling;
-            ButtonAnimator.BaseScale = Vector3.one * highlightScale * BaseScale;
+            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
         }
 
         public void UpdateMouseHover (bool firstFrame, HoverParams highlightParams) {
