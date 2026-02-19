@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary>
-    /// Implementation of a ClickButton using the IconButton prefab.
+    /// Implementation of a button using the IconButton prefab.
     /// </summary>
-    public class IconButton : ClickButton {
+    public class IconButton : ButtonNode {
 
         public Image ButtonImage;
         public BoxCollider BoxCollider;
@@ -23,19 +24,19 @@ namespace LycheeLabs.FruityInterface.Elements {
             RefreshLayoutDeferred();
         }
 
+        protected override void AnimateHover (float highlightTween, float heldTween) {
+            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
+            float highlightScale = 1 + scaleShift * AnimationScaling;
+            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
+        }
+
+        protected override void AnimateClick () {
+            ButtonAnimator.Squash(1f);
+        }
+
         public void ConfigureSprite(Sprite sprite) {
             this.sprite = sprite;
             ButtonImage.sprite = sprite;
-            RefreshLayoutDeferred();
-        }
-
-        public void ConfigureSize(float size) {
-            this.size = new Vector2(size, size);
-            RefreshLayoutDeferred();
-        }
-
-        public void ConfigureSize(Vector2 size) {
-            this.size = size;
             RefreshLayoutDeferred();
         }
 

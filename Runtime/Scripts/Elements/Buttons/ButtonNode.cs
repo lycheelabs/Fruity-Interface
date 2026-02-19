@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary> Abstract implementation of a simple button. </summary>
-    public abstract class ButtonNode : ControlNode, ClickTarget {
+    public abstract class ButtonNode : ControlNode, ClickTarget, EnteringElement {
 
         public float BaseScale = 1f;
         public float AnimationScaling = 1f;
@@ -32,18 +33,23 @@ namespace LycheeLabs.FruityInterface.Elements {
             set { rectTransform.SetAnchor(value); }
         }
 
+        private ClickButtonEffect _effect;
+        public ClickButtonEffect TryGetEffect {
+            get {
+                _effect = _effect ?? GetComponent<ClickButtonEffect>();
+                return _effect;
+            }
+        }
+
         private void Update () {
             highlightTween = highlightTween.MoveTowardsUnscaled(IsHighlighted, 8);
             heldTween = heldTween.MoveTowardsUnscaled(IsHeld, 8);
-            Animate(highlightTween, heldTween);
+            AnimateHover(highlightTween, heldTween);
             OnUpdate();
         }
 
-        protected virtual void Animate (float highlightTween, float heldTween) {
-            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
-            float highlightScale = 1 + scaleShift * AnimationScaling;
-            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
-        }
+        protected abstract void AnimateHover (float highlightTween, float heldTween);
+        protected abstract void AnimateClick ();
 
         public void UpdateMouseHover (bool firstFrame, HoverParams highlightParams) {
             IsHighlighted = true;
@@ -58,9 +64,41 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         protected virtual void OnUpdate() { }
-        public abstract void ApplyMouseClick (ClickParams clickParams);
-        protected abstract void OnHighlight (bool firstFrame, HoverParams highlightParams);
-        protected abstract void OnDehighlight ();
+
+        public virtual void ApplyMouseClick (ClickParams clickParams) {
+            AnimateClick();
+
+            if (TryGetEffect == null) {
+                Debug.LogWarning("ButtonNode is missing a ClickButtonEffect.");
+                return;
+            }
+            if (TryGetEffect.MouseButtonIsPermitted(clickParams.ClickButton)) {
+                TryGetEffect.Activate(clickParams.ClickButton);
+            }
+        }
+
+        bool ClickTarget.TryMouseUnclick(ClickParams clickParams) {
+            if (TryGetEffect != null) {
+                return TryGetEffect.TryUnclick(clickParams.ClickButton);
+            }
+            return true;
+        }
+
+        public void SetEnterTween (float tween) {
+            if (TryGetEffect != null) {
+                Offset = (1 - tween) * TryGetEffect.EntryOffset;
+            }
+        }
+
+        protected virtual void OnHighlight (bool firstFrame, HoverParams highlightParams) {
+            if (firstFrame && TryGetEffect != null) {
+                TryGetEffect.MouseOver();
+            }
+        }
+
+        protected virtual void OnDehighlight () {
+            //
+        }
 
     }
 

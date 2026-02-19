@@ -6,9 +6,9 @@ using UnityEngine.UI;
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary>
-    /// Implementation of a ClickButton using the TextButton prefab.
+    /// Implementation of a button using the TextButton prefab.
     /// </summary>
-    public class TextButton : ClickButton {
+    public class TextButton : ButtonNode {
 
         public Image BackingImage;
         public TextMeshProUGUI ButtonText;
@@ -47,6 +47,16 @@ namespace LycheeLabs.FruityInterface.Elements {
         public void SetFontScale (float heightScale) {
             this.fontHeightScaling = heightScale;
             RefreshLayoutDeferred();
+        }
+
+        protected override void AnimateHover (float highlightTween, float heldTween) {
+            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.07f * Tweens.EaseOutQuad(heldTween);
+            float highlightScale = 1 + scaleShift * AnimationScaling;
+            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
+        }
+
+        protected override void AnimateClick () {
+            ButtonAnimator.Squash(1f);
         }
 
         // -----------------------------------------------
