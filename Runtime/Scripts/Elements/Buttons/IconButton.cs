@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private Vector2 size = new Vector2(50, 50);
         [SerializeField] private float colliderPadding = 10;
         [SerializeField] private float iconScaling = 1;
+
+        private bool inputDisabled;
 
         private void OnValidate () {
             RefreshLayoutDeferred();
@@ -55,6 +58,12 @@ namespace LycheeLabs.FruityInterface.Elements {
             LayoutSizePixels = size;
             BoxCollider.size = (size * iconScaling) + new Vector2(colliderPadding, colliderPadding);
         }
+
+        public void SetInputDisabled (bool disabled) {
+            inputDisabled = disabled;
+        }
+
+        public override bool InputIsDisabled => inputDisabled;
 
     }
 

@@ -39,6 +39,26 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
+        private void OnEnable () {
+            if (TryGetEffect != null) {
+                TryGetEffect.Initialise();
+                ApplyOption(TryGetEffect.SelectedOption());
+            }
+        }
+
+        private void ApplyOption (TabbingSelectorOption option) {
+            if (option != null) {
+                MainButton.SetText(option.Name);
+            }
+        }
+
+        private void Update () {
+            if (TryGetEffect != null) {
+                LeftArrow.SetInputDisabled(!TryGetEffect.CanTabLeft());
+                RightArrow.SetInputDisabled(!TryGetEffect.CanTabRight());
+            }
+        }
+
         protected override void RefreshLayout () {
 
             // Override layout
@@ -77,15 +97,28 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public void Activate (TabbingSelectorComponent type, MouseButton clickButton) {
             if (TryGetEffect != null) {
-                TryGetEffect.Activate(type, clickButton);
+                if (clickButton == MouseButton.Left) {
+                    ActivateComponent(type);
+                }
             } else {
                 Debug.LogWarning("TabbingSelectorEffect component not found on " + name);
             }
         }
 
+        private void ActivateComponent (TabbingSelectorComponent type) {
+            if (type == TabbingSelectorComponent.LeftArrow) {
+                ApplyOption(TryGetEffect.TabLeft());
+                MainButton.ButtonAnimator.Squash(3);
+            } 
+            if (type == TabbingSelectorComponent.RightArrow) {
+                ApplyOption(TryGetEffect.TabRight());
+                MainButton.ButtonAnimator.Squash(3);
+            }
+        }
+
         public void MouseOver (TabbingSelectorComponent type) {
-            if (TryGetEffect != null) {
-                TryGetEffect.MouseOver(type);
+            if (TryGetEffect != null && type == TabbingSelectorComponent.Main) {
+                //TryGetEffect.MouseOver(type);
             }
         }
 
