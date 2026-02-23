@@ -1,36 +1,53 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
     [ExecuteAlways]
     public class GridContainerNode : ContainerNode {
 
-        public int MaxColumns = 5;
+        public Orientation IndexDirection;
+        public int WrapAtIndex = 5;
+
         public Vector2 GridCellSize = new Vector2(100, 100);
 
         protected override void RefreshLayout() {
+            if (ChildNodes.Count == 0) return;
+
             var numItems = ChildNodes.Count;
-            var numColumns = Mathf.Max(1, Mathf.Min(numItems, MaxColumns));
-            var numRows = Mathf.Max(1, Mathf.CeilToInt(numItems / (float)MaxColumns));
+            int rows, columns;
+
+            if (IndexDirection == Orientation.Horizontal) {
+                columns = Mathf.Min(numItems, WrapAtIndex);
+                rows = Mathf.CeilToInt(numItems / (float)WrapAtIndex);
+            } else {
+                rows = Mathf.Min(numItems, WrapAtIndex);
+                columns = Mathf.CeilToInt(numItems / (float)WrapAtIndex);
+            }
+
+            var xOffset = -(columns - 1f) / 2f;
+            var yOffset = -(rows - 1f) / 2f;
 
             for (int i = 0; i < ChildNodes.Count; i++) {
-                var row = (i / MaxColumns) * MaxColumns;
-                var rowStartIndex = row * MaxColumns;
-                var rowEndIndex = Mathf.Min(rowStartIndex + MaxColumns - 1, numItems - 1);
-                var rowColumns = rowEndIndex - rowStartIndex + 1;
+                int row, column;
 
-                var column = i % MaxColumns;
-                var xOffset = -(rowColumns - 1f) / 2f;
-                var yOffset = -(numRows - 1f) / 2f;
-                var position = new Vector3(xOffset + column, -(yOffset + row)) * GridCellSize; 
+                if (IndexDirection == Orientation.Horizontal) {
+                    row = i / WrapAtIndex;
+                    column = i % WrapAtIndex;
+                } else {
+                    column = i / WrapAtIndex;
+                    row = i % WrapAtIndex;
+                }
+
+                var position = new Vector3(xOffset + column, -(yOffset + row)) * GridCellSize;
 
                 var node = ChildNodes[i];
                 node.rectTransform.SetAnchorAndPosition(position);
             }
 
-            var containedSize = new Vector2(numColumns, numRows) * GridCellSize;
+            var containedSize = new Vector2(columns, rows) * GridCellSize;
             LayoutSizePixels = containedSize;
-            rectTransform.sizeDelta = TotalSizePixels;
+            rectTransform.sizeDelta = containedSize;
         }
 
     }

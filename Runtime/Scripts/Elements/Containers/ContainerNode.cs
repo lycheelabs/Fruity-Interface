@@ -8,7 +8,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
     public abstract class ContainerNode : LayoutNode {
-        
+
         public readonly List<LayoutNode> ChildNodes = new List<LayoutNode>();
         public int ChildCount => ChildNodes.Count;
         [SerializeField] private int prevChildCount = -1;
