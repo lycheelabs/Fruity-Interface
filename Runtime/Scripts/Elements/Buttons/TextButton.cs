@@ -19,6 +19,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private float maxWidth = 200;
         [SerializeField] private bool cropWidth = false;
         [SerializeField] private Sprite iconSprite = null;
+        [SerializeField] private bool inputDisabled;
 
         [Range(0f, 2f)] [SerializeField] private float fontHeightScaling = 1f;
         [Range(-1f, 1f)][SerializeField] private float fontHeightShift = 0f;
@@ -49,6 +50,10 @@ namespace LycheeLabs.FruityInterface.Elements {
             RefreshLayoutDeferred();
         }
 
+        public void SetColor (Color color) {
+            BackingImage.color = color;
+        }
+
         protected override void AnimateHover (float highlightTween, float heldTween) {
             /*var scaleShift = 0.03f * Tweens.EaseOutQuad(highlightTween) - 0.05f * Tweens.EaseOutQuad(heldTween);
             float highlightScale = 1 + scaleShift * AnimationScaling;
@@ -65,6 +70,12 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected override void AnimateClick () {
             ButtonAnimator.Squash(2.5f * AnimationScaling);
         }
+
+        public void SetInputDisabled (bool disabled) {
+            inputDisabled = disabled;
+        }
+
+        public override bool InputIsDisabled => inputDisabled;
 
         // ---------------------------------------------
 

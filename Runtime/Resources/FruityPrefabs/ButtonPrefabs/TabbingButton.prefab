@@ -55,12 +55,17 @@ MonoBehaviour:
   ignoresInterfaceLock: 0
   LayoutSizePixels: {x: 400, y: 50}
   LayoutPaddingPixels: {x: 0, y: 0}
+  LayoutDriver: {fileID: 0}
   MainButton: {fileID: 7325691520206030572}
   LeftArrow: {fileID: 5857473340651807958}
   RightArrow: {fileID: 2023725637004725278}
   width: 400
   height: 50
+  fontHeightScaling: 1
+  iconScaling: 1
   arrowMargin: 30
+  arrowColorEnabled: {r: 1, g: 1, b: 1, a: 1}
+  arrowColorDisabled: {r: 0.30760387, g: 0.27003917, b: 0.3660378, a: 1}
 --- !u!1001 &1084907032576736927
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -17,8 +17,9 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private Vector2 size = new Vector2(50, 50);
         [SerializeField] private float colliderPadding = 10;
         [SerializeField] private float iconScaling = 1;
+        [SerializeField] private bool inputDisabled;
 
-        private bool inputDisabled;
+        public override bool InputIsDisabled => inputDisabled;
 
         private void OnValidate () {
             RefreshLayoutDeferred();
@@ -28,20 +29,24 @@ namespace LycheeLabs.FruityInterface.Elements {
             RefreshLayoutDeferred();
         }
 
-        protected override void AnimateHover (float highlightTween, float heldTween) {
-            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.14f * Tweens.EaseOutQuad(heldTween);
-            float highlightScale = 1 + scaleShift * AnimationScaling;
-            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
+        public void SetIcon (Sprite sprite) {
+            ButtonImage.sprite = sprite;
         }
+
+        public void SetColor (Color color) {
+            ButtonImage.color = color;
+        }
+
+        // ---------------------------------------------
 
         protected override void AnimateClick () {
             ButtonAnimator.Squash(6f * AnimationScaling);
         }
 
-        public void ConfigureSprite(Sprite sprite) {
-            this.sprite = sprite;
-            ButtonImage.sprite = sprite;
-            RefreshLayoutDeferred();
+        protected override void AnimateHover (float highlightTween, float heldTween) {
+            var scaleShift = 0.1f * Tweens.EaseOutQuad(highlightTween) - 0.14f * Tweens.EaseOutQuad(heldTween);
+            float highlightScale = 1 + scaleShift * AnimationScaling;
+            ButtonAnimator.OverlayScale(Vector3.one * highlightScale * BaseScale);
         }
 
         protected override void RefreshLayout () {            
@@ -62,8 +67,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         public void SetInputDisabled (bool disabled) {
             inputDisabled = disabled;
         }
-
-        public override bool InputIsDisabled => inputDisabled;
 
     }
 

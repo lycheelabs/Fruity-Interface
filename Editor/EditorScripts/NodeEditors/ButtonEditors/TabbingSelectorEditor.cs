@@ -12,6 +12,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
             FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             FruityEditorDrawer.DrawConfigProperties(serializedObject, DrivenConfig, FreeConfig);
+            FruityEditorDrawer.DrawAdditionalProperties(serializedObject, "Style", StyleConfig);
             FruityEditorDrawer.DrawPrefabProperties(serializedObject, ref PrefabFoldout, PrefabConfig);
         }
 
@@ -34,6 +35,11 @@ namespace LycheeLabs.FruityInterface.Elements {
             EditorGUILayout.PropertyField(so.FindProperty("RightArrow"));
         }
 
-    } 
+        private static void StyleConfig (SerializedObject so) {
+            EditorGUILayout.PropertyField(so.FindProperty("arrowColorEnabled"));
+            EditorGUILayout.PropertyField(so.FindProperty("arrowColorDisabled"));
+        }
+
+    }
 
 }

@@ -87,4 +87,13 @@ public static class FruityEditorDrawer {
         }
     }
 
+    public static void DrawAdditionalProperties (SerializedObject so, string title, Action<SerializedObject> drawProperties) {
+        so.Update();
+        EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        drawProperties?.Invoke(so);
+        EditorGUILayout.EndVertical();
+        so.ApplyModifiedProperties();
+    }
+
 }

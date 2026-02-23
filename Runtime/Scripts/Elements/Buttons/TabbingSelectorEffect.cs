@@ -8,24 +8,40 @@ namespace LycheeLabs.FruityInterface.Elements {
         public int SelectedIndex { get; private set; }
         public abstract List<TabbingSelectorOption> ListAllOptions ();
 
-        protected abstract TabbingSelectorOption InitialOption { get; }
-        protected abstract bool CanWrap { get; }
+        public abstract bool MainButtonIsSelectable { get; }
+        protected abstract bool OptionsCanWrap { get; }
 
-        public void Initialise () {
-            SelectedIndex = 0;
+        private TabbingSelectorOption currentOption;
 
+        public void Initialise () {         
             var options = ListAllOptions();
             if (options.Count == 0) {
                 return;
             }
+            if (currentOption == null) {
+                SelectedIndex = 0;
+                currentOption = options[0];
+            }
+        }
 
-            for (int i = 0; i < options.Count; i++) {
-                if (options[i] == InitialOption) {
-                    SelectedIndex = i;
-                    break;
+
+        public void OnSelectionSet (TabbingSelectorOption option) {
+            if (option != currentOption) {
+                var options = ListAllOptions();
+                for (int i = 0; i < options.Count; i++) {
+                    if (options[i] == option) {
+                        currentOption = option;
+                        SelectedIndex = i;
+                        OnSelectionChanged(option);
+                        return;
+                    }
                 }
             }
         }
+
+        public abstract void MouseOverComponent (TabbingSelectorComponent type);
+        public abstract void ActivateMainButton ();
+        protected abstract void OnSelectionChanged (TabbingSelectorOption newOption);
 
         public TabbingSelectorOption SelectedOption () {
             var options = ListAllOptions();
@@ -38,12 +54,12 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public bool CanTabLeft () {
             var options = ListAllOptions();
-            return options.Count > 0 && (SelectedIndex > 0 || CanWrap);
+            return options.Count > 0 && (SelectedIndex > 0 || OptionsCanWrap);
         }
 
         public bool CanTabRight () {
             var options = ListAllOptions();
-            return options.Count > 0 && (SelectedIndex < options.Count - 1 || CanWrap);
+            return options.Count > 0 && (SelectedIndex < options.Count - 1 || OptionsCanWrap);
         }
 
         public TabbingSelectorOption TabLeft () {
@@ -55,7 +71,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
             if (SelectedIndex > 0) {
                 SelectedIndex--;
-            } else if (CanWrap) {
+            } else if (OptionsCanWrap) {
                 SelectedIndex = options.Count - 1;
             }
 
@@ -71,7 +87,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
             if (SelectedIndex < options.Count - 1) {
                 SelectedIndex++;
-            } else if (CanWrap) {
+            } else if (OptionsCanWrap) {
                 SelectedIndex = 0;
             }
 

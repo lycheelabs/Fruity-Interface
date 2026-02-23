@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
@@ -20,6 +19,9 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private float fontHeightScaling = 1;
         [SerializeField] private float iconScaling = 1;
         [SerializeField] private float arrowMargin = 20;
+
+        [SerializeField] private Color arrowColorEnabled = Color.white;
+        [SerializeField] private Color arrowColorDisabled = Color.gray;
 
         private float ButtonWidth => Mathf.Max(height, width - height * iconScaling * 2 - arrowMargin);
 
@@ -46,16 +48,37 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
+        public void Select (TabbingSelectorOption newOption) {
+            if (TryGetEffect != null) {
+                var options = TryGetEffect.ListAllOptions();
+                if (options.Contains(newOption)) {
+                    ApplyOption(newOption);
+                }
+            }
+        }
+
         private void ApplyOption (TabbingSelectorOption option) {
             if (option != null) {
                 MainButton.SetText(option.Name);
+                MainButton.SetColor(option.Color);
+
+                if (TryGetEffect != null) {
+                    TryGetEffect.OnSelectionSet(option);
+                }
             }
         }
 
         private void Update () {
             if (TryGetEffect != null) {
-                LeftArrow.SetInputDisabled(!TryGetEffect.CanTabLeft());
-                RightArrow.SetInputDisabled(!TryGetEffect.CanTabRight());
+                MainButton.SetInputDisabled(!TryGetEffect.MainButtonIsSelectable);;
+
+                var canTabLeft = TryGetEffect.CanTabLeft();
+                LeftArrow.SetInputDisabled(!canTabLeft);
+                LeftArrow.SetColor(canTabLeft ? arrowColorEnabled : arrowColorDisabled);
+
+                var canTabRight = TryGetEffect.CanTabRight();
+                RightArrow.SetInputDisabled(!canTabRight);
+                RightArrow.SetColor(canTabRight ? arrowColorEnabled : arrowColorDisabled);
             }
         }
 
@@ -106,6 +129,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void ActivateComponent (TabbingSelectorComponent type) {
+            if (type == TabbingSelectorComponent.Main) {
+                TryGetEffect.ActivateMainButton();
+                MainButton.ButtonAnimator.Squash(3);
+            }
             if (type == TabbingSelectorComponent.LeftArrow) {
                 ApplyOption(TryGetEffect.TabLeft());
                 MainButton.ButtonAnimator.Squash(3);
@@ -117,8 +144,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         public void MouseOver (TabbingSelectorComponent type) {
-            if (TryGetEffect != null && type == TabbingSelectorComponent.Main) {
-                //TryGetEffect.MouseOver(type);
+            if (TryGetEffect != null) {
+                TryGetEffect.MouseOverComponent(type);
             }
         }
 
