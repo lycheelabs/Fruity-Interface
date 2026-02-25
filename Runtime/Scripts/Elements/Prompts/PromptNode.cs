@@ -88,6 +88,17 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         /// <summary>
+        /// Closes this prompt and reopens the previous prompt, if it exists.
+        /// </summary>
+        public void GoBack () {
+            if (!closing && !pausing) {
+                pausing = true;
+                reopening = false;
+                PromptLayer.GoBack();
+            }
+        }
+
+        /// <summary>
         /// Reopen this prompt after it was hidden.
         /// </summary>
         public void Reopen () {

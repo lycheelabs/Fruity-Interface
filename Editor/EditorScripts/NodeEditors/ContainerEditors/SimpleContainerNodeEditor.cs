@@ -2,8 +2,8 @@ using UnityEditor;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [CustomEditor(typeof(PromptContainerNode))]
-    public class PromptContainerNodeEditor : Editor {
+    [CustomEditor(typeof(SimpleContainerNode))]
+    public class SimpleContainerNodeEditor : Editor {
 
         public bool PrefabFoldout;
 

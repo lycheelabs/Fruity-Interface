@@ -29,6 +29,11 @@ namespace LycheeLabs.FruityInterface.Elements {
             RefreshLayoutDeferred();
         }
 
+        public void SetSize (float newSize) {
+            size = new Vector2(newSize, newSize);
+            RefreshLayoutDeferred();
+        }
+
         public void SetIcon (Sprite sprite) {
             ButtonImage.sprite = sprite;
         }
