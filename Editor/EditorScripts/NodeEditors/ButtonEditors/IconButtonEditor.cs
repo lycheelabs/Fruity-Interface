@@ -10,8 +10,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         public override void OnInspectorGUI () {
             var isDriven = FruityEditorDrawer.LayoutIsDriven(serializedObject);
 
-            FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             FruityEditorDrawer.DrawConfigProperties(serializedObject, DrivenConfig, FreeConfig);
+            FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             FruityEditorDrawer.DrawPrefabProperties(serializedObject, ref PrefabFoldout, PrefabConfig);
         }
 

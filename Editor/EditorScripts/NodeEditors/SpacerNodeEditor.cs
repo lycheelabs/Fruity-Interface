@@ -6,9 +6,9 @@ namespace LycheeLabs.FruityInterface {
     public class SpacerNodeEditor : Editor {
 
         public override void OnInspectorGUI () {
-            FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             DrawConfigProperties(serializedObject);
             FruityEditorDrawer.DrawLayoutProperties(serializedObject, true, true);
+            FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
         }
 
         public static void DrawConfigProperties (SerializedObject so) {

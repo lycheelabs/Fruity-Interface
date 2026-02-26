@@ -39,8 +39,8 @@ public static class FruityEditorDrawer {
         so.Update();
         EditorGUILayout.LabelField("Node Tree", EditorStyles.boldLabel);
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-        EditorGUILayout.PropertyField(so.FindProperty("inputParent"));
-        EditorGUILayout.PropertyField(so.FindProperty("ignoresInterfaceLock"));
+        EditorGUILayout.PropertyField(so.FindProperty("inputParentOverride"));
+        EditorGUILayout.PropertyField(so.FindProperty("ignoreInterfaceLock"));
         EditorGUILayout.EndVertical();
         so.ApplyModifiedProperties();
     }
