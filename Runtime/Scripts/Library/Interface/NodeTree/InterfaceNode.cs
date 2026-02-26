@@ -36,7 +36,8 @@ namespace LycheeLabs.FruityInterface {
 
         public virtual bool InputIsDisabled { get; }
 
-        public InterfaceNode InputParent => inputParentOverride ?? automaticInputParent;
+        public InterfaceNode InputParent => (inputParentOverride != null) 
+            ? inputParentOverride : automaticInputParent;
 
         public InterfaceNode InputParentOverride {
             get => inputParentOverride;
