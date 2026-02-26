@@ -1,12 +1,11 @@
-﻿using UnityEditor.Experimental.GraphView;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
     [ExecuteAlways]
     public class GridContainerNode : ContainerNode {
 
-        public Orientation IndexDirection;
+        public LayoutOrientation IndexDirection = LayoutOrientation.HORIZONTAL;
         public int WrapAtIndex = 5;
 
         public Vector2 GridCellSize = new Vector2(100, 100);
@@ -17,7 +16,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             var numItems = ChildNodes.Count;
             int rows, columns;
 
-            if (IndexDirection == Orientation.Horizontal) {
+            if (IndexDirection == LayoutOrientation.HORIZONTAL) {
                 columns = Mathf.Min(numItems, WrapAtIndex);
                 rows = Mathf.CeilToInt(numItems / (float)WrapAtIndex);
             } else {
@@ -31,7 +30,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             for (int i = 0; i < ChildNodes.Count; i++) {
                 int row, column;
 
-                if (IndexDirection == Orientation.Horizontal) {
+                if (IndexDirection == LayoutOrientation.HORIZONTAL) {
                     row = i / WrapAtIndex;
                     column = i % WrapAtIndex;
                 } else {
