@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
     public abstract class ContainerNode : LayoutNode {
 
@@ -14,6 +11,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private int prevChildCount = -1;
 
         public Vector2 minimumSize = new Vector2(100, 100);
+
+        private void OnValidate () {
+            RefreshChildren();
+        }
 
         private void LateUpdate () {
             RefreshChildren();

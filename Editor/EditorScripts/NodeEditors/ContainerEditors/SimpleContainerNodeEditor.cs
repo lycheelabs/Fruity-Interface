@@ -8,20 +8,18 @@ namespace LycheeLabs.FruityInterface.Elements {
         public bool PrefabFoldout;
 
         public override void OnInspectorGUI () {
-            DrawConfigProperties(serializedObject);
-            FruityEditorDrawer.DrawLayoutProperties(serializedObject, restrictSize: true);
+            FruityEditorDrawer.DrawAdditionalProperties(serializedObject, "UI Layout", GeneralConfig);
             FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
+            FruityEditorDrawer.DrawPrefabProperties(serializedObject, ref PrefabFoldout, PrefabConfig);
         }
 
-        public static void DrawConfigProperties (SerializedObject so) {
-            so.Update();
-            EditorGUILayout.LabelField("Config", EditorStyles.boldLabel);
-            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        private static void GeneralConfig (SerializedObject so) {
+            EditorGUILayout.PropertyField(so.FindProperty("LayoutContents"));
+            EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));
+        }
 
-            EditorGUILayout.PropertyField(so.FindProperty("ContentsNode"));
-
-            EditorGUILayout.EndVertical();
-            so.ApplyModifiedProperties();
+        private static void PrefabConfig (SerializedObject so) {
+            EditorGUILayout.PropertyField(so.FindProperty("BoxCollider"));
         }
 
     }
