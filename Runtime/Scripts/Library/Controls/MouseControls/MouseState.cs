@@ -63,17 +63,23 @@ namespace LycheeLabs.FruityInterface {
 
         /// <summary>
         /// Cancel the active drag if it matches the specified target.
-        /// Updates local state and queues a cancellation event to maintain proper event ordering.
+        /// FruityUI.DraggedTarget is cleared immediately to keep state aligned within the same frame.
+        /// A cancellation event is then queued to invoke CancelMouseDrag() on the target once
+        /// the event queue processes, even though DraggedTarget is already null by that point.
         /// Safe to call at any time - even during event processing.
         /// </summary>
         public void CancelDrag(DragTarget target) {
             if (activePress.pressIsDrag && FruityUI.DraggedTarget == target) {
-                // Queue the cancellation event
-                QueueDragCancelEvent();
-                
+                // Null immediately so ValidateState() next frame sees a consistent state.
+                // The target reference is passed to the event so CancelMouseDrag() is still called.
+                FruityUI.DraggedTarget = null;
+
+                // Queue the cancellation event with the captured target
+                QueueDragCancelEvent(target);
+
                 // Clear drag-over state
                 ClearDragOverState();
-                
+
                 // Update local press state to prevent further drag updates
                 CancelDragPress();
             }
@@ -506,8 +512,8 @@ namespace LycheeLabs.FruityInterface {
             FruityUIManager.QueueEvent(new EndDragEvent { Params = dragParams, WasCancelled = false });
         }
 
-        private static void QueueDragCancelEvent() {
-            FruityUIManager.QueueEvent(new EndDragEvent { Params = default, WasCancelled = true });
+        private static void QueueDragCancelEvent(DragTarget cancelTarget = null) {
+            FruityUIManager.QueueEvent(new EndDragEvent { Params = default, WasCancelled = true, CancelTarget = cancelTarget });
         }
 
         #endregion

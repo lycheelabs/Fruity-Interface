@@ -7,23 +7,23 @@ namespace LycheeLabs.FruityInterface  {
     internal static class InterfaceHelpers {
                 
         public static Vector2 WorldPointToScreenPoint (Camera camera,Vector3 mousePosition) {
-            if (camera == null) return default;
+            if (camera == null || !IsValid(mousePosition)) return default;
             return camera.WorldToScreenPoint(mousePosition);
         }
 
         public static Vector3 ScreenPointToWorldPoint (Camera camera,Vector3 mousePosition, Plane plane) {
-            if (camera == null) return default;
+            if (camera == null || !IsValid(mousePosition)) return default;
             var worldPoint = camera.ScreenToWorldPoint(mousePosition);
             return IntersectWithPlane(camera, worldPoint, plane);
         }
 
         public static Ray ScreenPointToRay (Camera camera, Vector3 mousePosition) {
-            if (camera == null) return default;
+            if (camera == null || !IsValid(mousePosition)) return default;
             return camera.ScreenPointToRay(mousePosition);
         }
         
         public static Vector3 IntersectWithPlane (Camera camera, Vector3 vector, Plane plane) {
-            if (camera == null) return default;
+            if (camera == null || !IsValid(vector)) return default;
             
             // Already intersecting?
             if (vector.y == 0 || camera == null) {
@@ -56,6 +56,13 @@ namespace LycheeLabs.FruityInterface  {
             if (aspect == AspectRatio.ULTRAWIDE) return 21f / 9f;
             if (aspect == AspectRatio.ULTRATALL) return 9f / 21f;
             return 4f / 3f;
+        }
+
+        public static bool IsValid (Vector3 v) {
+            return
+                float.IsFinite(v.x) &&
+                float.IsFinite(v.y) &&
+                float.IsFinite(v.z);
         }
 
     }
