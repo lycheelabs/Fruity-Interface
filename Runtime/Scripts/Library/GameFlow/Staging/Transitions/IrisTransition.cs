@@ -18,7 +18,7 @@ namespace LycheeLabs.FruityInterface.Flow {
         private Color colorA;
         private Color colorB;
 
-        protected override float TransitionSpeed => 1.5f * speedScale;
+        protected override float TransitionSpeed => 1.66f * speedScale;
         private float speedScale;
 
         private float adjustedTween;
@@ -26,6 +26,8 @@ namespace LycheeLabs.FruityInterface.Flow {
         private float pausePoint;
         private bool pauseCleared;
         private float pauseTween;
+
+        private float lastTween;
 
         private void Start() {
             InitMaterial();
@@ -65,7 +67,7 @@ namespace LycheeLabs.FruityInterface.Flow {
         protected override void Refresh(bool isEntering, float tween) {
             if (pausing) {
                 var target = isEntering ? pausePoint : 1 - pausePoint;
-                pauseTween = pauseTween.MoveTowards(!pauseCleared, TransitionSpeed * 2);
+                pauseTween = pauseTween.MoveTowards(!pauseCleared, TransitionSpeed * 2.5f);
                 adjustedTween = Mathf.Lerp(tween, target, Tweens.EaseInOutQuad(pauseTween));
 
                 if (!isEntering && !pauseCleared) adjustedTween = Mathf.Max(adjustedTween,
@@ -79,6 +81,11 @@ namespace LycheeLabs.FruityInterface.Flow {
                 image.material.SetFloat("_Tween", adjustedTween);
                 image.color = Color.Lerp(colorA, colorB, Tweens.EaseInOutQuad(tween));
                 image.enabled = adjustedTween > 0;
+
+                var speed = Mathf.Abs(lastTween - adjustedTween) / Time.deltaTime;
+                lastTween = adjustedTween;
+                var blurring = Mathf.Min(Mathf.Log(1 + speed * 0.05f), 0.33f);
+                image.material.SetFloat("_Softness", blurring);
             }
         }
 
