@@ -75,6 +75,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             PromptLayer.Canvas.Attach(this);
         }
 
+        public bool IsPartOfMenuChain => PromptLayer.CanGoBack;
+
         /// <summary>
         /// Closes this prompt and instantiates the next prompt in its place.
         /// This prompt is hidden (not destroyed) so that navigating backwards will reopen this prompt.

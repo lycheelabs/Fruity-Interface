@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
+    [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
     public abstract class ContainerNode : LayoutNode {
 

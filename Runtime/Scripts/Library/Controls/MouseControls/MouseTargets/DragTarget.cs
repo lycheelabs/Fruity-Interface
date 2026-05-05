@@ -39,6 +39,22 @@
     }
 
     /// <summary>
+    /// Optional extension of DragTarget that supports multi-place behaviour in pickup (two-click) mode.
+    /// When AllowMultiPlace returns true after a placement, the drag remains active so the target
+    /// can be placed again on the next click. The loop continues until AllowMultiPlace returns false
+    /// or the drag is cancelled. Multi-place does not apply to held-button drags.
+    /// </summary>
+    public interface MultiPlaceDragTarget : DragTarget {
+
+        /// <summary>
+        /// Called after ApplyMouseDrag in pickup mode to determine whether the drag should remain
+        /// active for another placement. Return true to keep dragging, false to end the drag.
+        /// </summary>
+        bool AllowMultiPlace(DragParams dragParams);
+
+    }
+
+    /// <summary>
     /// Describes how a drag target responds to drag input.
     /// </summary>
     public enum MouseDragMode {

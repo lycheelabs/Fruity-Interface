@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,17 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
+        public void InitialiseAs (TabbingSelectorOption option) {
+            var options = ListAllOptions();
+            for (int i = 0; i < options.Count; i++) {
+                if (options[i] == option) {
+                    currentOption = option;
+                    SelectedIndex = i;
+                    OnSelectionInitialised(option);
+                    return;
+                }
+            }
+        }
 
         public void OnSelectionSet (TabbingSelectorOption option) {
             if (option != currentOption) {
@@ -41,6 +53,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public abstract void MouseOverComponent (TabbingSelectorComponent type);
         public abstract void ActivateMainButton ();
+        protected abstract void OnSelectionInitialised (TabbingSelectorOption option);
         protected abstract void OnSelectionChanged (TabbingSelectorOption newOption);
 
         public TabbingSelectorOption SelectedOption () {
@@ -74,7 +87,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             } else if (OptionsCanWrap) {
                 SelectedIndex = options.Count - 1;
             }
-
             return options[SelectedIndex];
         }
 
@@ -90,7 +102,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             } else if (OptionsCanWrap) {
                 SelectedIndex = 0;
             }
-
             return options[SelectedIndex];
         }
 

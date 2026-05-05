@@ -383,15 +383,23 @@ namespace LycheeLabs.FruityInterface {
                 if (Input.GetMouseButtonDown((int)activePress.button) && activePress.pressStartFrame != Time.frameCount) {
                     // Build params after hierarchy has processed to get current DraggedOverTarget
                     var dragParams = BuildCurrentDragParams();
-                    
+
                     // Cancel drag if no valid drop target, otherwise complete
                     if (dragParams.DraggingOver == null) {
                         QueueDragCancelEvent();
+                        ClearDragOverState();
+                        activePress.Clear();
                     } else {
-                        QueueDragCompleteEvent(dragParams);
+                        // Check if multi-place should keep the drag alive after placement
+                        var multiPlaceTarget = FruityUI.DraggedTarget as MultiPlaceDragTarget;
+                        var isMultiPlace = multiPlaceTarget != null && multiPlaceTarget.AllowMultiPlace(dragParams);
+                        QueueDragCompleteEvent(dragParams, isMultiPlace);
+                        if (!isMultiPlace) {
+                            ClearDragOverState();
+                            activePress.Clear();
+                        }
+                        // else: press and drag-over state are kept active for the next placement
                     }
-                    ClearDragOverState();
-                    activePress.Clear();
                     return;
                 }
             }
@@ -508,8 +516,8 @@ namespace LycheeLabs.FruityInterface {
             });
         }
 
-        private static void QueueDragCompleteEvent(DragParams dragParams) {
-            FruityUIManager.QueueEvent(new EndDragEvent { Params = dragParams, WasCancelled = false });
+        private static void QueueDragCompleteEvent(DragParams dragParams, bool isMultiPlace = false) {
+            FruityUIManager.QueueEvent(new EndDragEvent { Params = dragParams, WasCancelled = false, IsMultiPlace = isMultiPlace });
         }
 
         private static void QueueDragCancelEvent(DragTarget cancelTarget = null) {

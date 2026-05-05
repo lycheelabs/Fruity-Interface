@@ -44,7 +44,16 @@ namespace LycheeLabs.FruityInterface.Elements {
         private void OnEnable () {
             if (TryGetEffect != null) {
                 TryGetEffect.Initialise();
-                ApplyOption(TryGetEffect.SelectedOption());
+                ApplyOption(TryGetEffect.SelectedOption(), true);
+            }
+        }
+
+        public void JumpTo (TabbingSelectorOption newOption) {
+            if (TryGetEffect != null) {
+                var options = TryGetEffect.ListAllOptions();
+                if (options.Contains(newOption)) {
+                    ApplyOption(newOption, true);
+                }
             }
         }
 
@@ -52,18 +61,22 @@ namespace LycheeLabs.FruityInterface.Elements {
             if (TryGetEffect != null) {
                 var options = TryGetEffect.ListAllOptions();
                 if (options.Contains(newOption)) {
-                    ApplyOption(newOption);
+                    ApplyOption(newOption, false);
                 }
             }
         }
 
-        private void ApplyOption (TabbingSelectorOption option) {
+        private void ApplyOption (TabbingSelectorOption option, bool initialise) {
             if (option != null) {
                 MainButton.SetText(option.Name);
                 MainButton.SetColor(option.Color);
 
                 if (TryGetEffect != null) {
-                    TryGetEffect.OnSelectionSet(option);
+                    if (initialise) {
+                        TryGetEffect.InitialiseAs(option);
+                    } else {
+                        TryGetEffect.OnSelectionSet(option);
+                    }
                 }
             }
         }
@@ -134,11 +147,11 @@ namespace LycheeLabs.FruityInterface.Elements {
                 MainButton.ButtonAnimator.Squash(3);
             }
             if (type == TabbingSelectorComponent.LeftArrow) {
-                ApplyOption(TryGetEffect.TabLeft());
+                ApplyOption(TryGetEffect.TabLeft(), false);
                 MainButton.ButtonAnimator.Squash(3);
             } 
             if (type == TabbingSelectorComponent.RightArrow) {
-                ApplyOption(TryGetEffect.TabRight());
+                ApplyOption(TryGetEffect.TabRight(), false);
                 MainButton.ButtonAnimator.Squash(3);
             }
         }

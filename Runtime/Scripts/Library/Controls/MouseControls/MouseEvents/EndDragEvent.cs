@@ -16,6 +16,11 @@ namespace LycheeLabs.FruityInterface {
         /// already been nulled before this event activates.
         /// </summary>
         public DragTarget CancelTarget;
+        /// <summary>
+        /// When true, this is a multi-place completion: ApplyMouseDrag is called but
+        /// FruityUI.DraggedTarget is not cleared so the drag remains active for the next placement.
+        /// </summary>
+        public bool IsMultiPlace;
 
         public void Activate(bool logging) {
             // Prefer the live DraggedTarget; fall back to the captured reference for
@@ -34,12 +39,15 @@ namespace LycheeLabs.FruityInterface {
             if (WasCancelled) {
                 if (logging) Debug.Log("Cancel Drag: " + dragTarget);
                 dragTarget.CancelMouseDrag();
+                FruityUI.DraggedTarget = null;
             } else {
-                if (logging) Debug.Log("Complete Drag: " + dragTarget);
+                if (logging) Debug.Log(IsMultiPlace ? "Multi-Place Drag: " : "Complete Drag: " + dragTarget);
                 dragTarget.ApplyMouseDrag(Params);
+                // For multi-place, keep DraggedTarget set so the drag remains active.
+                if (!IsMultiPlace) {
+                    FruityUI.DraggedTarget = null;
+                }
             }
-
-            FruityUI.DraggedTarget = null;
         }
     }
 }

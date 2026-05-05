@@ -40,6 +40,8 @@ namespace LycheeLabs.FruityInterface {
             Sequencer.RefreshLayers();
         }
 
+        public bool CanGoBack => NavigationStack.Count > 0;
+
         public void GoBack () {
             if (ActivePrompt != null) {
                 ActivePrompt.Close();
