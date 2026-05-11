@@ -3,14 +3,12 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface.Elements {
 
     /// <summary>
-    /// This container adjusts its RectTransform size and BoxCollider size 
-    /// to match the contained LayoutContent's total size.
+    /// This container adjusts its RectTransform size to match the contained LayoutContent's total size.
     /// </summary>
-    [RequireComponent(typeof(BoxCollider))]
+    [ExecuteAlways]
     public class SimpleContainerNode : ContainerNode, ClickTarget {
 
         [SerializeField] LayoutNode LayoutContents;
-        [SerializeField] private BoxCollider BoxCollider;
 
         private void OnValidate () {
             RefreshLayoutDeferred();

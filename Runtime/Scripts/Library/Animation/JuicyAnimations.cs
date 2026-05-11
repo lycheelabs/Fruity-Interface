@@ -33,16 +33,16 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public static void SquashBulge (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
-            SmoothBulge(animator, sizeScale, speedScale);
-            Squash(animator, sizeScale * 1.2f, speedScale * 0.8f, 3);
+            SmoothBulge(animator, sizeScale * 0.75f, speedScale);
+            Squash(animator, sizeScale, speedScale * 0.8f, 3);
         }
 
         public static void CrazySquash(this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
-            Squash(animator, sizeScale * 2f, speedScale * 0.66f, 6);
+            Squash(animator, sizeScale, speedScale * 0.66f, 6);
         }
 
         public static void ExtraCrazySquash (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
-            Squash(animator, sizeScale * 2f, speedScale * 0.33f, 12);
+            Squash(animator, sizeScale, speedScale * 0.33f, 12);
         }
 
         public static void FlattenSquash(this JuicyAnimator animator, float speedScale = 1f) {

@@ -12,7 +12,7 @@ namespace LycheeLabs.FruityInterface.Animation {
         private readonly Tween tween;
 
         public SquashAnimation (float sizeScale = 1f, float speedScale = 1f, float cycles = 3, Tween tween = null) {
-            this.sizeScale = sizeScale * 0.15f;
+            this.sizeScale = sizeScale;
             this.speedScale = Mathf.Max (speedScale, 0.1f) * 3f;
             this.cycles = cycles;
             this.tween = tween;

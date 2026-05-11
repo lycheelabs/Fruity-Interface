@@ -37,10 +37,10 @@ namespace LycheeLabs.FruityInterface {
         
         /// <summary>True if the mouse cursor is within the screen bounds.</summary>
         public static bool MouseIsOnscreen =>
-            Input.mousePosition.x >= 1 && 
-            Input.mousePosition.y >= 1 && 
-            Input.mousePosition.x < (Screen.width - 1) && 
-            Input.mousePosition.y < (Screen.height - 1);
+            Input.mousePosition.x >= 0 && 
+            Input.mousePosition.y >= 0 && 
+            Input.mousePosition.x < Screen.width && 
+            Input.mousePosition.y < Screen.height;
 
         // ----------------------- Mouse Targets -----------------------
 
@@ -74,8 +74,9 @@ namespace LycheeLabs.FruityInterface {
         
         /// <summary>When set, only this node and its children can receive mouse events.</summary>
         public static InterfaceNode LockedNode { get; private set; }
-        
-        /// <summary>When true, all mouse input is disabled.</summary>
+
+        /// <summary>When true, all mouse input is disabled.
+        /// (However - for safety, when InterfaceIsLocked the locked node is never disabled)</summary>
         public static bool DisableInput { get; set; }
         
         // ----------------------- Methods -----------------------

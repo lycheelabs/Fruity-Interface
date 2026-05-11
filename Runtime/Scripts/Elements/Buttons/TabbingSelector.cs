@@ -144,15 +144,15 @@ namespace LycheeLabs.FruityInterface.Elements {
         private void ActivateComponent (TabbingSelectorComponent type) {
             if (type == TabbingSelectorComponent.Main) {
                 TryGetEffect.ActivateMainButton();
-                MainButton.ButtonAnimator.Squash(3);
+                MainButton.ButtonAnimator.Squash(0.5f);
             }
             if (type == TabbingSelectorComponent.LeftArrow) {
                 ApplyOption(TryGetEffect.TabLeft(), false);
-                MainButton.ButtonAnimator.Squash(3);
+                MainButton.ButtonAnimator.Squash(0.5f);
             } 
             if (type == TabbingSelectorComponent.RightArrow) {
                 ApplyOption(TryGetEffect.TabRight(), false);
-                MainButton.ButtonAnimator.Squash(3);
+                MainButton.ButtonAnimator.Squash(0.5f);
             }
         }
 

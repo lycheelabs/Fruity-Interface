@@ -52,9 +52,6 @@ namespace LycheeLabs.FruityInterface {
 
         public bool InputEnabledInHierarchy {
             get {
-                if (FruityUI.DisableInput) {
-                    return false;
-                }
                 var node = this;
                 var foundLockRoot = false;
                 int depth = 0;
@@ -67,6 +64,11 @@ namespace LycheeLabs.FruityInterface {
                     foundLockRoot |= (node == FruityUI.LockedNode || node.ignoreInterfaceLock);
                     node = node.InputParent;
                 }
+                // If unlocked, allow global input disabling
+                if (FruityUI.LockedNode == null && FruityUI.DisableInput) {
+                    return false;
+                }
+                // If locked, require lock to be in the hierarchy
                 if (FruityUI.LockedNode != null && !foundLockRoot) {
                     return false;
                 }

@@ -11,7 +11,7 @@ namespace LycheeLabs.FruityInterface.Animation {
         private readonly Tween tween;
 
         public BulgeAnimation (float sizeScale = 1f, float speedScale = 1f, Tween tween = null) {
-            this.sizeScale = sizeScale * 0.15f;
+            this.sizeScale = sizeScale;
             this.speedScale = Mathf.Max(speedScale, 0.1f) * 4f;
             this.tween = tween;
         }

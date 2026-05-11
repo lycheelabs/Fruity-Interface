@@ -68,7 +68,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         protected override void AnimateClick () {
-            ButtonAnimator.Squash(2.5f * AnimationScaling);
+            ButtonAnimator.Squash(0.5f * AnimationScaling);
         }
 
         public void SetInputDisabled (bool disabled) {

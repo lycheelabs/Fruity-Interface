@@ -45,7 +45,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         // ---------------------------------------------
 
         protected override void AnimateClick () {
-            ButtonAnimator.Squash(6f * AnimationScaling);
+            ButtonAnimator.Squash(AnimationScaling);
         }
 
         protected override void AnimateHover (float highlightTween, float heldTween) {
