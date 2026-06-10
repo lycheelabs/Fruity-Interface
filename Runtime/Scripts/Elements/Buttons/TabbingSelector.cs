@@ -41,6 +41,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
+        public TabbingSelectorOption TryGetSelection => TryGetEffect?.SelectedOption() ?? null;
+
         private void OnEnable () {
             if (TryGetEffect != null) {
                 TryGetEffect.Initialise();
