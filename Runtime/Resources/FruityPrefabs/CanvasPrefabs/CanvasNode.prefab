@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5663682503117434173}
   - component: {fileID: 8894984139683863243}
+  - component: {fileID: 8353936698552397060}
   - component: {fileID: 5663682503117434172}
   - component: {fileID: 5663682503117434175}
   m_Layer: 5
@@ -51,10 +52,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a59ac37c04d09fa458bec004cfb53983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.CanvasNode
-  inputParent: {fileID: 0}
-  ignoresInterfaceLock: 0
+  inputParentOverride: {fileID: 0}
+  ignoreInterfaceLock: 0
   canvas: {fileID: 5663682503117434172}
+  layer: {fileID: 8353936698552397060}
   contents: {fileID: 8908080362826729067}
+--- !u!114 &8353936698552397060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5663682503117434145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2901fa2513827884caa4630e03e6ce80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.InterfaceLayer
+  Layer: 0
 --- !u!223 &5663682503117434172
 Canvas:
   m_ObjectHideFlags: 0

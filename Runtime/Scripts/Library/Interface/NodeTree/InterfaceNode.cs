@@ -11,7 +11,9 @@ namespace LycheeLabs.FruityInterface {
 
         private InterfaceNode automaticInputParent;
         [SerializeField] private InterfaceNode inputParentOverride;
-        [SerializeField] private bool ignoreInterfaceLock;
+        [Obsolete, SerializeField, HideInInspector] private bool ignoreInterfaceLock;
+        private int _cachedLayer;
+        private int _cachedLayerFrame;
 
         private const int MAX_PARENT_DEPTH = 100;
 
@@ -36,6 +38,17 @@ namespace LycheeLabs.FruityInterface {
 
         public virtual bool InputIsDisabled { get; }
 
+        /// <summary>The layer index for this node, resolved from the first InterfaceLayer found walking up the hierarchy.</summary>
+        public int LayerIndex {
+            get {
+                if (_cachedLayerFrame != Time.frameCount) {
+                    _cachedLayer = InterfaceLayer.GetLayer(this);
+                    _cachedLayerFrame = Time.frameCount;
+                }
+                return _cachedLayer;
+            }
+        }
+
         public InterfaceNode InputParent => (inputParentOverride != null) 
             ? inputParentOverride : automaticInputParent;
 
@@ -53,7 +66,6 @@ namespace LycheeLabs.FruityInterface {
         public bool InputEnabledInHierarchy {
             get {
                 var node = this;
-                var foundLockRoot = false;
                 int depth = 0;
                 while (node != null) {
                     if (depth++ > MAX_PARENT_DEPTH) {
@@ -61,17 +73,10 @@ namespace LycheeLabs.FruityInterface {
                         return false;
                     }
                     if (node.InputIsDisabled) return false;
-                    foundLockRoot |= (node == FruityUI.LockedNode || node.ignoreInterfaceLock);
                     node = node.InputParent;
                 }
-                // If unlocked, allow global input disabling
-                if (FruityUI.LockedNode == null && FruityUI.DisableInput) {
-                    return false;
-                }
-                // If locked, require lock to be in the hierarchy
-                if (FruityUI.LockedNode != null && !foundLockRoot) {
-                    return false;
-                }
+                if (FruityUI.ActiveLayerThreshold > LayerIndex) return false;
+                if (!FruityUI.InterfaceIsLocked && FruityUI.DisableInput) return false;
                 return true;
             }
         }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -6,6 +8,8 @@ namespace LycheeLabs.FruityInterface {
     /// Static access point for UI system state and utilities.
     /// </summary>
     public static class FruityUI {
+
+        private const bool DEBUG_LAYER_LOCK = false;
 
         // ----------------------- Projection -----------------------
 
@@ -67,17 +71,56 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         public static DraggedOverTarget DraggedOverTarget { get; internal set; }
 
-        // ----------------------- Lock State -----------------------
+        // ----------------------- Layer Lock State -----------------------
 
-        /// <summary>True if the UI is locked to a specific node hierarchy.</summary>
-        public static bool InterfaceIsLocked => LockedNode != null;
-        
-        /// <summary>When set, only this node and its children can receive mouse events.</summary>
-        public static InterfaceNode LockedNode { get; private set; }
+        private static readonly Dictionary<int, int> _layerLockCounts = new Dictionary<int, int>();
+        private static int _activeLayerThreshold;
+
+        /// <summary>The highest locked layer, or 0 if no layers are locked.
+        /// Only nodes at this layer or above receive input.</summary>
+        public static int ActiveLayerThreshold => _activeLayerThreshold;
+
+        /// <summary>True if any layer is currently locked.</summary>
+        public static bool InterfaceIsLocked => _activeLayerThreshold > 0;
 
         /// <summary>When true, all mouse input is disabled.
-        /// (However - for safety, when InterfaceIsLocked the locked node is never disabled)</summary>
+        /// (However - for safety, when InterfaceIsLocked the locked layer is never disabled)</summary>
         public static bool DisableInput { get; set; }
+
+        /// <summary>Lock the given layer. Nodes below this layer will not receive input.
+        /// Multiple locks on the same layer are refcounted.</summary>
+        public static void LockLayer(int layer) {
+            _layerLockCounts.TryGetValue(layer, out var count);
+            _layerLockCounts[layer] = count + 1;
+            var prevThreshold = _activeLayerThreshold;
+            if (layer > _activeLayerThreshold) {
+                _activeLayerThreshold = layer;
+            }
+            if (DEBUG_LAYER_LOCK) {
+                Debug.Log($"[FruityUI] LockLayer({layer}) count={count + 1} threshold={_activeLayerThreshold}" +
+                    (prevThreshold != _activeLayerThreshold ? " (raised from " + prevThreshold + ")" : ""));
+            }
+        }
+
+        /// <summary>Unlock the given layer. If no locks remain on any layer, all nodes are active again.</summary>
+        public static void UnlockLayer(int layer) {
+            if (!_layerLockCounts.TryGetValue(layer, out var count)) {
+                if (DEBUG_LAYER_LOCK) Debug.LogWarning($"[FruityUI] UnlockLayer({layer}) called but layer is not locked.");
+                return;
+            }
+            var prevThreshold = _activeLayerThreshold;
+            if (count <= 1) {
+                _layerLockCounts.Remove(layer);
+                _activeLayerThreshold = _layerLockCounts.Count > 0 ? _layerLockCounts.Keys.Max() : 0;
+            } else {
+                _layerLockCounts[layer] = count - 1;
+            }
+            var newCount = _layerLockCounts.TryGetValue(layer, out var nc) ? nc : 0;
+            if (DEBUG_LAYER_LOCK) {
+                Debug.Log($"[FruityUI] UnlockLayer({layer}) count={newCount} threshold={_activeLayerThreshold}" +
+                    (prevThreshold != _activeLayerThreshold ? " (dropped from " + prevThreshold + ")" : ""));
+            }
+        }
         
         // ----------------------- Methods -----------------------
 
@@ -89,14 +132,6 @@ namespace LycheeLabs.FruityInterface {
             WorldPlane = plane;
         }
 
-        public static void LockUI(InterfaceNode newLockedRoot) {
-            LockedNode = newLockedRoot;
-        }
-
-        public static void UnlockUI() {
-            LockedNode = null;
-        }
-        
         /// <summary>
         /// Programmatically trigger a click on a target.
         /// The click is buffered and processed as synthetic input in the next available frame.

@@ -7,7 +7,7 @@ namespace LycheeLabs.FruityInterface {
     public abstract class EventSequencer {
 
         private List<SequenceLayer> sequenceLayers;
-        private InterfaceNode currentRestrictedNode;
+        private int currentRestrictedLayer;
 
         protected EventSequencer() {
             sequenceLayers = new List<SequenceLayer>();
@@ -59,17 +59,22 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public void RefreshControlsLock() {
-            InterfaceNode newRestrictedNode = null;
+            int newRestrictedLayer = 0;
             for (int i = sequenceLayers.Count - 1; i >= 0; i--) {
                 var promptLayer = sequenceLayers[i] as PromptSequenceLayer;
-                if (promptLayer != null && promptLayer.IsRestrictingMouseInput) {
-                    newRestrictedNode = promptLayer.ActiveNode;
+                if (promptLayer != null && promptLayer.IsRestrictingMouseInput && promptLayer.ActiveNode != null) {
+                    newRestrictedLayer = InterfaceLayer.GetLayer(promptLayer.ActiveNode);
                     break;
                 }
             }
-            if (newRestrictedNode != currentRestrictedNode) {
-                currentRestrictedNode = newRestrictedNode;
-                FruityUI.LockUI(newRestrictedNode);
+            if (newRestrictedLayer != currentRestrictedLayer) {
+                if (currentRestrictedLayer > 0) {
+                    FruityUI.UnlockLayer(currentRestrictedLayer);
+                }
+                currentRestrictedLayer = newRestrictedLayer;
+                if (newRestrictedLayer > 0) {
+                    FruityUI.LockLayer(newRestrictedLayer);
+                }
             }
         }
 

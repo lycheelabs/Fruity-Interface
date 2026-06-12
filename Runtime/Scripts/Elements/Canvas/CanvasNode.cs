@@ -5,28 +5,34 @@ namespace LycheeLabs.FruityInterface.Elements {
     [RequireComponent(typeof(Canvas))]
     public sealed class CanvasNode : InterfaceNode {
 
-        public static CanvasNode Spawn (string name, string layerName, int order, float planeDistance, Camera camera = null) {
+        public static CanvasNode Spawn (string name, Camera camera, float planeDistance) {
             var instance = FruityUIPrefabs.NewCanvasNode().GetComponent<CanvasNode>();
-            instance.Setup(name, camera, layerName, order, planeDistance);
+            instance.name = "Canvas-" + name;
+            instance.SetCamera(camera, planeDistance);
             return instance;
         }
 
         // -------------------------------------------------
 
         public Canvas canvas;
+        public InterfaceLayer layer;
         public RectTransform contents;
         protected override Transform AttachTarget => contents.transform;
 
-        public void Setup (string name, Camera camera, string layerName, int order, float planeDistance) {
-            canvas.name = "Canvas-" + name;
+        public CanvasNode SetCamera (Camera camera, float planeDistance) {
             canvas.worldCamera = camera ?? Camera.main;
-            canvas.sortingLayerName = layerName;
-            canvas.sortingOrder = order;
             canvas.planeDistance = planeDistance + 5;
+            return this;
         }
 
-        public CanvasNode SetLayer (string newLayerName) {
-            canvas.sortingLayerName = newLayerName;
+        public CanvasNode SetInterfaceLayer (int interfaceLayer) {
+            layer.Layer = interfaceLayer;
+            return this;
+        }
+
+        public CanvasNode SetSorting (string sortingLayerName, int sortingOrder = 0) {
+            canvas.sortingLayerName = sortingLayerName;
+            canvas.sortingOrder = sortingOrder;
             return this;
         }
 
