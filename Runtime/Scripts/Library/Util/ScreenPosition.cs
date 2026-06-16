@@ -3,19 +3,29 @@ using System.Collections;
 
 namespace LycheeLabs.FruityInterface {
 
+    [System.Obsolete("Use WorldAnchor for world→screen resolution or ScreenAnchor for screen→world resolution.")]
     public struct ScreenPosition {
 
 		public static ScreenPosition Lerp (ScreenPosition a, ScreenPosition b, float tween, Vector2 screenOffset = default) {
-			var lerpPosition = Vector3.Lerp(a.position, b.position, tween);
-			var lerpOffset = Vector2.Lerp(a.offset, b.offset, tween);
-			return new ScreenPosition(lerpPosition, lerpOffset + screenOffset);
+			if (a.baked && b.baked) {
+				var lerpBaked = Vector3.Lerp(a.bakedPosition, b.bakedPosition, tween);
+				var lerpOffset = Vector2.Lerp(a.offset, b.offset, tween);
+				var result = new ScreenPosition(default, lerpOffset + screenOffset);
+				result.bakedPosition = lerpBaked;
+				result.baked = true;
+				return result;
+			} else {
+				var lerpPosition = Vector3.Lerp(a.position, b.position, tween);
+				var lerpOffset = Vector2.Lerp(a.offset, b.offset, tween);
+				return new ScreenPosition(lerpPosition, lerpOffset + screenOffset);
+			}
 		}
 
 		/// <summary>
 		/// ScreenOffset is relative to screen center and measured in UIConfig units
 		/// </summary>
 		public static ScreenPosition FromCamera (Vector2 screenOffset, Camera camera = null) {
-			camera = camera ?? Camera.main;
+			camera = camera ?? FruityUI.UICamera;
 			var cameraCenter = camera.ScreenToWorldPoint(new Vector3 (Screen.width, Screen.height) / 2f);
 			var position = new ScreenPosition(cameraCenter, screenOffset);
 			position.Bake();
@@ -42,7 +52,7 @@ namespace LycheeLabs.FruityInterface {
 		}
 
 		/// <summary> Baking locks in the camera's current position.</summary>
-		public ScreenPosition Bake () => Bake(Camera.main);
+		public ScreenPosition Bake () => Bake(FruityUI.UICamera);
 
 		/// <summary> Baking locks in the camera's current position.</summary>
 		public ScreenPosition Bake(Camera camera) {
@@ -53,7 +63,7 @@ namespace LycheeLabs.FruityInterface {
 
 
 		/// <summary> Returns the position as a scaled screenspace vector, relative to the screen centre.</summary>
-		public Vector3 ScreenVector () => ScreenVector(Camera.main);
+		public Vector3 ScreenVector () => ScreenVector(FruityUI.UICamera);
 
 		/// <summary> Returns the position as a scaled screenspace vector, relative to the screen centre.</summary>
 		public Vector3 ScreenVector (Camera camera) {
@@ -63,7 +73,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         /// <summary> Returns the position as a raw screenspace vector, relative to the screen corner.</summary>
-        public Vector3 RawScreenVector() => RawScreenVector(Camera.main);
+        public Vector3 RawScreenVector() => RawScreenVector(FruityUI.UICamera);
 
         /// <summary> Returns the position as a raw screenspace vector, relative to the screen corner.</summary>
         public Vector3 RawScreenVector (Camera camera) {
@@ -80,7 +90,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         /// <summary> Returns the position as a raw viewport vector, relative to the screen corner.</summary>
-        public Vector3 RawViewportVector() => RawViewportVector(Camera.main);
+        public Vector3 RawViewportVector() => RawViewportVector(FruityUI.UICamera);
 
         /// <summary> Returns the position as a raw viewport vector, relative to the screen corner.</summary>
         public Vector2 RawViewportVector(Camera camera) {
@@ -89,13 +99,13 @@ namespace LycheeLabs.FruityInterface {
         }
 
         /// <summary> Returns the position as a worldspace position.</summary>
-        public Vector3 WorldVector () => WorldVector(Camera.main);
+        public Vector3 WorldVector () => WorldVector(FruityUI.UICamera);
 
         /// <summary> Returns the position as a worldspace position.</summary>
-        public Vector3 WorldVector (Camera camera) {
+		public Vector3 WorldVector (Camera camera) {
 			var screenVector = ScreenVector(camera);
 			var adjustedVector = (screenVector / ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
-			var worldVector = Camera.main.ScreenToWorldPoint(adjustedVector);
+			var worldVector = camera.ScreenToWorldPoint(adjustedVector);
 			return worldVector.IntersectWithWorldPlane();
 		}
 
