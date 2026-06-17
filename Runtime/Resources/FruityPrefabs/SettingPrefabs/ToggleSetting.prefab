@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4613884883433608674, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 175
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 6334570399864271152, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_fontSize
-      value: 33.6
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055770, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_Name
@@ -46,11 +46,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 700
+      value: 800
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 64
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -102,7 +102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8461694419077459103, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 525
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 9101753004865950675, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: ControlNode
@@ -118,13 +118,34 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4613884883433608674, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1475903548767655189}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7717136075907055770, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 944780924492906809}
   m_SourcePrefab: {fileID: 100100000, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
 --- !u!224 &1165155007961751990 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4613884883433608674, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
   m_PrefabInstance: {fileID: 5777196472991298644}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4266175256437454030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7717136075907055770, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
+  m_PrefabInstance: {fileID: 5777196472991298644}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &944780924492906809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4266175256437454030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084f7bfbc39b2ac4582d5ce304f5fc78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.ToggleSettingKey
+  SettingKey: display.fullscreen
 --- !u!1001 &9179374162307847600
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -175,15 +196,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6127659
+      value: 0.7659574
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.6127659
+      value: 0.7659574
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6127659
+      value: 0.7659574
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -236,19 +257,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7717136075907055770, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 3472185311591607163}
   m_SourcePrefab: {fileID: 100100000, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
 --- !u!224 &1475903548767655189 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7717136075907055781, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
   m_PrefabInstance: {fileID: 9179374162307847600}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1475903548767655210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7717136075907055770, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
+  m_PrefabInstance: {fileID: 9179374162307847600}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3472185311591607163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1475903548767655210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c9414d3f1776e4b96b9788340c38c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.ToggleSettingEffect
 --- !u!114 &8809500821582096545 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 369878426039598353, guid: d435122462dd44f4d817062a7beb1f6e, type: 3}
   m_PrefabInstance: {fileID: 9179374162307847600}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1475903548767655210}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab737797614666849ac76773cf540c9c, type: 3}

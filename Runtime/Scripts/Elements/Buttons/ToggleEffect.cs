@@ -13,15 +13,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             get => button ?? GetComponent<ToggleButton>();
         }
 
-        public void SetUpAs(bool value) {
-            IsToggledOn = value;
-            Button.JumpTo(value);
-        }
-
-        public void Toggle () {
-            ToggleTo(!IsToggledOn);
-        }
-
         public void ToggleTo(bool value) {
             ApplyToggle(value);
             IsToggledOn = value;

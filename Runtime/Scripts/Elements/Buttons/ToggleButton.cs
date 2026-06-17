@@ -70,7 +70,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         // ------------------------------------------------------------------
 
         public void ApplyMouseClick(ClickParams clickParams) {
-            AnimateTo(!isActive);
+            isActive = !isActive;
+            
+            TryGetEffect?.ToggleTo(isActive);
+            AnimateTo(isActive);
         }
 
         public void UpdateMouseHover(bool isFirstFrame, HoverParams highlightParams) {
