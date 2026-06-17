@@ -56,13 +56,13 @@ Material:
     m_Ints: []
     m_Floats:
     - _Angle: -45
-    - _Flip: 1
+    - _Flip: 0
     - _Float: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ScrollSpeed: 0.2
     - _Tiling: 15
-    - _Tween: 0
+    - _Tween: 0.44560057
     m_Colors:
     - _DetailColor: {r: 0.06875222, g: 0.1415094, b: 0.07329954, a: 0}
     - _MainColor: {r: 0.04049483, g: 0.09433961, b: 0.04203325, a: 0}

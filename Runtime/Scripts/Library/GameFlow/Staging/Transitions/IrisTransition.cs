@@ -58,7 +58,7 @@ namespace LycheeLabs.FruityInterface.Flow {
                 PauseAt((float)pausePoint);
             }
             if (config.TryGetConfig(TargetKey, out var target)) {
-                if (target is ScreenPosition targetPosition) {
+                if (target is WorldAnchor targetPosition) {
                     material.SetVector("_Origin", targetPosition.RawViewportVector());
                 }
             }
