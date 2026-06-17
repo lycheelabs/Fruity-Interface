@@ -3,41 +3,21 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    /// <summary>
-    /// Implementation of a UIButton that passes behaviour to a ToggleButtonEffect component.
-    /// </summary>
-    public class ToggleField : ControlNode, ControlLayoutDriver {
+    public class SettingNode : ControlNode {
 
-        public IconButton ToggleButton;
-        public RectTransform FieldBounds;
-        public TextMeshProUGUI FieldText;
-
-        public Sprite OnSprite;
-        public Sprite OffSprite;
+        // Prefab references
+        public TextMeshProUGUI Text;
+        public RectTransform TextBounds;
+        public LayoutNode ControlNode;
+        public RectTransform ControlBounds;
 
         [SerializeField] private float width = 200;
         [SerializeField] private float height = 50;
-        [SerializeField] private float fontHeightScaling = 1;
-        [SerializeField] private float iconScaling = 1;
-        [SerializeField] private float fieldMargin = 20;
-
-        private float FieldWidth => Mathf.Max(height, width - height - fieldMargin);
-
-        public float DrivenWidth => FieldWidth;
-        public float DrivenHeight => height;
-        public Vector2 DrivenLayoutPadding => default;
-        public bool DrivenCropWidth => false;
-        public float DrivenFontHeightScaling => fontHeightScaling;
-        public float DrivenIconScale => iconScaling;
-        public float DrivenInteriorMargins => fieldMargin;
+        [SerializeField][Range(0,1)] private float fontHeightScaling = 0.75f;
+        [SerializeField][Range(0,1)] private float contentRatio = 0.75f;
 
         public void SetText (string text) {
-            FieldText.text = text;
-            FieldText.rectTransform.offsetMin = new Vector2(height * 1.25f, 0);
-
-            var size = new Vector2(width, height);
-            rectTransform.sizeDelta = size;
-            LayoutSizePixels = size;
+            Text.text = text;
         }
 
         //public new void OnValidate() {
@@ -54,28 +34,26 @@ namespace LycheeLabs.FruityInterface.Elements {
                 fontHeightScaling = LayoutDriver.fontHeightScaling;
             }
 
-            // Pass layout to children
-            var childDriver = GetComponent<ControlLayoutStyle>();
-            if (childDriver != null) {
-                childDriver.width = FieldWidth;
-                childDriver.height = height;
-                childDriver.layoutPadding = default;
-                childDriver.fontHeightScaling = fontHeightScaling;
-                childDriver.iconScaling = iconScaling;
-                childDriver.interiorMargins = 0;
-
-                ToggleButton.BasePosition = new Vector3(height / 2f, 0);
-                ToggleButton.RefreshLayoutDeferred();
-            }
-
             // Apply size to self
             LayoutSizePixels = new Vector2(width, height);
             rectTransform.sizeDelta = new Vector2(width, height);
-            FieldBounds.sizeDelta = new Vector2(FieldWidth, height);
 
-            FieldText.fontSizeMax = height * 0.75f * fontHeightScaling;
-            FieldText.fontSizeMin = height * 0.35f * fontHeightScaling;
+            var textW = width * contentRatio;
+            var controlW = width - textW;
+            TextBounds.sizeDelta = new Vector2(textW, height);
+            ControlBounds.sizeDelta = new Vector2(controlW, height);
 
+            Text.fontSizeMax = height * 0.75f * fontHeightScaling;
+            Text.fontSizeMin = height * 0.35f * fontHeightScaling;
+
+            // Apply size to control
+            if (ControlNode != null) {
+                var controlSize = ControlNode.TotalSizePixels;
+                var controlScaleX = controlW / controlSize.x;
+                var controlScaleY = height / controlSize.y;
+                var controlScale = Mathf.Min(controlScaleX, controlScaleY);
+                ControlNode.transform.localScale = Vector3.one * controlScale * 0.9f;
+            }
         }
 
         // ------------------------------------------------------------------

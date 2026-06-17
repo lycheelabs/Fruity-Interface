@@ -16,8 +16,8 @@ namespace LycheeLabs.FruityInterface {
             animator?.Play(new BulgeAnimation(sizeScale, speedScale, tween));
         }
 
-        public static void Nudge (this JuicyAnimator animator, Vector3 direction, float sizeScale = 1f, float speedScale = 1f) {
-            animator?.Play(new NudgeAnimation(direction, sizeScale, speedScale));
+        public static void Nudge (this JuicyAnimator animator, Vector3 direction, float distance, float speedScale = 1f) {
+            animator?.Play(new NudgeAnimation(direction, distance, speedScale));
         }
 
         public static void Wiggle(this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {

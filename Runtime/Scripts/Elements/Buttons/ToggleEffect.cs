@@ -3,48 +3,19 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [RequireComponent(typeof(ToggleField))]
+    [RequireComponent(typeof(ToggleButton))]
     public abstract class ToggleEffect : MonoBehaviour {
 
         public bool IsToggledOn { get; private set; }
 
-        private ToggleField button = null;
-        public ToggleField Button {
-            get => button ?? GetComponent<ToggleField>();
-        }
-
-        [SerializeField]
-        private float width = 300;
-        public float Width {
-            get => width;
-            set { width = value; UpdateLayout(); }
-        }
-
-        [SerializeField]
-        private float height = 40;
-        public float Height {
-            get => height;
-            set { height = value; UpdateLayout(); }
-        }
-
-        [SerializeField]
-        private string text = "Button Text";
-        public string Text {
-            get => text;
-            set { text = value; UpdateLayout(); }
-        }
-
-        public void OnValidate() {
-            //Button.Initialise();
-            UpdateLayout();
-        }
-
-        protected void UpdateLayout() {
-            //Button.Configure(Text, Height, Width);
+        private ToggleButton button = null;
+        public ToggleButton Button {
+            get => button ?? GetComponent<ToggleButton>();
         }
 
         public void SetUpAs(bool value) {
             IsToggledOn = value;
+            Button.JumpTo(value);
         }
 
         public void Toggle () {
@@ -56,7 +27,10 @@ namespace LycheeLabs.FruityInterface.Elements {
             IsToggledOn = value;
         }
 
-        public abstract void MouseOver ();
+        // -------------------------------------------------
+
+        public virtual void OnHover () {}
+        public virtual void OnClick () {}
         protected abstract void ApplyToggle(bool value);
 
     }

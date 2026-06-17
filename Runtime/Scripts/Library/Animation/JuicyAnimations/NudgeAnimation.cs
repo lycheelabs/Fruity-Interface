@@ -10,14 +10,14 @@ namespace LycheeLabs.FruityInterface.Animation {
         private readonly float sizeScale;
         private readonly float speedScale;
 
-        public NudgeAnimation (Vector3 direction, float sizeScale = 1f, float speedScale = 1f) {
+        public NudgeAnimation (Vector3 direction, float distance, float speedScale = 1f) {
             direction.z = 0;
             if (direction.magnitude != 0) {
                 direction = direction.normalized;
             }
 
             this.direction = direction;
-            this.sizeScale = sizeScale * 0.1f;
+            this.sizeScale = distance;
             this.speedScale = Mathf.Max(speedScale, 0.1f) * 8f;
         }
 
