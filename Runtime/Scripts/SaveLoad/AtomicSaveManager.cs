@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.SaveLoad {
@@ -94,7 +95,7 @@ namespace LycheeLabs.FruityInterface.SaveLoad {
 
         // --- Core Serialization ---
         private static byte[] SerializeData<T>(T data, bool encrypt) {
-            string json = JsonUtility.ToJson(data, true);
+            string json = JsonConvert.SerializeObject(data, Formatting.Indented);
             byte[] bytes = Encoding.UTF8.GetBytes(json);
 
             if (!encrypt) {
@@ -130,7 +131,7 @@ namespace LycheeLabs.FruityInterface.SaveLoad {
             if (string.IsNullOrWhiteSpace(json))
                 throw new InvalidDataException("JSON was empty.");
 
-            T result = JsonUtility.FromJson<T>(json);
+            T result = JsonConvert.DeserializeObject<T>(json);
             if (result == null)
                 throw new InvalidDataException("JSON failed to deserialize into " + typeof(T).Name);
 
