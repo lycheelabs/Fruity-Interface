@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 084f7bfbc39b2ac4582d5ce304f5fc78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.ToggleSettingKey
-  SettingKey: display.fullscreen
+  SettingKey: 
 --- !u!1001 &9179374162307847600
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -99,13 +99,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7717136075907055770, guid: c800077e021d95e4dbc6b7187fc339fe, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6437315900680686961}
   m_SourcePrefab: {fileID: 100100000, guid: c800077e021d95e4dbc6b7187fc339fe, type: 3}
 --- !u!224 &6799299067995248585 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7717136075907055781, guid: c800077e021d95e4dbc6b7187fc339fe, type: 3}
   m_PrefabInstance: {fileID: 3837964246449821548}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6799299067995248630 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7717136075907055770, guid: c800077e021d95e4dbc6b7187fc339fe, type: 3}
+  m_PrefabInstance: {fileID: 3837964246449821548}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6437315900680686961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6799299067995248630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e49d8317cc17204ab13c62cd0663d9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.SliderSettingEffect
 --- !u!1001 &5777196472991298644
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -227,7 +247,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7717136075907055770, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       insertIndex: 1
-      addedObject: {fileID: 944780924492906809}
+      addedObject: {fileID: 2975239533681400754}
   m_SourcePrefab: {fileID: 100100000, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
 --- !u!224 &1165155007961751990 stripped
 RectTransform:
@@ -239,7 +259,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7717136075907055770, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
   m_PrefabInstance: {fileID: 5777196472991298644}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &944780924492906809
+--- !u!114 &2975239533681400754
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,7 +268,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4266175256437454030}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 084f7bfbc39b2ac4582d5ce304f5fc78, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b0c63006ea921c42b3ebb042e003ab6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.ToggleSettingKey
-  SettingKey: display.fullscreen
+  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.SliderSettingKey
+  SettingKey: 

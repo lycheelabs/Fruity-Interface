@@ -110,10 +110,10 @@ RectTransform:
   - {fileID: 5170578722040099474}
   m_Father: {fileID: 7717136075907055781}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -80, y: 0}
+  m_SizeDelta: {x: 176.7, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &4556370944703982694
 CanvasRenderer:
@@ -158,7 +158,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 70, y: 0}
+  m_SizeDelta: {x: 73.3, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1238140415687087244
 CanvasRenderer:
@@ -233,7 +233,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 66%
+  m_text: 50%
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c0553a0d261b10645816f24c6f1ab7e8, type: 2}
   m_sharedMaterial: {fileID: 21770866985822968, guid: c0553a0d261b10645816f24c6f1ab7e8, type: 2}
@@ -450,11 +450,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::SliderNode
   inputParentOverride: {fileID: 0}
   ignoreInterfaceLock: 0
-  LayoutSizePixels: {x: 0, y: 0}
+  LayoutSizePixels: {x: 250, y: 60}
   LayoutPaddingPixels: {x: 0, y: 0}
-  barBounds: {fileID: 1882219624114187289}
+  barBounds: {fileID: 8357293981592168390}
+  bar: {fileID: 1882219624114187289}
   barCollider: {fileID: 4324462555525813841}
   handle: {fileID: 3500596707350494773}
+  counterBounds: {fileID: 5495009388970061760}
+  counter: {fileID: 7146272252736616919}
+  valueIsPercentage: 1
+  showValue: 1
+  valueTextWidth: 73.3
 --- !u!1 &7808228273817047027
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,7 +517,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 180, y: 56, z: 0}
+  m_Size: {x: 176.7, y: 44, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &3111480202125082450
 MonoBehaviour:
