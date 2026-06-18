@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    public enum TabbingSelectorComponent {
-        Main,
+    public enum ArrowSelectorComponent {
+        Display,
         LeftArrow,
         RightArrow
     }
 
-    public class TabbingSelector : ControlNode, ControlLayoutDriver {
+    public class ArrowSelector : ControlNode, ControlLayoutDriver {
 
         public TextButton MainButton;
         public IconButton LeftArrow;
@@ -133,7 +133,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         }
 
-        public void Activate (TabbingSelectorComponent type, MouseButton clickButton) {
+        public void Activate (ArrowSelectorComponent type, MouseButton clickButton) {
             if (TryGetEffect != null) {
                 if (clickButton == MouseButton.Left) {
                     ActivateComponent(type);
@@ -143,28 +143,28 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
-        private void ActivateComponent (TabbingSelectorComponent type) {
-            if (type == TabbingSelectorComponent.Main) {
+        private void ActivateComponent (ArrowSelectorComponent type) {
+            if (type == ArrowSelectorComponent.Display) {
                 TryGetEffect.ActivateMainButton();
                 MainButton.ButtonAnimator.Squash(0.5f);
             }
-            if (type == TabbingSelectorComponent.LeftArrow) {
+            if (type == ArrowSelectorComponent.LeftArrow) {
                 ApplyOption(TryGetEffect.TabLeft(), false);
                 MainButton.ButtonAnimator.Squash(0.5f);
             } 
-            if (type == TabbingSelectorComponent.RightArrow) {
+            if (type == ArrowSelectorComponent.RightArrow) {
                 ApplyOption(TryGetEffect.TabRight(), false);
                 MainButton.ButtonAnimator.Squash(0.5f);
             }
         }
 
-        public void MouseOver (TabbingSelectorComponent type) {
+        public void MouseOver (ArrowSelectorComponent type) {
             if (TryGetEffect != null) {
                 TryGetEffect.MouseOverComponent(type);
             }
         }
 
-        public void UpdateLayout (TabbingSelectorComponent type) {
+        public void UpdateLayout (ArrowSelectorComponent type) {
             //
         }
 

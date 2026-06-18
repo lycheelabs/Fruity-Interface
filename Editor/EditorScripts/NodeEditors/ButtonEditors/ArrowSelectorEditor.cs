@@ -2,8 +2,8 @@ using UnityEditor;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [CustomEditor(typeof(TabbingSelector))]
-    public class TabbingSelectorEditor : Editor {
+    [CustomEditor(typeof(ArrowSelector))]
+    public class ArrowSelectorEditor : Editor {
 
         public bool PrefabFoldout;
 

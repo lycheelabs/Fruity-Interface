@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    [RequireComponent(typeof(ToggleButton))]
+    [RequireComponent(typeof(ToggleSwitch))]
     public abstract class ToggleEffect : MonoBehaviour {
 
         public bool IsToggledOn { get; private set; }
 
-        private ToggleButton button = null;
-        public ToggleButton Button {
-            get => button ?? GetComponent<ToggleButton>();
+        private ToggleSwitch button = null;
+        public ToggleSwitch Button {
+            get => button ?? GetComponent<ToggleSwitch>();
         }
 
         public void ToggleTo(bool value) {

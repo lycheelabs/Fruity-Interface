@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    public class ToggleButton : LayoutNode, ClickTarget {
+    public class ToggleSwitch : LayoutNode, ClickTarget {
 
         // Config
         public Sprite OnSprite;

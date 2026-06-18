@@ -35,7 +35,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 20}
+  m_SizeDelta: {x: 0, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8726863400777502616
 MonoBehaviour:
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 3.3
+  m_PixelsPerUnitMultiplier: 3.5
 --- !u!222 &2780987671216391681
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -113,7 +113,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 176.7, y: 0}
+  m_SizeDelta: {x: 176.7, y: 60}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &4556370944703982694
 CanvasRenderer:
@@ -341,7 +341,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 44, y: 44}
+  m_SizeDelta: {x: 40, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3647565707669696525
 MonoBehaviour:
@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.47450984, g: 0.42352945, b: 0.49411768, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -452,15 +452,19 @@ MonoBehaviour:
   ignoreInterfaceLock: 0
   LayoutSizePixels: {x: 250, y: 60}
   LayoutPaddingPixels: {x: 0, y: 0}
+  bounds: {fileID: 7717136075907055781}
   barBounds: {fileID: 8357293981592168390}
   bar: {fileID: 1882219624114187289}
   barCollider: {fileID: 4324462555525813841}
-  handle: {fileID: 3500596707350494773}
+  handle: {fileID: 268123625904716406}
+  barFill: {fileID: 972740255773931916}
   counterBounds: {fileID: 5495009388970061760}
   counter: {fileID: 7146272252736616919}
-  valueIsPercentage: 1
+  width: 250
+  Color: {r: 1, g: 1, b: 1, a: 1}
   showValue: 1
   valueTextWidth: 73.3
+  valueIsPercentage: 1
 --- !u!1 &7808228273817047027
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,8 +570,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0.16500854, y: 0}
-  m_SizeDelta: {x: -12.670009, y: 9}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -8, y: 8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &972740255773931916
 MonoBehaviour:
@@ -582,7 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4753568, g: 0.42438588, b: 0.4943396, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

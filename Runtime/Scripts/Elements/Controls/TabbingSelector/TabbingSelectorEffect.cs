@@ -51,7 +51,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
-        public abstract void MouseOverComponent (TabbingSelectorComponent type);
+        public abstract void MouseOverComponent (ArrowSelectorComponent type);
         public abstract void ActivateMainButton ();
         protected abstract void OnSelectionInitialised (TabbingSelectorOption option);
         protected abstract void OnSelectionChanged (TabbingSelectorOption newOption);

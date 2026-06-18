@@ -1,9 +1,9 @@
 namespace LycheeLabs.FruityInterface.Elements.Buttons {
 
-    public class TabbingSelectorButtonEffect : ButtonEffect {
+    public class ArrowSelectorEffect : ButtonEffect {
 
-        public TabbingSelectorComponent Type;
-        public TabbingSelector Parent;
+        public ArrowSelectorComponent Type;
+        public ArrowSelector Parent;
 
         public override void Activate (MouseButton clickButton) {
             Parent.Activate(Type, clickButton);

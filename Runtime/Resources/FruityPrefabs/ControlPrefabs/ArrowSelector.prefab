@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3479122883067366820}
   - component: {fileID: 4689134469383656775}
   m_Layer: 5
-  m_Name: TabbingButton
+  m_Name: ArrowSelector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

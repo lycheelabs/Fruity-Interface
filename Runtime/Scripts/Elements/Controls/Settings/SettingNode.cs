@@ -6,18 +6,19 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class SettingNode : ControlNode {
 
         // Prefab references
-        public TextMeshProUGUI Text;
+        public TextMeshProUGUI TextField;
         public RectTransform TextBounds;
         public LayoutNode ControlNode;
         public RectTransform ControlBounds;
 
+        [SerializeField] private string text = "Setting text";
         [SerializeField] private float width = 200;
         [SerializeField] private float height = 50;
         [SerializeField][Range(0,1)] private float fontHeightScaling = 0.75f;
         [SerializeField][Range(0,1)] private float contentRatio = 0.75f;
 
         public void SetText (string text) {
-            Text.text = text;
+            TextField.text = text;
         }
 
         //public new void OnValidate() {
@@ -43,8 +44,9 @@ namespace LycheeLabs.FruityInterface.Elements {
             TextBounds.sizeDelta = new Vector2(textW, height);
             ControlBounds.sizeDelta = new Vector2(controlW, height);
 
-            Text.fontSizeMax = height * 0.75f * fontHeightScaling;
-            Text.fontSizeMin = height * 0.35f * fontHeightScaling;
+            TextField.text = text;
+            TextField.fontSizeMax = height * 0.75f * fontHeightScaling;
+            TextField.fontSizeMin = height * 0.35f * fontHeightScaling;
 
             // Apply size to control
             if (ControlNode != null) {
@@ -54,6 +56,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 var controlScale = Mathf.Min(controlScaleX, controlScaleY);
                 ControlNode.transform.localScale = Vector3.one * controlScale * 0.9f;
             }
+
         }
 
         // ------------------------------------------------------------------

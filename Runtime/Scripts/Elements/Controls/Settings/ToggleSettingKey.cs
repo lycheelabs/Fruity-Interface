@@ -11,7 +11,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         public void Start () {
             if (SettingsRegistry.Active != null &&
                 SettingsRegistry.Active.TryGet<BoolSetting>(SettingKey, out setting)) {
-                var toggle = GetComponentInChildren<ToggleButton>();
+                var toggle = GetComponentInChildren<ToggleSwitch>();
                 if (toggle != null) {
                     toggle.JumpTo(setting.Value);
                 } else {

@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: c800077e021d95e4dbc6b7187fc339fe, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 280
+      value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 7717136075907055781, guid: c800077e021d95e4dbc6b7187fc339fe, type: 3}
       propertyPath: m_SizeDelta.y
@@ -233,6 +233,10 @@ PrefabInstance:
     - target: {fileID: 8461694419077459103, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: m_SizeDelta.x
       value: 496
+      objectReference: {fileID: 0}
+    - target: {fileID: 9101753004865950675, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
+      propertyPath: text
+      value: Slider text
       objectReference: {fileID: 0}
     - target: {fileID: 9101753004865950675, guid: 3ce39b3f7e649c844b90544113ba248f, type: 3}
       propertyPath: contentRatio

@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Toggle text
+  m_text: Setting text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c0553a0d261b10645816f24c6f1ab7e8, type: 2}
   m_sharedMaterial: {fileID: 21770866985822968, guid: c0553a0d261b10645816f24c6f1ab7e8, type: 2}
@@ -191,12 +191,13 @@ MonoBehaviour:
   inputParentOverride: {fileID: 0}
   ignoreInterfaceLock: 0
   LayoutSizePixels: {x: 800, y: 80}
-  LayoutPaddingPixels: {x: 0, y: 0}
+  LayoutPaddingPixels: {x: 5, y: 5}
   LayoutDriver: {fileID: 0}
-  Text: {fileID: 6334570399864271152}
+  TextField: {fileID: 6334570399864271152}
   TextBounds: {fileID: 8461694419077459103}
   ControlNode: {fileID: 0}
   ControlBounds: {fileID: 4613884883433608674}
+  text: Setting text
   width: 800
   height: 80
   fontHeightScaling: 0.7

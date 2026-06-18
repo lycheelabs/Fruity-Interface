@@ -1,23 +1,28 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface {
 
     public class SliderNode : LayoutNode, DragTarget {
 
         // Prefab config
+        public RectTransform bounds;
         public RectTransform barBounds;
         public RectTransform bar;
         public BoxCollider barCollider;
-        public RectTransform handle;
+        public Image handle;
+        public Image barFill;
         
         public RectTransform counterBounds;
         public TextMeshProUGUI counter;
 
         // Public config
-        public bool valueIsPercentage = true;
+        public float width = 250f;
+        public Color Color = Color.white;
         public bool showValue = true;
         public float valueTextWidth = 80f;
+        public bool valueIsPercentage = true;
 
         // Value
         private int min = 0;
@@ -34,7 +39,7 @@ namespace LycheeLabs.FruityInterface {
 
         void Update() {
             highlightTween = highlightTween.MoveTowardsUnscaled(isHighlighted, 10);
-            handle.localScale = Vector3.one * (1 + 0.2f * highlightTween);         
+            handle.rectTransform.localScale = Vector3.one * (1 + 0.28f * highlightTween);         
         }
 
         protected override void RefreshLayout() {
@@ -42,12 +47,17 @@ namespace LycheeLabs.FruityInterface {
             counterBounds.gameObject.SetActive(showValue);
             counterBounds.sizeDelta = new Vector2(counterWidth, counterBounds.sizeDelta.y);
 
-            var totalWidth = LayoutSizePixels.x;
-            barBounds.sizeDelta = new Vector2(totalWidth - counterWidth, barBounds.sizeDelta.y);
+            barBounds.sizeDelta = new Vector2(width - counterWidth, barBounds.sizeDelta.y);
 
             var barSize = barBounds.rect.size;
-            var handleSize = handle.rect.size;
+            var handleSize = handle.rectTransform.rect.size;
             barCollider.size = new Vector3(barSize.x, handleSize.y, 1);
+
+            bounds.sizeDelta = new Vector2(width, 60);
+            LayoutSizePixels = new  Vector2(width, 60);
+
+            handle.color = Color;
+            barFill.color = Color;
 
             UpdateCounter();
         }
@@ -61,7 +71,7 @@ namespace LycheeLabs.FruityInterface {
         public void SetValueSilent (int newValue) {
             value = ClampValue(newValue);
             var progress = Progress(value);
-            handle.anchoredPosition = new Vector2((progress - 0.5f) * BarWidth(), 0);
+            handle.rectTransform.anchoredPosition = new Vector2((progress - 0.5f) * BarWidth(), 0);
             UpdateCounter();
         }
 
@@ -111,14 +121,14 @@ namespace LycheeLabs.FruityInterface {
         }
 
         private float BarWidth() {
-            var handleHeight = handle.rect.height;
+            var handleHeight = handle.rectTransform.rect.height;
             return bar.rect.width - handleHeight * 0.8f;
         }
 
         private void AnimateTo(int newValue) {
             value = ClampValue(newValue);
             var progress = Progress(value);
-            handle.anchoredPosition = new Vector2((progress - 0.5f) * BarWidth(), 0);
+            handle.rectTransform.anchoredPosition = new Vector2((progress - 0.5f) * BarWidth(), 0);
             UpdateCounter();
             TryGetEffect?.OnValueChanged(value);
         }
