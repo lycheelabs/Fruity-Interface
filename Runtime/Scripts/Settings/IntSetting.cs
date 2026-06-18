@@ -10,6 +10,8 @@ namespace LycheeLabs.FruityInterface.Settings {
             set { _value = Clamp(value); Apply(); }
         }
 
+        public float ValueAsPercent => Value / 100f;
+
         public int DefaultValue { get; }
         public int Min { get; }
         public int Max { get; }

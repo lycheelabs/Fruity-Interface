@@ -39,7 +39,8 @@ namespace LycheeLabs.FruityInterface {
 
         void Update() {
             highlightTween = highlightTween.MoveTowardsUnscaled(isHighlighted, 10);
-            handle.rectTransform.localScale = Vector3.one * (1 + 0.28f * highlightTween);         
+            handle.rectTransform.localScale = Vector3.one * (1 + 0.28f * highlightTween); 
+            UpdateHandle();        
         }
 
         protected override void RefreshLayout() {
@@ -59,6 +60,8 @@ namespace LycheeLabs.FruityInterface {
             handle.color = Color;
             barFill.color = Color;
 
+            var progress = Progress(value);
+
             UpdateCounter();
         }
 
@@ -71,7 +74,7 @@ namespace LycheeLabs.FruityInterface {
         public void SetValueSilent (int newValue) {
             value = ClampValue(newValue);
             var progress = Progress(value);
-            handle.rectTransform.anchoredPosition = new Vector2((progress - 0.5f) * BarWidth(), 0);
+
             UpdateCounter();
         }
 
@@ -127,8 +130,6 @@ namespace LycheeLabs.FruityInterface {
 
         private void AnimateTo(int newValue) {
             value = ClampValue(newValue);
-            var progress = Progress(value);
-            handle.rectTransform.anchoredPosition = new Vector2((progress - 0.5f) * BarWidth(), 0);
             UpdateCounter();
             TryGetEffect?.OnValueChanged(value);
         }
@@ -136,6 +137,12 @@ namespace LycheeLabs.FruityInterface {
         private void UpdateCounter () {
             if (counter != null) {
                 counter.text = valueIsPercentage ? value + "%" : value.ToString();
+            }
+        }
+
+        private void UpdateHandle () {
+            if (handle != null) {
+                handle.rectTransform.anchoredPosition = new Vector2((Progress(value) - 0.5f) * BarWidth(), 0);
             }
         }
 
