@@ -66,7 +66,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             rectTransform.sizeDelta = size;
             ButtonImage.rectTransform.sizeDelta = size * iconScaling;
             LayoutSizePixels = size;
-            BoxCollider.size = (size * iconScaling) + new Vector2(colliderPadding, colliderPadding);
+            BoxCollider.size = (Vector3)(size * iconScaling) + new Vector3(colliderPadding, colliderPadding, 1);
         }
 
         public void SetInputDisabled (bool disabled) {
