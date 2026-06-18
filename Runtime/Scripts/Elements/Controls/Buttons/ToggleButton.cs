@@ -45,7 +45,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     
             highlightTween = highlightTween.MoveTowardsUnscaled(isHighlighted, 10);
             pressTween = pressTween.MoveTowardsUnscaled(isPressed, 12);
-            Animator.BaseScale = Vector3.one * (1 + 0.18f * Tweens.EaseInOutQuad(highlightTween));
+            Animator.BaseScale = Vector3.one * (1 + 0.12f * Tweens.EaseInOutQuad(highlightTween));
             Animator.BasePosition = new Vector3(26 * pressTween * (activeTween - 0.5f), 0);
 
             Dot.transform.localScale = Vector3.one * (1 + 0.3f * pressTween);
@@ -83,6 +83,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public void EndMouseHover() {
             isHighlighted = false;
+            isPressed = false;
         }
 
         // ------------------------------------------------------------------

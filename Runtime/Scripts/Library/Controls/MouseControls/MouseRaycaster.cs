@@ -37,7 +37,7 @@ public class MouseRaycaster  {
 
             float sqrDist = ((Vector3)hit.point - ray.origin).sqrMagnitude;
             if (sqrDist < bestSqrDistance) {
-                var node = hit.collider.gameObject.GetComponent<InterfaceNode>();
+                var node = ResolveNode(hit.collider);
                 if (node != null && node.InputEnabledInHierarchy) {
                     var candidate = node.GetMouseTarget(hit.point, button);
                     if (candidate != null) {
@@ -62,7 +62,7 @@ public class MouseRaycaster  {
 
             float sqrDist = (hitPoint3D - ray.origin).sqrMagnitude;
             if (sqrDist < bestSqrDistance) {
-                var node = hit.collider.gameObject.GetComponent<InterfaceNode>();
+                var node = ResolveNode(hit.collider);
                 if (node != null && node.InputEnabledInHierarchy) {
                     var candidate = node.GetMouseTarget(hit.point, button);
                     if (candidate != null) {
@@ -74,6 +74,16 @@ public class MouseRaycaster  {
                 }
             }
         }
+    }
+
+    private static InterfaceNode ResolveNode (Collider col) {
+        return col.GetComponent<InputForwarder>()?.Target
+            ?? col.GetComponent<InterfaceNode>();
+    }
+
+    private static InterfaceNode ResolveNode (Collider2D col) {
+        return col.GetComponent<InputForwarder>()?.Target
+            ?? col.GetComponent<InterfaceNode>();
     }
 
 }

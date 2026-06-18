@@ -226,7 +226,10 @@ namespace LycheeLabs.FruityInterface {
             }
 
             if (!pressRemainsActive) {
-                activePress.Clear();
+                if (pressEvent.target != null)
+                    activePress.Hold(pressEvent.target, pressEvent.button);
+                else
+                    activePress.Clear();
             }
         }
 

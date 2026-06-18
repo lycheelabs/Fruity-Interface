@@ -49,6 +49,12 @@ namespace LycheeLabs.FruityInterface  {
             pressStartTime = Time.unscaledTime;
         }
 
+        public void Hold (MouseTarget pressedTarget, MouseButton pressedButton) {
+            isPressed = true;
+            target = pressedTarget;
+            button = pressedButton;
+        }
+
         public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, MouseDragMode mode, Vector3 worldPosition, Vector2 screenPosition) {
             isPressed = true;
             target = pressedTarget;

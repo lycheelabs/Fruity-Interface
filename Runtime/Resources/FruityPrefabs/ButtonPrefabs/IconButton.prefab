@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 128, y: 128}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376951998503170689
 MonoBehaviour:
@@ -50,10 +50,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c338ac20eb6cd314fb5b8115c42aba04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputParent: {fileID: 0}
-  ignoresInterfaceLock: 0
+  inputParentOverride: {fileID: 0}
+  ignoreInterfaceLock: 0
   LayoutSizePixels: {x: 50, y: 50}
   LayoutPaddingPixels: {x: 0, y: 0}
+  LayoutDriver: {fileID: 0}
   BaseScale: 1
   AnimationScaling: 1
   ButtonAnimator: {fileID: 176158420684989700}
@@ -62,6 +63,8 @@ MonoBehaviour:
   sprite: {fileID: 0}
   size: {x: 50, y: 50}
   colliderPadding: 10
+  iconScaling: 1
+  inputDisabled: 0
 --- !u!65 &859855964750334821
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -158,7 +161,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f101f3dd442a9044381cf31b3e9761d7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8e4711b65e7eb2847af9bdc1e0c30469, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
