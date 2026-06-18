@@ -41,6 +41,9 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
+        private NodeSFX _sfx;
+        public NodeSFX TryGetSFX => _sfx ??= GetComponent<NodeSFX>();
+
         private void Update () {
             highlightTween = highlightTween.MoveTowardsUnscaled(IsHighlighted, 12);
             heldTween = heldTween.MoveTowardsUnscaled(IsHeld, 12);
@@ -74,6 +77,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
             if (TryGetEffect.MouseButtonIsPermitted(clickParams.ClickButton)) {
                 TryGetEffect.Activate(clickParams.ClickButton);
+                TryGetSFX?.OnClick();
             }
         }
 
@@ -91,8 +95,11 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         protected virtual void OnHighlight (bool firstFrame, HoverParams highlightParams) {
-            if (firstFrame && TryGetEffect != null) {
-                TryGetEffect.MouseOver();
+            if (firstFrame) {
+                if (TryGetEffect != null) {
+                    TryGetEffect.MouseOver();
+                }
+                TryGetSFX?.OnFirstHover();
             }
         }
 

@@ -37,6 +37,12 @@ namespace LycheeLabs.FruityInterface {
         private SliderEffect _effect;
         private SliderEffect TryGetEffect => _effect ??= GetComponent<SliderEffect>();
 
+        // SFX
+        private NodeSFX _sfx;
+        private NodeSFX TryGetSFX => _sfx ??= GetComponent<NodeSFX>();
+        private float lastSFXTime;
+        private int lastSFXValue;
+
         void Update() {
             highlightTween = highlightTween.MoveTowardsUnscaled(isHighlighted, 10);
             handle.rectTransform.localScale = Vector3.one * (1 + 0.28f * highlightTween); 
@@ -80,6 +86,7 @@ namespace LycheeLabs.FruityInterface {
 
         public void UpdateMouseHover(bool isFirstFrame, HoverParams highlightParams) {
             isHighlighted = true;
+            if (isFirstFrame) TryGetSFX?.OnFirstHover();
         }
 
         public void EndMouseHover() {
@@ -98,6 +105,7 @@ namespace LycheeLabs.FruityInterface {
             var progress = Mathf.Clamp01(local.x / width + 0.5f);
             var intValue = Mathf.RoundToInt(Mathf.Lerp(min, max, progress));
             AnimateTo(intValue);
+            if (isFirstFrame) TryGetSFX?.OnClick();
         }
 
         public void ApplyMouseDrag(DragParams dragParams) {
@@ -129,9 +137,17 @@ namespace LycheeLabs.FruityInterface {
         }
 
         private void AnimateTo(int newValue) {
-            value = ClampValue(newValue);
+            newValue = ClampValue(newValue);
             UpdateCounter();
-            TryGetEffect?.OnValueChanged(value);
+            TryGetEffect?.OnValueChanged(newValue);
+
+            if (newValue != lastSFXValue && Time.unscaledTime - lastSFXTime >= 0.09f) {
+                lastSFXTime = Time.unscaledTime;
+                lastSFXValue = newValue;
+                TryGetSFX?.OnSliderModified(Progress(newValue));
+            }
+
+            value = newValue;
         }
 
         private void UpdateCounter () {

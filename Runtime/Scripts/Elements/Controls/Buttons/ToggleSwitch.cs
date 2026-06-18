@@ -74,11 +74,15 @@ namespace LycheeLabs.FruityInterface.Elements {
             
             TryGetEffect?.ToggleTo(isActive);
             AnimateTo(isActive);
+
+            if (isActive) TryGetSFX?.OnTurnOn();
+            else TryGetSFX?.OnTurnOff();
         }
 
         public void UpdateMouseHover(bool isFirstFrame, HoverParams highlightParams) {
             isHighlighted = true;
             isPressed = highlightParams.PressButton == MouseButton.Left;
+            if (isFirstFrame) TryGetSFX?.OnFirstHover();
         }
 
         public void EndMouseHover() {
@@ -95,6 +99,9 @@ namespace LycheeLabs.FruityInterface.Elements {
                 return _effect;
             }
         }
+
+        private NodeSFX _sfx;
+        public NodeSFX TryGetSFX => _sfx ??= GetComponent<NodeSFX>();
 
         /*protected sealed override void OnUpdate() {
             if (TryGetEffect != null) {
