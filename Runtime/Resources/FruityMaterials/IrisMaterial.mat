@@ -40,7 +40,7 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Softness: 0.33
+    - _Softness: 0
     - _Tween: 0
     m_Colors:
     - _Origin: {r: 0.5, g: 0.5, b: 0, a: 0}
