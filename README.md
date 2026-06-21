@@ -52,19 +52,21 @@ Namespace `LycheeLabs.FruityInterface.Settings`. Generic typed settings with JSO
 | `BoolSetting` | Concrete — `bool Value`, `DefaultValue`, `Reset()`. |
 | `IntSetting` | Concrete — `int Value`, `Min`, `Max`, `DefaultValue`, `Reset()`. Auto-clamps. |
 | `StringSetting` | Concrete — `string Value`, `DefaultValue`, `Reset()`. |
+| `VolumeSetting` | `: IntSetting` — takes `AudioMixer` + exposed parameter. `Apply()` sets mixer dB. |
+| `VSyncSetting` | `: BoolSetting` — `Apply()` sets `QualitySettings.vSyncCount`. |
 | `SettingsRegistry` | Static `Active` instance. `Register<T>()`, `TryGet<T>(key)`, `ApplyAll()`, `ResetAll()`. |
 | `SettingsFile` | Subclass of `SaveFile`. `CaptureFrom(registry)`, `ApplyTo(registry)`, `Save()`, `Load()`. |
 
 ### Value setter behavior
 
-Setting `Value` calls `Apply()` immediately. The base `Apply()` is a no-op — override it for settings that need side effects (e.g. `Screen.fullScreen = ...`).
+Setting `Value` calls `Apply()` immediately. The base `Apply()` is a no-op — override it for settings that need side effects.
 
 During load, `SettingsFile.ApplyTo()` writes all values silently via `FromToken()` (bypasses the property setter), then calls `Apply()` on every parameter once all values are consistent.
 
 ### JSON shape
 
 ```json
-{"Data":{"display":{"fullscreen":true,"resolution":2},"audio":{"master_vol":80}}}
+{"Data":{"display":{"fullscreen":true,"vsync":true,"render_scale":100},"audio":{"master_vol":80,"music_vol":65,"sfx_vol":100}}}
 ```
 
 Dotted keys (`"display.fullscreen"`) become nested objects. Key is the single source of truth for category structure.
@@ -73,20 +75,20 @@ Dotted keys (`"display.fullscreen"`) become nested objects. Key is the single so
 
 ```csharp
 public static class GameSettings {
-    static GameSettings() {
+    public static void Initialise(AudioMixer mixer, UniversalRenderPipelineAsset urp) {
         var r = new SettingsRegistry();
 
-        Fullscreen = r.Register(new FullscreenSetting("display.fullscreen", true));
-        MasterVol  = r.Register(new IntSetting("audio.master_vol", 80, 0, 100));
+        Fullscreen  = r.Register(new FullscreenSetting("display.fullscreen", true));
+        RenderScale = r.Register(new RenderScaleSetting("display.render_scale", urp));
+        Vsync       = r.Register(new VSyncSetting("display.vsync", true));
+        MasterVol   = r.Register(new VolumeSetting("audio.master_vol", mixer, "MasterVolume"));
+        MusicVol    = r.Register(new VolumeSetting("audio.music_vol",  mixer, "MusicVolume"));
+        SfxVol      = r.Register(new VolumeSetting("audio.sfx_vol",    mixer, "SFXVolume"));
 
         Registry = r;
         SettingsRegistry.Active = r;
+        Load();
     }
-
-    public static SettingsRegistry Registry { get; private set; }
-
-    public static FullscreenSetting Fullscreen { get; private set; }
-    public static IntSetting MasterVol { get; private set; }
 
     public static void Save() {
         var f = new SettingsFile(); f.CaptureFrom(Registry); f.Save();
@@ -98,16 +100,7 @@ public static class GameSettings {
 }
 ```
 
-Boot: call `GameSettings.Load()` before any setting is read (e.g. `[RuntimeInitializeOnLoadMethod]` or in a bootstrap manager).
-
-Complex settings subclass the base type and override `Apply()`:
-
-```csharp
-public class FullscreenSetting : BoolSetting {
-    public FullscreenSetting(string key, bool def) : base(key, def) { }
-    public override void Apply() => Screen.fullScreen = Value;
-}
-```
+Complex settings subclass the base type and override `Apply()` — see `FullscreenSetting`, `VSyncSetting`, `VolumeSetting`, `RenderScaleSetting`.
 
 ---
 
@@ -119,18 +112,21 @@ Connects UI controls to the settings pipeline. Two-component pattern per control
 
 | Component | Goes on | Role |
 |---|---|---|
-| `ToggleSettingKey` | SettingNode (the field) | Holds `SettingKey` string. `Start()` finds child `ToggleEffect` and calls `SetUpAs()`. `OnToggled()` writes to the `BoolSetting`. |
-| `ToggleSettingEffect` | ToggleButton (the button) | Extends `ToggleEffect`. `ApplyToggle()` routes to `GetComponentInParent<ToggleSettingKey>().OnToggled()`. |
+| `ToggleSettingKey` | SettingNode (the field) | Holds `SettingKey` string. `Start()` reads the `BoolSetting` and calls `SetUpAs()`. `OnToggled()` writes back. |
+| `ToggleSettingEffect` | ToggleSwitch (the child) | Extends `ToggleEffect`. `ApplyToggle()` routes to `GetComponentInParent<ToggleSettingKey>().OnToggled()`. |
 
-### Prefab setup
+### Slider bridge
 
-Bake `ToggleSettingEffect` onto the `ToggleButton` child in a prefab variant. The user drops the variant, adds `ToggleSettingKey` to the root, sets `SettingKey` in the inspector — one field to configure.
+| Component | Goes on | Role |
+|---|---|---|
+| `SliderSettingKey` | SettingNode (the field) | Holds `SettingKey` string. `Start()` calls `slider.Configure(min, max, value)`. `OnSlid(int)` writes to `IntSetting`. |
+| `SliderSettingEffect` | SliderNode (the child) | Extends `SliderEffect`. `OnValueChanged(int)` routes to `GetComponentInParent<SliderSettingKey>().OnSlid()`. |
 
 ### Extending
 
 Future control types follow the same pattern:
 
-| Data | Field Key Component | Button Effect Component |
+| Data | Field Key Component | Effect Component |
 |---|---|---|
 | `BoolSetting` | `ToggleSettingKey` | `ToggleSettingEffect` |
 | `IntSetting` | `SliderSettingKey` | `SliderSettingEffect` |
@@ -138,35 +134,49 @@ Future control types follow the same pattern:
 
 ---
 
-## UI Elements (`Elements/`)
+## UI Elements
 
 ### Layout & hierarchy
 
 | Class | Extends | Role |
 |---|---|---|
 | `InterfaceNode` | MonoBehaviour | Base — parent hierarchy, layer, input enabled. |
-| `LayoutNode` | InterfaceNode | RectTransform + ILayoutElement + `RefreshLayout()`. |
+| `LayoutNode` | InterfaceNode | RectTransform + `LayoutSizePixels` + `RefreshLayout()`. |
 | `ColliderNode` | InterfaceNode | BoxCollider-based raycast target. |
 | `ControlNode` | LayoutNode | Adds `LayoutDriver` for parent-driven sizing. |
 | `ContainerNode` | LayoutNode | Abstract — `ChildNodes` list, `RebuildChildNodes()`. |
-| `SettingNode` | ControlNode | Field layout — splits into text label + control child. |
+| `SettingNode` | ControlNode | Field layout — text label + control child. |
 
 ### Button types
 
 | Class | Extends | Role |
 |---|---|---|
 | `ButtonEffect` | MonoBehaviour | Abstract click behavior — `MouseOver()`, `Activate(button)`, `TryUnclick()`. |
-| `ButtonNode` | ControlNode + ClickTarget | Hover animation, delegates click to `ButtonEffect`. |
+| `ButtonNode` | ControlNode + ClickTarget | Hover animation, delegates click to `ButtonEffect`. Has `TryGetSFX`. |
 | `TextButton` | ButtonNode | Button with TMP text + optional icon. |
 | `IconButton` | ButtonNode | Button with sprite icon. |
-| `ToggleButton` | LayoutNode + ClickTarget | Animated boolean toggle switch. Self-animates, delegates `ToggleTo()` to its `ToggleEffect`. |
+| `ToggleSwitch` | LayoutNode + ClickTarget | Animated boolean switch. Has `TryGetSFX` — calls `OnTurnOn()` / `OnTurnOff()`. |
 
 ### Toggle types
 
 | Class | Extends | Role |
 |---|---|---|
 | `ToggleEffect` | MonoBehaviour | Abstract — `IsToggledOn`, `Toggle()`, `ToggleTo()`, `ApplyToggle(bool)`. |
-| `ToggleField` | ControlNode | Compound — IconButton toggle + text label. (Click wiring commented out; use ToggleButton pattern instead.) |
+
+### Slider types
+
+| Class | Extends | Role |
+|---|---|---|
+| `SliderNode` | LayoutNode + DragTarget | Draggable int slider. Configurable `width`, `showValue`, `valueIsPercentage`. Has `TryGetSFX` — calls `OnClick()` on drag start, `OnSliderModified()` on value change (throttled). |
+| `SliderEffect` | MonoBehaviour | Abstract — `OnValueChanged(int value)`. |
+
+### SFX
+
+| Class | Extends | Role |
+|---|---|---|
+| `NodeSFX` | MonoBehaviour | Abstract — `OnFirstHover()`, `OnClick()`, `OnTurnOn()`, `OnTurnOff()`, `OnSliderModified(float)`. |
+
+Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `SliderNode`. The node calls the appropriate method automatically via `TryGetSFX`.
 
 ### Selector types
 
@@ -206,12 +216,13 @@ Future control types follow the same pattern:
 
 | Class | Role |
 |---|---|
-| `MouseState` | MonoBehaviour singleton — raycasting, press lifecycle, event queuing. |
+| `MouseState` | Raycasting, press lifecycle, event queuing. Tracks plain `MouseTarget` presses (not just click/drag). |
 | `MouseTarget` | Interface — `UpdateMouseHover`, `EndMouseHover`. |
 | `ClickTarget` | Extends MouseTarget — `ApplyMouseClick`, `TryMouseUnclick`. |
-| `DragTarget` | Extends MouseTarget — drag modes, multi-place. |
+| `DragTarget` | Extends MouseTarget — drag modes (`DragOnly`, `PickUpOnly`, `DragOrPickUp`). |
 | `DraggedOverTarget` | Extends MouseTarget — `UpdateMouseDraggedOver`. |
-| `MouseRaycaster` | Raycasts against colliders on each layer. |
+| `MouseRaycaster` | Supports `InputForwarder` for decoupling collider from `InterfaceNode`. |
+| `InputForwarder` | MonoBehaviour — `Target` field. Lives on collider GameObject, routes input to a different `InterfaceNode`. |
 | `MouseButton` | Enum `Left`, `Right`, `Middle`, `None`. |
 
 Events go through queues: `HoverHierarchyEvent` → `ClickEvent` → `StartDragEvent` → ... → `EndDragEvent`.
@@ -262,6 +273,7 @@ Events go through queues: `HoverHierarchyEvent` → `ClickEvent` → `StartDragE
 | `FruityUI` | Static access — layer locking, camera/world plane, mouse-to-world projection, `TriggerNewClick()`. |
 | `FruityUIManager` | MonoBehaviour singleton — mouse input, aspect ratio, click buffering. |
 | `FruityUIPrefabs` | Prefab loading — Canvas, Letterbox, Shadow, FullscreenButton. |
+| `FruityEditorDrawer` | Editor helpers — `DrawConfigProperties()`, `DrawLayoutProperties()`, `DrawPrefabProperties()`, `DrawAdditionalProperties()`. |
 | `Anchor` / `ScreenAnchor` / `WorldAnchor` | RectTransform anchoring helpers. |
 | `InterfaceHelpers` | Coordinate conversion between screen, UI, and world space. |
 | `InterfaceLayer` | Layer index resolution for input filtering. |

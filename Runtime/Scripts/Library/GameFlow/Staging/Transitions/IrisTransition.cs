@@ -78,14 +78,17 @@ namespace LycheeLabs.FruityInterface.Flow {
             }
 
             if (image != null) {
-                image.material.SetFloat("_Tween", adjustedTween);
                 image.color = Color.Lerp(colorA, colorB, Tweens.EaseInOutQuad(tween));
                 image.enabled = adjustedTween > 0;
+            }
+
+            if (material != null) {
+                material.SetFloat("_Tween", adjustedTween);
 
                 var speed = Mathf.Abs(lastTween - adjustedTween) / Time.deltaTime;
                 lastTween = adjustedTween;
                 var blurring = Mathf.Min(Mathf.Log(1 + speed * 0.05f), 0.33f);
-                image.material.SetFloat("_Softness", blurring);
+                material.SetFloat("_Softness", blurring);
             }
         }
 

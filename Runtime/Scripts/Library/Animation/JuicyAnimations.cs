@@ -8,11 +8,11 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public static class JuicyAnimations {
 
-        public static void Squash (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f, int cycles = 3, Tween tween = null) {
+        public static void Squash (this JuicyAnimator animator, float sizeScale, float speedScale = 1f, int cycles = 3, Tween tween = null) {
             animator?.Play(new SquashAnimation(sizeScale, speedScale, cycles, tween));
         }
 
-        public static void Bulge (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f, Tween tween = null) {
+        public static void Bulge (this JuicyAnimator animator, float sizeScale, float speedScale = 1f, Tween tween = null) {
             animator?.Play(new BulgeAnimation(sizeScale, speedScale, tween));
         }
 
@@ -28,11 +28,11 @@ namespace LycheeLabs.FruityInterface {
             animator?.Play(new LongWiggleAnimation(sizeScale, speedScale));
         }
 
-        public static void SmoothBulge (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
+        public static void SmoothBulge (this JuicyAnimator animator, float sizeScale, float speedScale = 1f) {
             Bulge(animator, sizeScale, speedScale * 0.5f, Tweens.EaseInOutQuadTween);
         }
 
-        public static void SquashBulge (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
+        public static void SquashBulge (this JuicyAnimator animator, float sizeScale, float speedScale = 1f) {
             SmoothBulge(animator, sizeScale * 0.75f, speedScale);
             Squash(animator, sizeScale, speedScale * 0.8f, 3);
         }
@@ -41,11 +41,11 @@ namespace LycheeLabs.FruityInterface {
             Squash(animator, sizeScale, speedScale * 0.66f, 6);
         }
 
-        public static void ExtraCrazySquash (this JuicyAnimator animator, float sizeScale = 1f, float speedScale = 1f) {
+        public static void ExtraCrazySquash (this JuicyAnimator animator, float sizeScale, float speedScale = 1f) {
             Squash(animator, sizeScale, speedScale * 0.33f, 12);
         }
 
-        public static void FlattenSquash(this JuicyAnimator animator, float speedScale = 1f) {
+        public static void FlattenSquash(this JuicyAnimator animator, float speedScale) {
             animator?.Play(new FlattenSquashAnimation(speedScale));
         }
 

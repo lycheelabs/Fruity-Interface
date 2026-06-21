@@ -43,10 +43,13 @@ namespace LycheeLabs.FruityInterface.Flow {
 
         protected override void Refresh(bool isEntering, float tween) {
             if (image != null) {
-                image.material.SetFloat("_Tween", Tweens.EaseOutQuad(tween * 0.66f));
-                image.material.SetFloat("_Angle", angle);
-                image.material.SetFloat("_Flip", isEntering ? 0 : 1);
                 image.enabled = tween > 0;
+            }
+
+            if (material != null) {
+                material.SetFloat("_Tween", Tweens.EaseOutQuad(tween * 0.66f));
+                material.SetFloat("_Angle", angle);
+                material.SetFloat("_Flip", isEntering ? 0 : 1);
             }
         }
 

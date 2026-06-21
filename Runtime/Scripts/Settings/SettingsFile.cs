@@ -19,12 +19,16 @@ namespace LycheeLabs.FruityInterface.Settings {
         public void CaptureFrom (SettingsRegistry registry) {
             Data = new JObject();
             foreach (var param in registry.All) {
+                if (registry.IsExcluded(param.Key))
+                    continue;
                 SetNested(Data, param.Key, param.ToToken());
             }
         }
 
         public void ApplyTo (SettingsRegistry registry) {
             foreach (var param in registry.All) {
+                if (registry.IsExcluded(param.Key))
+                    continue;
                 var token = GetNested(Data, param.Key);
                 if (token != null) {
                     param.FromToken(token);
