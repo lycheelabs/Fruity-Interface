@@ -10,7 +10,7 @@ namespace LycheeLabs.FruityInterface.SaveLoad {
 
     internal static class AtomicSaveManager {
 
-        private static string BaseDirectory => Path.Combine(Application.persistentDataPath, "SaveData");
+        private static string BaseDirectory => Application.persistentDataPath;
         private static string GetSavePath(string relativePath) => Path.Combine(BaseDirectory, relativePath);
         private static string GetBackupPath(string relativePath) => Path.Combine(BaseDirectory, relativePath + ".bak");
         private static string GetTempPath(string relativePath) => Path.Combine(BaseDirectory, relativePath + ".tmp");
