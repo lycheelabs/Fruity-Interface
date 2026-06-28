@@ -84,7 +84,7 @@ namespace LycheeLabs.FruityInterface  {
         public bool WasRealDrag(Vector2 currentScreenPosition) {
             var duration = Time.unscaledTime - pressStartTime;
             var distance = (currentScreenPosition - pressScreenPosition).magnitude;
-            var threshold = ScreenBounds.BoxedCanvasSize.y / DRAG_DISTANCE_DIVISOR;
+            var threshold = FruityUI.ScreenBounds.BoxedCanvasSize.y / DRAG_DISTANCE_DIVISOR;
             return duration > MAX_CLICK_DURATION || distance > threshold;
         }
 

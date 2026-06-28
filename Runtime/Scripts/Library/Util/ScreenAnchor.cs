@@ -39,12 +39,12 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public Vector3 ScreenVector() {
-            var canvasVector = RawScreenVector() * ScreenBounds.UIScaling;
-            return canvasVector + (Vector3)(-ScreenBounds.WindowCanvasSize / 2f);
+            var canvasVector = RawScreenVector() * FruityUI.ScreenBounds.UIScaling;
+            return canvasVector + (Vector3)(-FruityUI.ScreenBounds.WindowCanvasSize / 2f);
         }
 
         public Vector3 RawScreenVector() {
-            return screenPosition + (Vector3)offset / ScreenBounds.UIScaling;
+            return screenPosition + (Vector3)offset / FruityUI.ScreenBounds.UIScaling;
         }
 
         public Vector3 RawViewportVector() {
@@ -54,7 +54,7 @@ namespace LycheeLabs.FruityInterface {
 
         private Vector3 ScreenToAdjusted() {
             var screenVector = ScreenVector();
-            return (screenVector / ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
+            return (screenVector / FruityUI.ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
         }
 
     }

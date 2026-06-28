@@ -35,8 +35,8 @@ namespace LycheeLabs.FruityInterface {
         public Vector3 ScreenVector() => ScreenVector(FruityUI.UICamera);
 
         public Vector3 ScreenVector(Camera camera) {
-            var canvasVector = RawScreenVector(camera) * ScreenBounds.UIScaling;
-            var screenOffset = (Vector3)(-ScreenBounds.WindowCanvasSize / 2f);
+            var canvasVector = RawScreenVector(camera) * FruityUI.ScreenBounds.UIScaling;
+            var screenOffset = (Vector3)(-FruityUI.ScreenBounds.WindowCanvasSize / 2f);
             return canvasVector + screenOffset;
         }
 
@@ -47,7 +47,7 @@ namespace LycheeLabs.FruityInterface {
                 Debug.LogWarning("Resolving a WorldAnchor requires a Camera");
                 return default;
             }
-            return camera.WorldToScreenPoint(position) + (Vector3)offset / ScreenBounds.UIScaling;
+            return camera.WorldToScreenPoint(position) + (Vector3)offset / FruityUI.ScreenBounds.UIScaling;
         }
 
         public Vector3 RawViewportVector() => RawViewportVector(FruityUI.UICamera);
@@ -61,7 +61,7 @@ namespace LycheeLabs.FruityInterface {
 
         public Vector3 WorldVector(Camera camera) {
             var screenVector = ScreenVector(camera);
-            var adjusted = (screenVector / ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
+            var adjusted = (screenVector / FruityUI.ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
             return camera.ScreenToWorldPoint(adjusted).IntersectWithWorldPlane();
         }
 

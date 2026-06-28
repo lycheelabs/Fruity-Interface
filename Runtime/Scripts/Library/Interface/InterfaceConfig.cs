@@ -5,18 +5,18 @@ namespace LycheeLabs.FruityInterface {
     public class ScreenBounds {
 
         // Canvas
-        public static Vector2 WindowCanvasSize { get; private set; }
-        public static float WindowAspectRatio { get; private set; }
+        public Vector2 WindowCanvasSize { get; private set; }
+        public float WindowAspectRatio { get; private set; }
 
         // Letterboxing
-        public static Vector2 BoxedCanvasSize { get; private set; }
-        public static float BoxedAspectRatio { get; private set; }
-        public static float CameraScaling { get; private set; }
-        public static float UIScaling { get; private set; }
+        public Vector2 BoxedCanvasSize { get; private set; }
+        public float BoxedAspectRatio { get; private set; }
+        public float CameraScaling { get; private set; }
+        public float UIScaling { get; private set; }
 
-        public static Vector2 LetterboxOffset => new Vector2(LetterboxWidth, LetterboxHeight) / 2f;
-        public static float LetterboxWidth { get; private set; }
-        public static float LetterboxHeight { get; private set; }
+        public Vector2 LetterboxOffset => new Vector2(LetterboxWidth, LetterboxHeight) / 2f;
+        public float LetterboxWidth { get; private set; }
+        public float LetterboxHeight { get; private set; }
         
         public ScreenBounds() {
             // Safe initial values

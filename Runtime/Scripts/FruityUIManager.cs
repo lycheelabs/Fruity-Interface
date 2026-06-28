@@ -44,14 +44,13 @@ namespace LycheeLabs.FruityInterface {
 
         private MouseState mouseState;
         private ControlEventQueue events;
-        private ScreenBounds bounds;
         
         private void Awake () { 
             Instance = this;
             mouseState = new MouseState();
             events = new ControlEventQueue();
-            bounds = new ScreenBounds();
-            bounds.Update(MinAspectRatio, MaxAspectRatio);
+            
+            FruityUI.SetAspect(MinAspectRatio, MaxAspectRatio);
 
             // Default settings
             FruityUI.SetUICamera(Camera.main);
@@ -59,7 +58,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         void Update () {
-            bounds.Update(MinAspectRatio, MaxAspectRatio);
+            FruityUI.Update();
             mouseState.Update();
             events.Update(LogEvents);
         }

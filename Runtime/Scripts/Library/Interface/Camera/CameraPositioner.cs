@@ -162,8 +162,8 @@ namespace LycheeLabs.FruityInterface {
 
                 // Scaling and shift
                 var marginShift = camera.transform.right * worldViewportX + camera.transform.up * worldViewportY;
-                var largestAspect = Mathf.Max(worldViewportW / ScreenBounds.BoxedAspectRatio, worldViewportH);
-                var scaling = largestAspect / 2f * ScreenBounds.CameraScaling;
+                var largestAspect = Mathf.Max(worldViewportW / FruityUI.ScreenBounds.BoxedAspectRatio, worldViewportH);
+                var scaling = largestAspect / 2f * FruityUI.ScreenBounds.CameraScaling;
 
                 // Clamping 
                 var clampedCameraPosition = CalculateClamp(camera, fitSize);
@@ -186,8 +186,8 @@ namespace LycheeLabs.FruityInterface {
         private void CalculateViewport(out Vector2 size, out Vector2 offset) {
 
             // Size of the boxed game canvas
-            var canvasW = ScreenBounds.BoxedCanvasSize.x;
-            var canvasH = ScreenBounds.BoxedCanvasSize.y;
+            var canvasW = FruityUI.ScreenBounds.BoxedCanvasSize.x;
+            var canvasH = FruityUI.ScreenBounds.BoxedCanvasSize.y;
 
             // Size of the game panel (the canvas size within the UI margins)
             var panelW = Mathf.Max(1, canvasW - uiMarginRight - uiMarginLeft);
@@ -204,12 +204,12 @@ namespace LycheeLabs.FruityInterface {
             var fitSize = cameraSize / zoom;
             if (fitMode == CameraFitMode.FitHeightToLevelY) {
                 var cameraHeight = cameraSize.y / zoom;
-                var cameraWidth = cameraHeight * ScreenBounds.BoxedAspectRatio;
+                var cameraWidth = cameraHeight * FruityUI.ScreenBounds.BoxedAspectRatio;
                 fitSize = new Vector3(cameraWidth * viewportSize.x, cameraHeight * viewportSize.y, 0);
             }
             if (fitMode == CameraFitMode.FitHeightToLevelZ) {
                 var cameraHeight = cameraSize.z / zoom;
-                var cameraWidth = cameraHeight * ScreenBounds.BoxedAspectRatio;
+                var cameraWidth = cameraHeight * FruityUI.ScreenBounds.BoxedAspectRatio;
                 fitSize = new Vector3(cameraWidth * viewportSize.x, 0, cameraHeight * viewportSize.y);
             }
 

@@ -11,6 +11,21 @@ namespace LycheeLabs.FruityInterface {
 
         private const bool DEBUG_LAYER_LOCK = false;
 
+        // ----------------------- Screen Bounds -----------------------
+
+        private static ScreenBounds _screenBounds;
+        private static AspectRatio _minAspect;
+        private static AspectRatio _maxAspect;
+
+        public static ScreenBounds ScreenBounds => _screenBounds;
+
+        public static void SetAspect(AspectRatio min, AspectRatio max) {
+            _minAspect = min;
+            _maxAspect = max;
+            _screenBounds = new ScreenBounds();
+            _screenBounds.Update(_minAspect, _maxAspect);
+        }
+
         // ----------------------- Projection -----------------------
 
         /// <summary>The camera used for UI raycasting and coordinate conversion.</summary>
@@ -130,6 +145,16 @@ namespace LycheeLabs.FruityInterface {
 
         public static void SetWorldPlane(Plane plane) {
             WorldPlane = plane;
+        }
+
+        /// <summary>
+        /// Updates screen bounds to match current window/display dimensions.
+        /// Called automatically by FruityUIManager each frame.
+        /// </summary>
+        public static void Update() {
+            if (_screenBounds != null) {
+                _screenBounds.Update(_minAspect, _maxAspect);
+            }
         }
 
         /// <summary>

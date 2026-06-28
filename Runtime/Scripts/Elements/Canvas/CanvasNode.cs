@@ -42,8 +42,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void Update () {
-            contents.sizeDelta = ScreenBounds.BoxedCanvasSize;
-            contents.localScale = Vector3.one / ScreenBounds.UIScaling;
+            contents.sizeDelta = FruityUI.ScreenBounds.BoxedCanvasSize;
+            contents.localScale = Vector3.one / FruityUI.ScreenBounds.UIScaling;
         }
 
     }

@@ -20,8 +20,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
 		private void Update () {
-			float width = ScreenBounds.LetterboxWidth / ScreenBounds.UIScaling;
-			float height = ScreenBounds.LetterboxHeight / ScreenBounds.UIScaling;
+			float width = FruityUI.ScreenBounds.LetterboxWidth / FruityUI.ScreenBounds.UIScaling;
+			float height = FruityUI.ScreenBounds.LetterboxHeight / FruityUI.ScreenBounds.UIScaling;
 
 			borderL.sizeDelta = new Vector2 (width / 2, 0);
 			borderR.sizeDelta = new Vector2 (width / 2, 0);
