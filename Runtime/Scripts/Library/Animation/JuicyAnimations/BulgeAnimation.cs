@@ -12,7 +12,7 @@ namespace LycheeLabs.FruityInterface.Animation {
 
         public BulgeAnimation (float sizeScale = 1f, float speedScale = 1f, Tween tween = null) {
             this.sizeScale = sizeScale;
-            this.speedScale = Mathf.Max(speedScale, 0.1f) * 4f;
+            this.speedScale = Mathf.Max(speedScale, 0.1f) * 3f;
             this.tween = tween;
         }
 
@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface.Animation {
             value = value.MoveTowardsDelta(0, speedScale * deltaTime);
             var tweened = (tween != null) ? tween.ApplyInverted(value) : value;
 
-            var squash = Mathf.Sin(tweened * Mathf.PI) * tweened * sizeScale;
+            var squash = Mathf.Sin(tweened * Mathf.PI) * sizeScale;
             var squashScale = new Vector3(1 + squash, 1 + squash, 1);
 
             var existingScale = transform.scale;

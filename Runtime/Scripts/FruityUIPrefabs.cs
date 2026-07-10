@@ -24,6 +24,7 @@ namespace LycheeLabs.FruityInterface {
 
         private const string ROOT_FOLDER = "";
         private const string CANVAS_FOLDER = "CanvasPrefabs/";
+        private const string PROMPT_FOLDER = "PromptPrefabs/";
 
         // ----------------------------------------------------------------
 
@@ -32,6 +33,8 @@ namespace LycheeLabs.FruityInterface {
         private static readonly GameObject fullscreenLetterbox = Load(CANVAS_FOLDER, "FullscreenLetterboxNode");
         private static readonly GameObject fullscreenShadow = Load(CANVAS_FOLDER, "FullscreenShadowNode");
         private static readonly GameObject fullscreenButton = Load(CANVAS_FOLDER, "FullscreenButtonNode");
+       
+        private static readonly GameObject simpleTooltip = Load(PROMPT_FOLDER, "SimpleTooltip");
 
         public static GameObject NewCanvasNode () {
             return Object.Instantiate(canvas);
@@ -47,6 +50,10 @@ namespace LycheeLabs.FruityInterface {
 
         public static GameObject NewFullscreenButton () {
             return Object.Instantiate(fullscreenButton);
+        }
+
+        public static GameObject NewSimpleTooltip () {
+            return Object.Instantiate(simpleTooltip);
         }
 
     }
