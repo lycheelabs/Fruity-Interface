@@ -119,7 +119,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             clampedPosition.y = Mathf.Clamp(clampedPosition.y, -maxOffset.y, maxOffset.y);
             root.anchoredPosition = clampedPosition;
 
-            if (offsetDirection != Direction.NONE) {
+            if (offsetDirection != Direction.NONE && activeTween > 0) {
                 var shift = clampedPosition - screenPosition;
                 var arrowDir = offsetDirection.Reverse();
                 var arrowVector = arrowDir.ToVector2();
