@@ -10,6 +10,11 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public Vector2 GridCellSize = new Vector2(100, 100);
 
+        public void InsertChild (GameObject child, int siblingIndex) {
+            child.transform.SetParent(transform, false);
+            child.transform.SetSiblingIndex(siblingIndex);
+        }
+
         protected override void RefreshLayout() {
             if (ChildNodes.Count == 0) return;
 
