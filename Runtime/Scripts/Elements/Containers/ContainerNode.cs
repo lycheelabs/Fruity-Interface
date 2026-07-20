@@ -8,31 +8,39 @@ namespace LycheeLabs.FruityInterface.Elements {
     public abstract class ContainerNode : LayoutNode {
 
         public readonly List<LayoutNode> ChildNodes = new List<LayoutNode>();
+        private readonly List<LayoutNode> previousChildNodes = new List<LayoutNode>();
         public int ChildCount => ChildNodes.Count;
         [SerializeField] private int prevChildCount = -1;
 
         public Vector2 minimumSize = new Vector2(100, 100);
 
-        private void OnValidate () {
-            RefreshChildren();
+        new private void OnValidate () {
+            RebuildChildren();
+        }
+
+        private void OnTransformChildrenChanged() {
+            RebuildChildren();
         }
 
         private void LateUpdate () {
-            RefreshChildren();
-        }
-
-        private void RefreshChildren () {
-            if (transform.childCount != prevChildCount || true) {
-                prevChildCount = transform.childCount;
-                RebuildChildNodes();
+            if (Application.isPlaying) {
+                RefreshLayout();
+            } else {
+                RefreshLayoutDeferred();
             }
         }
 
-        protected override void OnNewChildAttached () {
-            RebuildChildNodes();
+        public void Insert (LayoutNode child, int siblingIndex) {
+            Attach(child);
+            child.transform.SetSiblingIndex(siblingIndex);
+            RebuildChildren();
         }
 
-        public void RebuildChildNodes () {
+        // Extract and cache LayoutNode components from valid children.
+        // Build list of valid children.
+        private void RebuildChildren () {
+            previousChildNodes.Clear();
+            previousChildNodes.AddRange(ChildNodes);
             ChildNodes.Clear();
             for (int i = 0; i < transform.childCount; i++) {
                 var child = transform.GetChild(i);
@@ -41,9 +49,23 @@ namespace LycheeLabs.FruityInterface.Elements {
                     ChildNodes.Add(childNode);
                 }
             }
+            for (int i = 0; i < previousChildNodes.Count; i++) {
+                var oldChild = previousChildNodes[i];
+                if (!ChildNodes.Contains(oldChild)) {
+                    OnChildRemoved(oldChild);
+                }
+            }
+            for (int i = 0; i < ChildNodes.Count; i++) {
+                var newChild = ChildNodes[i];
+                if (!previousChildNodes.Contains(newChild)) {
+                    OnChildAdded(newChild);
+                }
+            }
             RefreshLayoutDeferred();
         }
 
+        protected virtual void OnChildAdded(LayoutNode newChild) {}
+        protected virtual void OnChildRemoved(LayoutNode newChild) {}
         protected abstract override void RefreshLayout ();
 
     }

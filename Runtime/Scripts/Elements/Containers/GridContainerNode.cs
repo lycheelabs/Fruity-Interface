@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
@@ -10,9 +11,16 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public Vector2 GridCellSize = new Vector2(100, 100);
 
-        public void InsertChild (GameObject child, int siblingIndex) {
-            child.transform.SetParent(transform, false);
-            child.transform.SetSiblingIndex(siblingIndex);
+        public bool animateSlots;
+        public float animateSpeed = 1f;
+        private Dictionary<LayoutNode, SlotData> slotDataMap = new();
+
+        protected override void OnChildAdded(LayoutNode newChild) {
+            slotDataMap.Add(newChild, new SlotData());
+        }
+
+        protected override void OnChildRemoved(LayoutNode newChild) {
+            slotDataMap.Remove(newChild);
         }
 
         protected override void RefreshLayout() {
@@ -62,6 +70,11 @@ namespace LycheeLabs.FruityInterface.Elements {
             var containedSize = new Vector2(columns, rows) * GridCellSize;
             LayoutSizePixels = containedSize;
             rectTransform.sizeDelta = containedSize;
+        }
+
+        private struct SlotData {
+            bool initialised;
+            float animatedSlot;
         }
 
     }

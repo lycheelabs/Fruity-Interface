@@ -105,23 +105,18 @@ namespace LycheeLabs.FruityInterface {
         protected void AttachTo (InterfaceNode target, Transform transform) {
             if (target != null && !ParentCausesHierarchyLoop(target)) {
                 target.transform.SetParent(transform, false);
-                target.InputParentOverride = this;
-                target.OnNewChildAttached();
             }
         }
 
         public void Attach (InterfaceNode target) {
             if (target != null && !ParentCausesHierarchyLoop(target)) {
                 target.transform.SetParent(AttachTarget.transform, false);
-                target.InputParentOverride = this;
-                OnNewChildAttached();
             }
         }
 
         public void Attach(GameObject target) {
             if (target != null) {
                 target.transform.SetParent(AttachTarget.transform, false);
-                OnNewChildAttached();
             }
         }
 
@@ -132,7 +127,6 @@ namespace LycheeLabs.FruityInterface {
         }
 
         protected virtual Transform AttachTarget => transform;
-        protected virtual void OnNewChildAttached () { }
 
     }
 
