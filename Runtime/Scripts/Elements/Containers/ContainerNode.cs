@@ -68,6 +68,22 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected virtual void OnChildRemoved(LayoutNode newChild) {}
         protected abstract override void RefreshLayout ();
 
+        // -------------------------------------------------
+        protected int CountPrunedChildren() {
+            var numItems = 0;
+            for (int i = 0; i < ChildNodes.Count; i++) {
+                var node = ChildNodes[i];
+                if (!ShouldPrune(node)) { 
+                    numItems++;
+                }
+            }
+            return numItems;
+        }
+
+        protected bool ShouldPrune (LayoutNode node) {
+            return !node || !node.gameObject.activeSelf;
+        }
+
     }
 
 }

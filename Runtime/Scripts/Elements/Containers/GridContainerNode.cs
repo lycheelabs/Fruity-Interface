@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
@@ -8,8 +7,9 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class GridContainerNode : ContainerNode {
 
         private struct SlotData {
-            bool initialised;
-            float animatedSlot;
+            public int frameCount;
+            public float animatedSlot;
+            public bool isInitialised => Time.frameCount > frameCount;
         }
 
         // --------------------------------------------------
@@ -20,37 +20,53 @@ namespace LycheeLabs.FruityInterface.Elements {
         public Vector2 GridCellSize = new Vector2(100, 100);
 
         public bool animateSlots;
-        public float animateSpeed = 1f;
+        public float animateSpeed = 10f;
         private Dictionary<LayoutNode, SlotData> slotDataMap = new();
 
         protected override void OnChildAdded(LayoutNode newChild) {
-            slotDataMap.Add(newChild, new SlotData());
+            slotDataMap.Add(newChild, new SlotData() { 
+                frameCount = Time.frameCount 
+            });
         }
 
         protected override void OnChildRemoved(LayoutNode newChild) {
             slotDataMap.Remove(newChild);
         }
 
+        private SlotData GetData (LayoutNode node) {
+            if (!slotDataMap.ContainsKey(node)) {
+                slotDataMap[node] = new SlotData() { 
+                    frameCount = Time.frameCount 
+                };
+            }
+            return slotDataMap[node];
+        }
+
         // Called every frame
         protected override void RefreshLayout() {
+            CalculateGridSize(out var gridSize, out var gridOffset);
 
-            // Calculate items and grid size
-            int numItems = CountPrunedItems();
-            CalculateGridSize(numItems, out var gridSize, out var gridOffset);
-
-            // Position nodes
             int placedIndex = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
-                if (!node || !node.gameObject.activeSelf) { continue; }
-                if (!slotDataMap.ContainsKey(node)) {
-                    slotDataMap[node] = new SlotData();
+                if (ShouldPrune(node)) { 
+                    continue; 
                 }
 
-                var cell = IndexToCell(placedIndex);
-                Vector2 position = CellToPosition(cell, gridOffset);
-                node.rectTransform.SetAnchorAndPosition(position);
+                var data = GetData(node);
+                if (!data.isInitialised || !animateSlots) {
+                    // Initialise slot of new nodes
+                    data.animatedSlot = placedIndex;
+                } else {
+                    // Animate slot of existing nodes
+                    var delta = Time.unscaledDeltaTime * animateSpeed;
+                    data.animatedSlot = data.animatedSlot.MoveTowardsDelta(placedIndex, delta);
+                }
+
+                // Position nodes (animated)
+                PositionNode(node, data.animatedSlot, gridOffset);
                 placedIndex++;
+                slotDataMap[node] = data;
             }
 
             var containedSize = gridSize * GridCellSize;
@@ -60,18 +76,8 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         // -------------------------------------------------------
 
-        private int CountPrunedItems() {
-            var numItems = 0;
-            for (int i = 0; i < ChildNodes.Count; i++) {
-                var node = ChildNodes[i];
-                if (!node || !node.gameObject.activeSelf) { continue; }
-                numItems++;
-            }
-
-            return numItems;
-        }
-
-        private void CalculateGridSize(int numItems, out Vector2Int size, out Vector2 offset) {
+        private void CalculateGridSize(out Vector2Int size, out Vector2 offset) {
+            var numItems = CountPrunedChildren();
             if (IndexDirection == LayoutOrientation.HORIZONTAL) {
                 var columns = Mathf.Min(numItems, WrapAtIndex);
                 var rows = Mathf.CeilToInt(numItems / (float)WrapAtIndex);
@@ -85,20 +91,25 @@ namespace LycheeLabs.FruityInterface.Elements {
             offset = new Vector2(-(size.x - 1f) / 2f, -(size.y - 1f) / 2f);
         }
 
-        private Vector2Int IndexToCell(int placedIndex) {
-            int row, column;
-            if (IndexDirection == LayoutOrientation.HORIZONTAL) {
-                row = placedIndex / WrapAtIndex;
-                column = placedIndex % WrapAtIndex;
-            } else {
-                column = placedIndex / WrapAtIndex;
-                row = placedIndex % WrapAtIndex;
-            }
-            Vector2Int cell = new Vector2Int(column, row);
-            return cell;
+        private void PositionNode(LayoutNode node, float slotIndex, Vector2 gridOffset)  {
+            var cell = IndexToCell(slotIndex);
+            Vector2 position = CellToPosition(cell, gridOffset);
+            node.rectTransform.SetAnchorAndPosition(position);
         }
 
-        private Vector2 CellToPosition(Vector2Int cell, Vector2 gridOffset) {
+        private Vector2 IndexToCell(float placedIndex) {
+            float row, column;
+            if (IndexDirection == LayoutOrientation.HORIZONTAL) {
+                row = (int)(placedIndex + 0.5f) / WrapAtIndex;
+                column = (placedIndex + 0.5f) % WrapAtIndex - 0.5f;
+            } else {
+                column = (int)(placedIndex + 0.5f) / WrapAtIndex;
+                row = (placedIndex + 0.5f) % WrapAtIndex - 0.5f;
+            }
+            return new Vector2(column, row);
+        }
+
+        private Vector2 CellToPosition(Vector2 cell, Vector2 gridOffset) {
             return new Vector3(gridOffset.x + cell.x, -(gridOffset.y + cell.y)) * GridCellSize;
         }
 
