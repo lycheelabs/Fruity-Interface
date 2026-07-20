@@ -13,9 +13,16 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected override void RefreshLayout() {
             if (ChildNodes.Count == 0) return;
 
-            var numItems = ChildNodes.Count;
-            int rows, columns;
+            // Calculate item count (pruned)
+            var numItems = 0;
+            for (int i = 0; i < ChildNodes.Count; i++) {
+                var node = ChildNodes[i];
+                if (!node || !node.gameObject.activeSelf) { continue; }
+                numItems++;
+            }
 
+            // Calculate rows and colums
+            int rows, columns;
             if (IndexDirection == LayoutOrientation.HORIZONTAL) {
                 columns = Mathf.Min(numItems, WrapAtIndex);
                 rows = Mathf.CeilToInt(numItems / (float)WrapAtIndex);
@@ -23,25 +30,28 @@ namespace LycheeLabs.FruityInterface.Elements {
                 rows = Mathf.Min(numItems, WrapAtIndex);
                 columns = Mathf.CeilToInt(numItems / (float)WrapAtIndex);
             }
-
             var xOffset = -(columns - 1f) / 2f;
             var yOffset = -(rows - 1f) / 2f;
 
+            // Position nodes
+            int placedIndex = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
+                var node = ChildNodes[i];
+                if (!node || !node.gameObject.activeSelf) { continue; }
+
                 int row, column;
 
                 if (IndexDirection == LayoutOrientation.HORIZONTAL) {
-                    row = i / WrapAtIndex;
-                    column = i % WrapAtIndex;
+                    row = placedIndex / WrapAtIndex;
+                    column = placedIndex % WrapAtIndex;
                 } else {
-                    column = i / WrapAtIndex;
-                    row = i % WrapAtIndex;
+                    column = placedIndex / WrapAtIndex;
+                    row = placedIndex % WrapAtIndex;
                 }
 
                 var position = new Vector3(xOffset + column, -(yOffset + row)) * GridCellSize;
-
-                var node = ChildNodes[i];
                 node.rectTransform.SetAnchorAndPosition(position);
+                placedIndex++;
             }
 
             var containedSize = new Vector2(columns, rows) * GridCellSize;
