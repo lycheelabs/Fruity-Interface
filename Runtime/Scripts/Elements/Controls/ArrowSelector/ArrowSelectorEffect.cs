@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    public abstract class TabbingSelectorEffect : MonoBehaviour {
+    public abstract class ArrowSelectorEffect : MonoBehaviour {
 
         public int SelectedIndex { get; private set; }
         public abstract List<TabbingSelectorOption> ListAllOptions ();

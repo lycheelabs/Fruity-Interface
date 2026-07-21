@@ -33,10 +33,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         public float DrivenIconScale => iconScaling;
         public float DrivenInteriorMargins => arrowMargin;
 
-        private TabbingSelectorEffect _effect;
-        public TabbingSelectorEffect TryGetEffect {
+        private ArrowSelectorEffect _effect;
+        public ArrowSelectorEffect TryGetEffect {
             get {
-                _effect = _effect ?? GetComponent<TabbingSelectorEffect>();
+                _effect = _effect ?? GetComponent<ArrowSelectorEffect>();
                 return _effect;
             }
         }

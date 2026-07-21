@@ -1,6 +1,6 @@
 namespace LycheeLabs.FruityInterface.Elements.Buttons {
 
-    public class ArrowSelectorEffect : ButtonEffect {
+    public class ArrowSelectorTabEffect : ButtonEffect {
 
         public ArrowSelectorComponent Type;
         public ArrowSelector Parent;
