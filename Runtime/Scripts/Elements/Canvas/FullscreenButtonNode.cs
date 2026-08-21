@@ -10,7 +10,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class FullscreenButtonNode : InterfaceNode, ClickTarget {
 
 		public static FullscreenButtonNode Spawn (InterfaceNode parent, FullscreenButtonCallbacks callbacks) {
-			var instance = FruityUIPrefabs.NewFullscreenButton().GetComponent<FullscreenButtonNode>();
+			var instance = FruityUIPrefabs.FullscreenButton.Instantiate();
 			instance.transform.SetParent(parent?.transform, false);
 			instance.InputParentOverride = parent;
 			instance.Callbacks = callbacks;

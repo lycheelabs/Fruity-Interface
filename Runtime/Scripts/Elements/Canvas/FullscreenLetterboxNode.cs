@@ -5,7 +5,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class FullscreenLetterboxNode : InterfaceNode {
 
 		public static FullscreenLetterboxNode Instantiate (Transform parent) {
-			var instance = FruityUIPrefabs.NewFullscreenLetterbox().GetComponent<FullscreenLetterboxNode>();
+			var instance = FruityUIPrefabs.FullscreenLetterbox.Instantiate();
 			instance.transform.SetParent(parent, false);
 			return instance;
         }

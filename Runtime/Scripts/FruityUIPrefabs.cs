@@ -1,3 +1,5 @@
+using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.FruityAssetLoader;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -5,55 +7,45 @@ namespace LycheeLabs.FruityInterface {
     /// <summary>
     /// Contains a set of prefabs used for basic UI setup.
     /// </summary>
-    public static class FruityUIPrefabs {
+    public sealed class FruityUIPrefabs : AssetCatalog {
 
         private const string PREFABS_PATH = "FruityPrefabs/";
 
-        public static void Initialise () { }
-
-        public static GameObject Load (string filePath, string fileName) {
-            var path = PREFABS_PATH + filePath + fileName;
-            var gameObject = Resources.Load(path) as GameObject;
-            if (gameObject == null) {
-                throw new System.NullReferenceException("No prefab found at: " + path);
-            }
-            return gameObject;
-        }
-
         // ----------------------------------------------------------------
 
-        private const string ROOT_FOLDER = "";
         private const string CANVAS_FOLDER = "CanvasPrefabs/";
         private const string PROMPT_FOLDER = "PromptPrefabs/";
 
         // ----------------------------------------------------------------
 
-        private static readonly GameObject canvas = Load(CANVAS_FOLDER, "CanvasNode");
-        
-        private static readonly GameObject fullscreenLetterbox = Load(CANVAS_FOLDER, "FullscreenLetterboxNode");
-        private static readonly GameObject fullscreenShadow = Load(CANVAS_FOLDER, "FullscreenShadowNode");
-        private static readonly GameObject fullscreenButton = Load(CANVAS_FOLDER, "FullscreenButtonNode");
-       
-        private static readonly GameObject simpleTooltip = Load(PROMPT_FOLDER, "SimpleTooltip");
+        public static readonly Prefab<CanvasNode> Canvas = LoadPrefab<CanvasNode>(CANVAS_FOLDER, "CanvasNode");
+        public static readonly Prefab<FullscreenLetterboxNode> FullscreenLetterbox = LoadPrefab<FullscreenLetterboxNode>(CANVAS_FOLDER, "FullscreenLetterboxNode");
+        public static readonly Prefab<FullscreenShadowNode> FullscreenShadow = LoadPrefab<FullscreenShadowNode>(CANVAS_FOLDER, "FullscreenShadowNode");
+        public static readonly Prefab<FullscreenButtonNode> FullscreenButton = LoadPrefab<FullscreenButtonNode>(CANVAS_FOLDER, "FullscreenButtonNode");
+        public static readonly Prefab<SimpleTooltip> SimpleTooltip = LoadPrefab<SimpleTooltip>(PROMPT_FOLDER, "SimpleTooltip");
+
+        private static Prefab<T> LoadPrefab<T>(string folder, string file) where T : Component {
+            return new Prefab<T>(Load<GameObject>(PREFABS_PATH + folder, file));
+        }
 
         public static GameObject NewCanvasNode () {
-            return Object.Instantiate(canvas);
+            return Canvas.InstantiateGameObject();
         }
 
         public static GameObject NewFullscreenLetterbox () {
-            return Object.Instantiate(fullscreenLetterbox);
+            return FullscreenLetterbox.InstantiateGameObject();
         }
 
         public static GameObject NewFullscreenShadow () {
-            return Object.Instantiate(fullscreenShadow);
+            return FullscreenShadow.InstantiateGameObject();
         }
 
         public static GameObject NewFullscreenButton () {
-            return Object.Instantiate(fullscreenButton);
+            return FullscreenButton.InstantiateGameObject();
         }
 
         public static GameObject NewSimpleTooltip () {
-            return Object.Instantiate(simpleTooltip);
+            return SimpleTooltip.InstantiateGameObject();
         }
 
     }

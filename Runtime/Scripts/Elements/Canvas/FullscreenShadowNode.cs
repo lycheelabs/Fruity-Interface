@@ -7,7 +7,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class FullscreenShadowNode : InterfaceNode {
 
 		public static FullscreenShadowNode Instantiate (Transform parent) {
-			var instance = FruityUIPrefabs.NewFullscreenShadow().GetComponent<FullscreenShadowNode>();
+            var instance = FruityUIPrefabs.FullscreenShadow.Instantiate();
 			instance.transform.SetParent(parent, false);
 			return instance;
 		}

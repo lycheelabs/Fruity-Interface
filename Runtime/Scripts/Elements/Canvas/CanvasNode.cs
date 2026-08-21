@@ -6,7 +6,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public sealed class CanvasNode : InterfaceNode {
 
         public static CanvasNode Spawn (string name, Camera camera, float planeDistance) {
-            var instance = FruityUIPrefabs.NewCanvasNode().GetComponent<CanvasNode>();
+            var instance = FruityUIPrefabs.Canvas.Instantiate();
             instance.name = "Canvas-" + name;
             instance.SetCamera(camera, planeDistance);
             return instance;
