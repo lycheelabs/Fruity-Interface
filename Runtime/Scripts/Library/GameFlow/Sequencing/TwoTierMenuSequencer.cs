@@ -24,13 +24,17 @@ namespace LycheeLabs.FruityInterface {
         private EventSequenceLayer BlockingGameplay;
         private GameplaySequenceLayer Gameplay;
 
-        public TwoTierMenuSequencer(CanvasNode gamePromptCanvas, CanvasNode overlayPromptCanvas) {
-            // Instantiate layers from bottom to top
+        public TwoTierMenuSequencer() {
             Gameplay = AddGameplayLayer();
             BlockingGameplay = AddEventLayer();
-            GamePrompts = AddPromptLayer(gamePromptCanvas);
-            OverlayPrompts = AddPromptLayer(overlayPromptCanvas);
+            GamePrompts = AddPromptLayer(null);
+            OverlayPrompts = AddPromptLayer(null);
             Transitions = AddTransitionLayer();
+        }
+
+        public void InjectPromptCanvases(CanvasNode gamePromptCanvas, CanvasNode overlayPromptCanvas) {
+            GamePrompts.InjectCanvas(gamePromptCanvas);
+            OverlayPrompts.InjectCanvas(overlayPromptCanvas);
         }
 
         public bool PauseAllGameplay => OverlayPrompts.IsPrompting;

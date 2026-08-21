@@ -16,7 +16,11 @@ namespace LycheeLabs.FruityInterface {
         // ---------------------------------------------------
 
         public readonly EventSequencer Sequencer;
-        public readonly CanvasNode Canvas;
+        public CanvasNode Canvas { get; private set; }
+
+        public void InjectCanvas(CanvasNode canvas) {
+            Canvas = canvas;
+        }
 
         private PromptNode ActivePrompt;
         private PromptNode.PromptInstantiator QueuedPrompt;

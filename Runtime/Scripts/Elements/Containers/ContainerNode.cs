@@ -18,6 +18,10 @@ namespace LycheeLabs.FruityInterface.Elements {
             RebuildChildren();
         }
 
+        private void Awake () {
+            RebuildChildren();
+        }
+
         private void OnTransformChildrenChanged() {
             RebuildChildren();
         }
