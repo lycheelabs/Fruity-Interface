@@ -6,6 +6,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     public class TextBoxNode : LayoutNode {
 
         public float Width = 500;
+        private bool cropWidth;
 
         [SerializeField] private TextMeshProUGUI _text;
         public TextMeshProUGUI Text => _text ??= GetComponent<TextMeshProUGUI>();
@@ -23,7 +24,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
         }
 
-        public void SetText (string newText) {
+        public void SetText (string newText, bool crop = false) {
+            cropWidth = crop;
             Text.text = newText;
             RefreshLayoutDeferred();
         }
@@ -37,12 +39,16 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected override void RefreshLayout () {
             // Find preferred height based on width
             var rect = Text.rectTransform;
-            rect.sizeDelta = new Vector2(Width, rect.sizeDelta.y);
+            var width = Width;
+            if (cropWidth) {
+                width = Mathf.Min(width, Text.GetPreferredValues(Text.text, Mathf.Infinity, Mathf.Infinity).x);
+            }
+            rect.sizeDelta = new Vector2(width, rect.sizeDelta.y);
             var height = Text.preferredHeight;
 
             // Apply size
-            rect.sizeDelta = new Vector2(Width, height);
-            LayoutSizePixels = new Vector2(Width, height);
+            rect.sizeDelta = new Vector2(width, height);
+            LayoutSizePixels = new Vector2(width, height);
             RefreshLayoutDeferred();
         }
 

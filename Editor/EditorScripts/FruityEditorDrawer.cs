@@ -44,33 +44,35 @@ public static class FruityEditorDrawer {
         so.ApplyModifiedProperties();
     }
 
-    public static void DrawLayoutProperties (SerializedObject so, bool restrictSize = false, bool restrictPadding = false) {
+    public static void DrawLayoutProperties (SerializedObject so, bool restrictSize = false, bool restrictPadding = false,
+            bool sizeIsDriven = false) {
         if (restrictSize && restrictPadding) return;
         
         so.Update();
         EditorGUILayout.LabelField("UI Layout", EditorStyles.boldLabel);
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
         
-        if (restrictSize) {
-            /*EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(so.FindProperty("LayoutSizePixels"));
-            EditorGUILayout.LabelField("(Size is driven from elsewhere)", EditorStyles.miniLabel);
-            EditorGUI.EndDisabledGroup();*/
-        } else {
-            EditorGUILayout.PropertyField(so.FindProperty("LayoutSizePixels"));
+        if (!restrictSize) {
+            DrawDrivenProperty(so.FindProperty("LayoutSizePixels"), sizeIsDriven,
+                "(Size is driven from contents)");
         }
 
-        if (restrictPadding) {
-            /*EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));
-            EditorGUILayout.LabelField("(Padding is driven from elsewhere)", EditorStyles.miniLabel);
-            EditorGUI.EndDisabledGroup();*/
-        } else {
+        if (!restrictPadding) {
             EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));
         }
 
         EditorGUILayout.EndVertical();
         so.ApplyModifiedProperties();
+    }
+
+    public static void DrawDrivenProperty (SerializedProperty property, bool isDriven, string warning) {
+        EditorGUI.BeginDisabledGroup(isDriven);
+        EditorGUILayout.PropertyField(property);
+        EditorGUI.EndDisabledGroup();
+
+        if (isDriven) {
+            EditorGUILayout.LabelField(warning, EditorStyles.miniLabel);
+        }
     }
 
     public static void DrawPrefabProperties (SerializedObject so, ref bool foldOut,

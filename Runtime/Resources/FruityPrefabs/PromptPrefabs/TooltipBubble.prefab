@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 47, y: 0}
+  m_AnchoredPosition: {x: 25.5, y: 0}
   m_SizeDelta: {x: 32, y: 32}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &2800265460660374541
@@ -58,14 +58,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -6749759492525394578, guid: 4e0447aa954f0bb428b58549032e254e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 28300bee16f13d245b77731124f90951, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -134,14 +134,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e4ce319cf3457dd44ad79d7e14d5598a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: aefbd0eed3b44a44c809068d39295ed3, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -186,7 +186,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 60, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &429514955842109901
 MonoBehaviour:
@@ -202,11 +202,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AnthillVillage.UI.ArrowBubble
   inputParentOverride: {fileID: 0}
   ignoreInterfaceLock: 0
+  LayoutSizePixels: {x: 60, y: 80}
+  LayoutPaddingPixels: {x: 0, y: 0}
   root: {fileID: 886922561527622991}
   backing: {fileID: 8120714722682589068}
   arrow: {fileID: 8700472798618331031}
   contentsNode: {fileID: 0}
-  arrowOffset: 3
+  arrowOffset: 4.5
   arrowLength: 36
   arrowClearance: 44
   lerpSpeed: 1
+  MinimumSize: 60

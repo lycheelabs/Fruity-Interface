@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
-    public class TooltipBubble : InterfaceNode {
+    public class TooltipBubble : LayoutNode {
 
         // Components
         public RectTransform root;
@@ -12,10 +12,11 @@ namespace LycheeLabs.FruityInterface.Elements {
         public LayoutNode contentsNode;
 
         // Graphics config
-        public int arrowOffset = 1; // Shifts the arrow relative to the backing perimeter
-        public int arrowLength = 32; // Shifts the whole bubble to make space for the arrow
-        public int arrowClearance = 32; // Affects how close the arrow can shift laterally towards bubble edges
+        public float arrowOffset = 1; // Shifts the arrow relative to the backing perimeter
+        public float arrowLength = 32; // Shifts the whole bubble to make space for the arrow
+        public float arrowClearance = 32; // Affects how close the arrow can shift laterally towards bubble edges
         public float lerpSpeed = 1;
+        public float MinimumSize = 60;
         private float screenEdgePadding = 10;
 
         // ---------------------------------------
@@ -23,9 +24,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         // Entry
         private bool active;
         private float activeTween;
+        private bool overrideHidden;
+        private float overrideHiddenTween;
 
         // Size
-        private Vector2 rectSize;
         private float scale;
 
         // Position
@@ -33,38 +35,54 @@ namespace LycheeLabs.FruityInterface.Elements {
         private WorldAnchor basePosition;
         private Direction offsetDirection;
 
-
         private void Awake () {
             root.transform.localScale = Vector3.zero;
         }
 
         private void LateUpdate() {
             activeTween = activeTween.MoveTowards(active, 8 * lerpSpeed);
+            overrideHiddenTween = overrideHiddenTween.MoveTowards(overrideHidden, 8 * lerpSpeed);
             RefreshSize();
             RefreshPosition();
         }
 
-        private void OnValidate() {
+        protected override void RefreshLayout() {
             scale = 1;
-            activeTween = 1;
+            if (!Application.isPlaying) {
+                activeTween = 1;
+            }
             RefreshSize();
-
-            arrow.rectTransform.anchoredPosition = new Vector3(rectSize.x / 2f - arrowOffset, 0, 0);
+            if (!Application.isPlaying) {
+                arrow.rectTransform.anchoredPosition = new Vector3(
+                    TotalSizePixels.x / 2f - arrowOffset, 0, 0
+                );
+            }
         }
 
         public void Show(WorldAnchor position, Direction offsetDirection, float scale = 1f) {
-            active = true;
+            BeginShow();
 
             SetArrowDirection(offsetDirection.Reverse());
             SetPosition(position, offsetDirection, scale * 0.9f);
         }
 
         public void Show () {
-            active = true;
+            BeginShow();
         }
 
         public void Hide() {
             active = false;
+        }
+
+        public void OverrideHidden(bool hidden) {
+            overrideHidden = hidden;
+        }
+
+        private void BeginShow() {
+            if (!active) {
+                activeTween = 0;
+            }
+            active = true;
         }
 
         public void SetBubbleShift (Vector2 shift) {
@@ -79,8 +97,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             arrow.rectTransform.localEulerAngles = new Vector3(0, 0, direction.Angle());
 
             arrow.rectTransform.anchoredPosition = new Vector2(
-                (rectSize.x / 2f - arrowOffset) * direction.XIndex(), 
-                (rectSize.y / 2f - arrowOffset) * direction.ZIndex()
+                (TotalSizePixels.x / 2f - arrowOffset) * direction.XIndex(), 
+                (TotalSizePixels.y / 2f - arrowOffset) * direction.ZIndex()
             );
         }
 
@@ -93,7 +111,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             scale = newScale;
 
             screenPosition = newPosition;
-            var offset = rectSize / 2f + new Vector2(arrowLength, arrowLength);
+            var offset = TotalSizePixels / 2f + new Vector2(arrowLength, arrowLength);
             screenPosition.x += offset.x * newOffsetDirection.XIndex() * newScale;
             screenPosition.y += offset.y * newOffsetDirection.ZIndex() * newScale;
 
@@ -102,17 +120,17 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         private void RefreshSize () {
             if (contentsNode != null) {
-                rectSize = contentsNode.TotalSizePixels;
-            } else {
-                rectSize = new Vector2(100, 100);
+                LayoutSizePixels = contentsNode.TotalSizePixels;
             }
-            root.sizeDelta = rectSize;
-            root.transform.localScale = Vector3.one * Tweens.EaseOutQuad(activeTween) * scale;
+            LayoutSizePixels.x = Mathf.Max(LayoutSizePixels.x, MinimumSize);
+            LayoutSizePixels.y = Mathf.Max(LayoutSizePixels.y, MinimumSize);
+            root.sizeDelta = TotalSizePixels;
+            root.transform.localScale = Vector3.one * Tweens.EaseOutQuad(activeTween - overrideHiddenTween) * scale;
         }
 
         private void RefreshPosition () {
             var clampedPosition = screenPosition;
-            var size = (rectSize + new Vector2(screenEdgePadding, screenEdgePadding));
+            var size = (TotalSizePixels + new Vector2(screenEdgePadding, screenEdgePadding));
             var screenSize = FruityUI.ScreenBounds.BoxedCanvasSize;
             var maxOffset = (screenSize - size * scale) / 2f;
             clampedPosition.x = Mathf.Clamp(clampedPosition.x, -maxOffset.x, maxOffset.x);
@@ -128,7 +146,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
                 // Calculate offset adjustment
                 var arrowAdjust = -perpVector * (perpShift / scale);
-                var maxAdjust = (rectSize - new Vector2(arrowClearance, arrowClearance)) / 2f;
+                var maxAdjust = (TotalSizePixels - new Vector2(arrowClearance, arrowClearance)) / 2f;
                 maxAdjust.x = Mathf.Max(maxAdjust.x, 0);
                 maxAdjust.y = Mathf.Max(maxAdjust.y, 0);
                 var unclampedAdjust = arrowAdjust;
@@ -137,8 +155,8 @@ namespace LycheeLabs.FruityInterface.Elements {
                 var adjustOverflow = (unclampedAdjust - arrowAdjust) * perpVector;
 
                 arrow.rectTransform.anchoredPosition = new Vector2(
-                    (rectSize.x / 2f - arrowOffset) * arrowDir.XIndex() + arrowAdjust.x,
-                    (rectSize.y / 2f - arrowOffset) * arrowDir.ZIndex() + arrowAdjust.y
+                    (TotalSizePixels.x / 2f - arrowOffset) * arrowDir.XIndex() + arrowAdjust.x,
+                    (TotalSizePixels.y / 2f - arrowOffset) * arrowDir.ZIndex() + arrowAdjust.y
                 );
 
                 // Calculate scale adjustment

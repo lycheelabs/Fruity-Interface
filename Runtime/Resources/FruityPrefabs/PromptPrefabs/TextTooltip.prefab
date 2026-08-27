@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4576645938563928085}
   - component: {fileID: 2771759911103113623}
   m_Layer: 0
-  m_Name: SimpleTooltip
+  m_Name: TextTooltip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.36863, y: -0.07345}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2771759911103113623
@@ -62,9 +62,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 4576645938563928085}
     m_Modifications:
     - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: MinimumSize
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: contentsNode
       value: 
       objectReference: {fileID: 332920712348534510}
+    - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: LayoutSizePixels.x
+      value: 430
+      objectReference: {fileID: 0}
+    - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: LayoutSizePixels.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -91,11 +103,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 412
+      value: 430
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 44.48
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_LocalPosition.x
@@ -127,11 +139,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.9622111
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 40.602684
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -150,8 +162,16 @@ PrefabInstance:
       value: TooltipBubble
       objectReference: {fileID: 0}
     - target: {fileID: 5452991278577281019, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452991278577281019, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452991278577281019, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 203
+      value: 210.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -296,11 +316,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8566326237165890464, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: LayoutPaddingPixels.x
-      value: 12
+      value: 36
       objectReference: {fileID: 0}
     - target: {fileID: 8566326237165890464, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: LayoutPaddingPixels.y
-      value: 12
+      value: 16
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
