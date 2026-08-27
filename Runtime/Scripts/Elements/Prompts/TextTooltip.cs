@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
 
@@ -10,9 +11,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         public void Show(string text, WorldAnchor position, Direction offsetDirection, float wrapWidth, float scale = 1f, float padding = 0f) {
             Text.Width = wrapWidth;
             Bubble.LayoutPaddingPixels = new Vector2(padding, padding);
-            Bubble.RefreshLayoutDeferred();
             Text.SetText(text, crop: true);
-            Bubble.Show(position, offsetDirection, scale);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(Text.rectTransform);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(Bubble.rectTransform);
+            Bubble.Show(position, offsetDirection, scale * 0.88f);
         }
 
         public void Show () {
@@ -24,7 +26,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         public void SetSuppressed(bool hidden) {
-            Bubble.OverrideHidden(hidden);
+            Bubble.SetSuppressed(hidden);
         }
 
     }

@@ -43,7 +43,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             activeTween = activeTween.MoveTowards(active, 8 * lerpSpeed);
             overrideHiddenTween = overrideHiddenTween.MoveTowards(overrideHidden, 8 * lerpSpeed);
             RefreshSize();
-            RefreshPosition();
         }
 
         protected override void RefreshLayout() {
@@ -63,7 +62,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             BeginShow();
 
             SetArrowDirection(offsetDirection.Reverse());
-            SetPosition(position, offsetDirection, scale * 0.9f);
+            SetPosition(position, offsetDirection, scale);
         }
 
         public void Show () {
@@ -74,13 +73,14 @@ namespace LycheeLabs.FruityInterface.Elements {
             active = false;
         }
 
-        public void OverrideHidden(bool hidden) {
+        public void SetSuppressed(bool hidden) {
             overrideHidden = hidden;
         }
 
         private void BeginShow() {
             if (!active) {
-                activeTween = 0;
+                activeTween = 0.3f;
+                root.transform.localScale = Vector3.zero;
             }
             active = true;
         }
@@ -126,6 +126,9 @@ namespace LycheeLabs.FruityInterface.Elements {
             LayoutSizePixels.y = Mathf.Max(LayoutSizePixels.y, MinimumSize);
             root.sizeDelta = TotalSizePixels;
             root.transform.localScale = Vector3.one * Tweens.EaseOutQuad(activeTween - overrideHiddenTween) * scale;
+            if (Application.isPlaying) {
+                RefreshPosition();
+            }
         }
 
         private void RefreshPosition () {

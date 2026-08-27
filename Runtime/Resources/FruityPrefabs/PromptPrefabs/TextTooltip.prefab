@@ -71,7 +71,7 @@ PrefabInstance:
       objectReference: {fileID: 332920712348534510}
     - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: LayoutSizePixels.x
-      value: 430
+      value: 436
       objectReference: {fileID: 0}
     - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: LayoutSizePixels.y
@@ -103,7 +103,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 430
+      value: 436
       objectReference: {fileID: 0}
     - target: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_SizeDelta.y
@@ -171,12 +171,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5452991278577281019, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 210.5
+      value: 213.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 3211962653892346309, guid: d000699904095184391689a1d2d1c514, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 886922561527622991, guid: d000699904095184391689a1d2d1c514, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2807900171223710214}
     m_AddedComponents: []
@@ -197,18 +197,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4a0ad13176ef1f459bc1726b3a86075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnthillVillage.UI.ArrowBubble
---- !u!224 &3659628290173996713 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3211962653892346309, guid: d000699904095184391689a1d2d1c514, type: 3}
-  m_PrefabInstance: {fileID: 2187257992797851500}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8250438164184182094
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 3659628290173996713}
+    m_TransformParent: {fileID: 1302746252890055203}
     m_Modifications:
     - target: {fileID: 3161762772172077180, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: m_Name
@@ -264,15 +259,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6091359942420862792, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6091359942420862792, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6091359942420862792, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6091359942420862792, guid: 1fa90d8cc5186d54ba0d8dc5914871ed, type: 3}
       propertyPath: m_AnchoredPosition.x
