@@ -66,6 +66,10 @@ PrefabInstance:
       value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: arrowOffset
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 429514955842109901, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: contentsNode
       value: 
       objectReference: {fileID: 332920712348534510}
@@ -171,7 +175,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5452991278577281019, guid: d000699904095184391689a1d2d1c514, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 213.5
+      value: 214
+      objectReference: {fileID: 0}
+    - target: {fileID: 8120714722682589068, guid: d000699904095184391689a1d2d1c514, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 1.18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
