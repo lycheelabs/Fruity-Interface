@@ -79,7 +79,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         private void BeginShow() {
             if (!active) {
-                activeTween = 0.3f;
+                activeTween = 0.35f;
                 root.transform.localScale = Vector3.zero;
             }
             active = true;

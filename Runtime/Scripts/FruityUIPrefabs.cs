@@ -22,7 +22,7 @@ namespace LycheeLabs.FruityInterface {
         public static readonly Prefab<FullscreenLetterboxNode> FullscreenLetterbox = LoadPrefab<FullscreenLetterboxNode>(CANVAS_FOLDER, "FullscreenLetterboxNode");
         public static readonly Prefab<FullscreenShadowNode> FullscreenShadow = LoadPrefab<FullscreenShadowNode>(CANVAS_FOLDER, "FullscreenShadowNode");
         public static readonly Prefab<FullscreenButtonNode> FullscreenButton = LoadPrefab<FullscreenButtonNode>(CANVAS_FOLDER, "FullscreenButtonNode");
-        public static readonly Prefab<TextTooltip> SimpleTooltip = LoadPrefab<TextTooltip>(PROMPT_FOLDER, "TextTooltip");
+        public static readonly Prefab<TextTooltip> TextTooltip = LoadPrefab<TextTooltip>(PROMPT_FOLDER, "TextTooltip");
 
         private static Prefab<T> LoadPrefab<T>(string folder, string file) where T : Component {
             return new Prefab<T>(Load<GameObject>(PREFABS_PATH + folder, file));
@@ -45,7 +45,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public static GameObject NewSimpleTooltip () {
-            return SimpleTooltip.InstantiateGameObject();
+            return TextTooltip.InstantiateGameObject();
         }
 
     }
