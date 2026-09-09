@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using LycheeLabs.FruityInterface.Animation;
+using LycheeLabs.FruityInterface;
+using UnityEngine;
 
 namespace LycheeLabs.FruityInterface.Flow {
 

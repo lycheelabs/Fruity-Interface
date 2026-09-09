@@ -1,6 +1,7 @@
 ﻿using LycheeLabs.FruityInterface.Flow;
+using LycheeLabs.FruityInterface;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
 
     public class TransitionSequenceLayer : SequenceLayer {
 

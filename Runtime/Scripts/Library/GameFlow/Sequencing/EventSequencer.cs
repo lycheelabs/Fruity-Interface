@@ -1,8 +1,9 @@
 ﻿using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.FruityInterface;
 using System;
 using System.Collections.Generic;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
 
     public abstract class EventSequencer {
 

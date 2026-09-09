@@ -1,9 +1,10 @@
 using UnityEditor;
+using LycheeLabs.FruityInterface.Elements;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(ArrowSelector))]
-    public class ArrowSelectorEditor : Editor {
+    public class ArrowSelectorEditor : UnityEditor.Editor {
 
         public bool PrefabFoldout;
 

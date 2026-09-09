@@ -1,9 +1,10 @@
 ﻿using UnityEditor;
+using LycheeLabs.FruityInterface.Animation;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(JuicyGroup))]
-    public class JuicyGroupEditor : Editor {
+    public class JuicyGroupEditor : UnityEditor.Editor {
 
         SerializedProperty Children;
         SerializedProperty TimeScaling;

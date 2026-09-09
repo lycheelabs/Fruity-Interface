@@ -1,5 +1,5 @@
 ﻿
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
 
     public interface BlockingEvent {
         void Activate();

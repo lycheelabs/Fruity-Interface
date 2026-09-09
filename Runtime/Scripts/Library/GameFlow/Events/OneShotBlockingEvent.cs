@@ -1,5 +1,5 @@
 ﻿
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
     public abstract class OneShotBlockingEvent : BlockingEvent {
         public abstract void Activate();
         public void Update(bool isPaused, out bool isComplete) {

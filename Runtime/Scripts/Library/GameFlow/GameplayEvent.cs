@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
 
     public abstract class GameplayEvent {
 

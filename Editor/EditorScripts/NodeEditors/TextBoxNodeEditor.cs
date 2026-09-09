@@ -1,10 +1,10 @@
 using LycheeLabs.FruityInterface.Elements;
 using UnityEditor;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(TextBoxNode))]
-    public class TextBoxNodeEditor : Editor {
+    public class TextBoxNodeEditor : UnityEditor.Editor {
 
         public override void OnInspectorGUI () {
             DrawConfigProperties(serializedObject);

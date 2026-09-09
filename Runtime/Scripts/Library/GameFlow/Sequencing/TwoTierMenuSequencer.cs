@@ -1,7 +1,8 @@
 ﻿using LycheeLabs.FruityInterface.Elements;
 using LycheeLabs.FruityInterface.Flow;
+using LycheeLabs.FruityInterface;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
 
     public enum TwoTierMenuLayer {
         GAMEPLAY, OVERLAY

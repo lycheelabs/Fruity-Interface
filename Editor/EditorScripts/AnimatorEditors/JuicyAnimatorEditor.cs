@@ -1,9 +1,10 @@
 using UnityEditor;
+using LycheeLabs.FruityInterface.Animation;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(JuicyAnimator))]
-    public class JuicyAnimatorEditor : Editor {
+    public class JuicyAnimatorEditor : UnityEditor.Editor {
 
         SerializedProperty BasePosition;
         SerializedProperty BaseRotation;

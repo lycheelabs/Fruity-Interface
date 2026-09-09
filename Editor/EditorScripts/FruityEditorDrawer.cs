@@ -1,6 +1,10 @@
 using System;
+using LycheeLabs.FruityInterface;
+using LycheeLabs.FruityInterface.Elements;
 using UnityEditor;
 using UnityEngine;
+
+namespace LycheeLabs.FruityInterface.Editor {
 
 public static class FruityEditorDrawer {
 
@@ -96,5 +100,7 @@ public static class FruityEditorDrawer {
         EditorGUILayout.EndVertical();
         so.ApplyModifiedProperties();
     }
+
+}
 
 }

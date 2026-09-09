@@ -1,3 +1,4 @@
+using LycheeLabs.FruityInterface.Animation;
 using System;
 using TMPro;
 using UnityEngine;

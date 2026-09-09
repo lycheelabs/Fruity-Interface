@@ -1,10 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(ControlLayoutStyle))]
-    public class ControlLayoutStyleEditor : Editor {
+    public class ControlLayoutStyleEditor : UnityEditor.Editor {
 
         public override void OnInspectorGUI () {
             serializedObject.Update();

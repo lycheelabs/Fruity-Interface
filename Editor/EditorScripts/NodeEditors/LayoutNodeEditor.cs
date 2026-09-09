@@ -1,9 +1,10 @@
 using UnityEditor;
+using LycheeLabs.FruityInterface;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(LayoutNode))]
-    public class LayoutNodeEditor : Editor {
+    public class LayoutNodeEditor : UnityEditor.Editor {
 
         public override void OnInspectorGUI () {
             FruityEditorDrawer.DrawLayoutProperties(serializedObject);

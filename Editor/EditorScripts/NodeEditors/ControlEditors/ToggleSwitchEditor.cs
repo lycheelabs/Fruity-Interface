@@ -1,9 +1,10 @@
 using UnityEditor;
+using LycheeLabs.FruityInterface.Elements;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(ToggleSwitch))]
-    public class ToggleSwitchEditor : Editor {
+    public class ToggleSwitchEditor : UnityEditor.Editor {
 
         public bool PrefabFoldout;
 

@@ -1,9 +1,10 @@
 using UnityEditor;
+using LycheeLabs.FruityInterface.Elements;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(SpacerNode))]
-    public class SpacerNodeEditor : Editor {
+    public class SpacerNodeEditor : UnityEditor.Editor {
 
         public override void OnInspectorGUI () {
             DrawConfigProperties(serializedObject);

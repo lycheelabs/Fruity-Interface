@@ -2,7 +2,7 @@ using LycheeLabs.FruityInterface.Animation;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Animation {
 
     // TODO: Reveal RectTransform properties like anchor and pivot
 

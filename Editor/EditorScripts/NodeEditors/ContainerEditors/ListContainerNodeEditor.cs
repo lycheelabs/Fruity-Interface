@@ -1,9 +1,10 @@
 using UnityEditor;
+using LycheeLabs.FruityInterface.Elements;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.FruityInterface.Editor {
 
     [CustomEditor(typeof(ListContainerNode))]
-    public class ListContainerNodeEditor : Editor {
+    public class ListContainerNodeEditor : UnityEditor.Editor {
 
         public bool PrefabFoldout;
 

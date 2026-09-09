@@ -1,9 +1,10 @@
 ﻿using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.FruityInterface;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Flow {
     public class PromptSequenceLayer : SequenceLayer {
 
         public bool IsBlockingLayersBelow => IsPrompting;

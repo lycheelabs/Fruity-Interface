@@ -1,6 +1,6 @@
 using System;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.FruityInterface.Animation {
 
     public class Tween {
 

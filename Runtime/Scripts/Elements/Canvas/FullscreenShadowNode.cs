@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LycheeLabs.FruityInterface.Animation;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LycheeLabs.FruityInterface.Elements {
