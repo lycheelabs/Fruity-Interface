@@ -176,7 +176,7 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 
 ---
 
-## Input (`Runtime/Input/MouseControls/`)
+## Input (`Runtime/Interface/Input/MouseControls/`)
 
 | Class | Role |
 |---|---|
