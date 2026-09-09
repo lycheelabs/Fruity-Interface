@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Editor {
+namespace LycheeLabs.FruityInterface.Editors {
 
     public static class InspectorUtils {
 

@@ -1,7 +1,7 @@
 using UnityEditor;
 using LycheeLabs.FruityInterface.Elements;
 
-namespace LycheeLabs.FruityInterface.Editor {
+namespace LycheeLabs.FruityInterface.Editors {
 
     [CustomEditor(typeof(ToggleSwitch))]
     public class ToggleSwitchEditor : UnityEditor.Editor {

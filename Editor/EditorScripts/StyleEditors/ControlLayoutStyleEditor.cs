@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Editor {
+namespace LycheeLabs.FruityInterface.Editors {
 
     [CustomEditor(typeof(ControlLayoutStyle))]
     public class ControlLayoutStyleEditor : UnityEditor.Editor {

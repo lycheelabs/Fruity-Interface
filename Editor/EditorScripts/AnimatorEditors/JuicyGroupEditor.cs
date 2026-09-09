@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using LycheeLabs.FruityInterface.Animation;
 
-namespace LycheeLabs.FruityInterface.Editor {
+namespace LycheeLabs.FruityInterface.Editors {
 
     [CustomEditor(typeof(JuicyGroup))]
     public class JuicyGroupEditor : UnityEditor.Editor {

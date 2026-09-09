@@ -1,7 +1,7 @@
 using UnityEditor;
 using LycheeLabs.FruityInterface;
 
-namespace LycheeLabs.FruityInterface.Editor {
+namespace LycheeLabs.FruityInterface.Editors {
 
     [CustomEditor(typeof(SliderNode))]
     public class SliderNodeEditor : UnityEditor.Editor {
