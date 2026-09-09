@@ -11,7 +11,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private TextMeshProUGUI _text;
         public TextMeshProUGUI Text => _text ??= GetComponent<TextMeshProUGUI>();
 
-        private void OnValidate () {
+        private new void OnValidate () {
             RefreshLayoutDeferred();
         }
 

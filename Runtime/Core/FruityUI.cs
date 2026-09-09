@@ -9,7 +9,7 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public static class FruityUI {
 
-        private const bool DEBUG_LAYER_LOCK = false;
+        private static readonly bool DEBUG_LAYER_LOCK = false;
 
         // ----------------------- Screen Bounds -----------------------
 

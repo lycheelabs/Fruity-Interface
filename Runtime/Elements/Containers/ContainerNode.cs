@@ -10,7 +10,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         public readonly List<LayoutNode> ChildNodes = new List<LayoutNode>();
         private readonly List<LayoutNode> previousChildNodes = new List<LayoutNode>();
         public int ChildCount => ChildNodes.Count;
-        [SerializeField] private int prevChildCount = -1;
 
         public Vector2 minimumSize = new Vector2(100, 100);
 

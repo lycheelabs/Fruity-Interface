@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 		// --------------------------------------------------------
 
 		private FullscreenButtonCallbacks Callbacks;
-		private new BoxCollider collider;
+        private BoxCollider collider;
 
         private void Awake () {
 			collider = GetComponent<BoxCollider>();

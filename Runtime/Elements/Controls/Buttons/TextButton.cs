@@ -23,7 +23,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private bool inputDisabled;
 
         [Range(0f, 2f)] [SerializeField] private float fontHeightScaling = 1f;
-        [Range(-1f, 1f)][SerializeField] private float fontHeightShift = 0f;
 
         private void OnEnable () {
             RefreshLayoutDeferred();

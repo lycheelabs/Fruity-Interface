@@ -10,7 +10,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         [SerializeField] LayoutNode LayoutContents;
 
-        private void OnValidate () {
+        private new void OnValidate () {
             RefreshLayoutDeferred();
         }
 
