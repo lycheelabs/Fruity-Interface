@@ -34,6 +34,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         private Vector3 screenPosition;
         private WorldAnchor basePosition;
         private Direction offsetDirection;
+        private bool hasPosition;
 
         private void Awake () {
             root.transform.localScale = Vector3.zero;
@@ -61,6 +62,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         public void Show(WorldAnchor position, Direction offsetDirection, float scale = 1f) {
             BeginShow();
 
+            this.scale = scale;
+            RefreshSize();
             SetArrowDirection(offsetDirection.Reverse());
             SetPosition(position, offsetDirection, scale);
         }
@@ -103,6 +106,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void SetPosition (WorldAnchor newAnchor, Direction newOffsetDirection, float newScale) {
+            basePosition = newAnchor;
+            hasPosition = true;
             SetPosition(newAnchor.ScreenVector(), newOffsetDirection, newScale);
         }
 
@@ -120,6 +125,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         private void RefreshSize () {
             if (contentsNode != null) {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(contentsNode.rectTransform);
                 LayoutSizePixels = contentsNode.TotalSizePixels;
             }
             LayoutSizePixels.x = Mathf.Max(LayoutSizePixels.x, MinimumSize);
@@ -132,6 +138,13 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void RefreshPosition () {
+            if (hasPosition) {
+                screenPosition = basePosition.ScreenVector();
+                var offset = TotalSizePixels / 2f + new Vector2(arrowLength, arrowLength);
+                screenPosition.x += offset.x * offsetDirection.XIndex() * scale;
+                screenPosition.y += offset.y * offsetDirection.ZIndex() * scale;
+            }
+
             var clampedPosition = screenPosition;
             var size = (TotalSizePixels + new Vector2(screenEdgePadding, screenEdgePadding));
             var screenSize = FruityUI.ScreenBounds.BoxedCanvasSize;

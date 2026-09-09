@@ -12,6 +12,10 @@ namespace LycheeLabs.FruityInterface {
             animator?.Play(new SquashAnimation(sizeScale, speedScale, cycles, tween));
         }
 
+        public static void Squash (this JuicyAnimator animator, Vector2 axisScale, float speedScale = 1f, int cycles = 3, Tween tween = null) {
+            animator?.Play(new SquashAnimation(axisScale, speedScale, cycles, tween));
+        }
+
         public static void Bulge (this JuicyAnimator animator, float sizeScale, float speedScale = 1f, Tween tween = null) {
             animator?.Play(new BulgeAnimation(sizeScale, speedScale, tween));
         }

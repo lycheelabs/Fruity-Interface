@@ -9,7 +9,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         public override void OnInspectorGUI () {
             DrawConfigProperties(serializedObject);
-            FruityEditorDrawer.DrawLayoutProperties(serializedObject, restrictSize: true);
+            FruityEditorDrawer.DrawLayoutProperties(serializedObject, sizeIsDriven: true);
             FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
         }
 
