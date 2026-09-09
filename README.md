@@ -10,7 +10,7 @@ Save/load functionality is provided by the `com.lycheelabs.fruitysaveload` depen
 
 ---
 
-## Settings (`Settings/`)
+## Settings (`Runtime/Settings/`)
 
 Namespace `LycheeLabs.FruityInterface.Settings`. Generic typed settings with JSON persistence, category grouping via dotted keys, and an overrideable `Apply()` hook per setting.
 
@@ -74,7 +74,7 @@ Complex settings subclass the base type and override `Apply()` — see `Fullscre
 
 ---
 
-## Settings UI Bridge (`Elements/Buttons/Settings/`)
+## Settings UI Bridge (`Runtime/Elements/Controls/Settings/`)
 
 Connects UI controls to the settings pipeline. Two-component pattern per control type.
 
@@ -104,7 +104,7 @@ Future control types follow the same pattern:
 
 ---
 
-## UI Elements
+## UI Elements (`Runtime/Elements/`)
 
 ### Layout & hierarchy
 
@@ -176,7 +176,7 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 
 ---
 
-## Input (`Library/Controls/MouseControls/`)
+## Input (`Runtime/Input/MouseControls/`)
 
 | Class | Role |
 |---|---|
@@ -193,7 +193,7 @@ Events go through queues: `HoverHierarchyEvent` → `ClickEvent` → `StartDragE
 
 ---
 
-## Animation (`Library/Animation/`)
+## Animation (`Runtime/Animation/`)
 
 | Class | Role |
 |---|---|
