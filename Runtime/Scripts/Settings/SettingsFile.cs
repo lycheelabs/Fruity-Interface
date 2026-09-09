@@ -1,4 +1,4 @@
-using LycheeLabs.FruityInterface.SaveLoad;
+using LycheeLabs.FruitySaveLoad;
 using Newtonsoft.Json.Linq;
 
 namespace LycheeLabs.FruityInterface.Settings {

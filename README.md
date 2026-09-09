@@ -1,42 +1,12 @@
 # FruityInterface
 
-Unity package (`com.lycheelabs.fruityinterface`) providing UI rendering, input handling, stage sequencing, save/load, and a generic settings pipeline. Depends on `TextMeshPro`.
+Unity package (`com.lycheelabs.fruityinterface`) providing UI rendering, input handling, stage sequencing, and a generic settings pipeline. Depends on `TextMeshPro`, `FruitySaveLoad`, and `FruityAssetLoader`.
 
 ---
 
-## Save & Load (`SaveLoad/`)
+## Save & Load
 
-Namespace `LycheeLabs.FruityInterface.SaveLoad`. JSON-based with AES encryption (optional) and GZip compression. Uses Newtonsoft.Json (embedded DLL in `Runtime/Plugins/`).
-
-### Public API
-
-| Class | Role |
-|---|---|
-| `SaveFile` | `[Serializable]` abstract base — subclass with your data fields and `Validate()`. |
-| `SaveManager` | Static entry — `TrySave<T>()`, `TryLoad<T>()`, `Exists()`, `DeleteFile()`. |
-| `SaveFilePath<T>` | Typed path wrapper — `Exists()`, `Load()`, `LoadIfExists()`, `Delete()`. |
-| `LoadData<T>` | Result struct — `IsValid`, `Data`. |
-| `AtomicSaveManager` | `internal` — handles serialization, atomic writes, backup recovery, encryption. |
-
-### Usage
-
-```csharp
-public class MySaveFile : SaveFile {
-    public int Version;
-    public string PlayerName;
-
-    public override bool Validate() => !string.IsNullOrEmpty(PlayerName);
-    public bool Save() => SaveManager.TrySave(this, "myfile.sav", encrypt: false);
-}
-```
-
-### Save flow
-
-`SaveManager.TrySave()` → `AtomicSaveManager.TrySaveData()` → `JsonConvert.SerializeObject()` → optional compress + encrypt → atomic write with backup.
-
-### Load flow
-
-`SaveManager.TryLoad()` → `AtomicSaveManager.TryLoadData()` → optional decrypt + decompress → `JsonConvert.DeserializeObject<T>()` → `Validate()`.
+Save/load functionality is provided by the `com.lycheelabs.fruitysaveload` dependency in the `LycheeLabs.FruitySaveLoad` namespace. `SettingsFile` uses that package for persistence.
 
 ---
 
