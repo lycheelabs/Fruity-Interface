@@ -195,12 +195,6 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 | `GridContainerNode` | ContainerNode | Grid with horizontal/vertical wrap. |
 | `ListContainerNode` | ContainerNode | Scrollable vertical list. |
 
-### Prompts
-
-| Class | Extends | Role |
-|---|---|---|
-| `PromptNode` | InterfaceNode | Abstract — modal lifecycle: `Open()`, `Close()`, `Pause()`, `ProceedTo()`, `GoBack()`. |
-
 ### Canvas
 
 | Class | Role |
@@ -226,32 +220,6 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 | `MouseButton` | Enum `Left`, `Right`, `Middle`, `None`. |
 
 Events go through queues: `HoverHierarchyEvent` → `ClickEvent` → `StartDragEvent` → ... → `EndDragEvent`.
-
----
-
-## Game Flow (`Library/GameFlow/`)
-
-### Sequencing
-
-| Class | Role |
-|---|---|
-| `EventSequencer` | Abstract — layered event pipeline. |
-| `TwoTierMenuSequencer` | GAMEPLAY + OVERLAY prompt layers. |
-| `PromptSequenceLayer` | Navigation stack — GoBack, ProceedTo, ActivePrompt. |
-| `TransitionSequenceLayer` | Screen/stage transitions. |
-
-### Staging & transitions
-
-| Class | Role |
-|---|---|
-| `GameStage` | Base for game states (title, level, expedition). |
-| `StageTransition` | State machine — `StageTransitionChart`. |
-| `ScreenTransition` | Animated screen wipe/iris. |
-| `TransitionEvent` | Queued transition command. |
-
-### Blocking events
-
-`BlockingEvent`, `OneShotBlockingEvent`, `TimedBlockingEvent` — game logic that holds the sequencer until resolved.
 
 ---
 
