@@ -113,7 +113,9 @@ public class MouseRaycaster  {
         };
 
         if (graphicRaycasters == null || Time.frameCount - graphicRaycasterRefreshFrame >= 30) {
-            graphicRaycasters = Object.FindObjectsByType<GraphicRaycaster>(FindObjectsInactive.Exclude);
+            graphicRaycasters = Object.FindObjectsByType<GraphicRaycaster>(
+                FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None);
             graphicRaycasterRefreshFrame = Time.frameCount;
         }
 
