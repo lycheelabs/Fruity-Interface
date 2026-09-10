@@ -22,6 +22,7 @@ namespace LycheeLabs.FruityInterface {
         
         public static bool MouseIsMoving { get; private set; }
         public static bool DisableMouse { get; set; }
+        public bool LogRaycasts { get; set; }
         public static event TargetDelegate OnNewPress;
         public delegate void TargetDelegate(ClickTarget newTarget);
     
@@ -153,6 +154,9 @@ namespace LycheeLabs.FruityInterface {
             }
             activePress.Clear();
             activeButton = MouseButton.None;
+            leftButtonHeld = false;
+            rightButtonHeld = false;
+            middleButtonHeld = false;
             buttonDownThisEvent = false;
             buttonDownEventButton = MouseButton.None;
         }
@@ -179,7 +183,14 @@ namespace LycheeLabs.FruityInterface {
         /// Perform raycasting and queue hover event.
         /// </summary>
         private void UpdateRaycasting() {
+            var previousTarget = lastRaycastTarget;
             GetRaycastTarget();
+
+            if (LogRaycasts && previousTarget != lastRaycastTarget) {
+                var targetName = lastRaycastTarget == null ? "<none>" : lastRaycastTarget.ToString();
+                Debug.Log($"[MouseState] Raycast target: {targetName}, position={FruityUI.RawMouseScreenPosition}");
+            }
+
             var hoverTarget = FruityUI.DraggedTarget ?? lastRaycastTarget;
 
             // Only pass button if this target is the one being pressed (dragged or clicked)

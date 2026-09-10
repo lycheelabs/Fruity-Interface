@@ -10,17 +10,28 @@ namespace LycheeLabs.FruityInterface {
 
         public ClickTarget Target;
         public ClickParams Params;
+
+        private static bool IsAlive(object target) {
+            if (target == null) return false;
+            return !(target is UnityEngine.Object unityObject) || unityObject != null;
+        }
         
         public void Activate(bool logging) {
+            if (!IsAlive(Target)) return;
+
             // Cancel any active drag
-            if (FruityUI.DraggedTarget != null) {
+            if (IsAlive(FruityUI.DraggedTarget)) {
                 if (logging) Debug.Log("Drag cancelled by click: " + FruityUI.DraggedTarget);
                 FruityUI.DraggedTarget.CancelMouseDrag();
+                FruityUI.DraggedTarget = null;
+            } else {
                 FruityUI.DraggedTarget = null;
             }
             
             // Try to unclick the currently selected target
-            if (FruityUI.SelectedTarget != null && Target != FruityUI.SelectedTarget) {
+            if (!IsAlive(FruityUI.SelectedTarget)) {
+                FruityUI.SelectedTarget = null;
+            } else if (Target != FruityUI.SelectedTarget) {
                 if (!FruityUI.SelectedTarget.TryMouseUnclick(Params)) {
                     if (logging) Debug.Log("Unclick blocked by: " + FruityUI.SelectedTarget);
                     return;

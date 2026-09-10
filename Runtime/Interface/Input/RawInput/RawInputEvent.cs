@@ -5,7 +5,7 @@ namespace LycheeLabs.FruityInterface {
     /// <summary>
     /// A device-independent pointer transition captured before UI processing.
     /// </summary>
-    internal readonly struct RawInputEvent {
+    public readonly struct RawInputEvent {
 
         public RawInputEvent(
             RawInputEventType type,
