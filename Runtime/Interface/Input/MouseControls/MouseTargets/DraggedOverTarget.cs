@@ -6,6 +6,9 @@ namespace LycheeLabs.FruityInterface {
     /// Only objects implementing this interface will receive drag-over events during a drag operation.
     /// </summary>
     public interface DraggedOverTarget : MouseTarget {
+
+        /// <summary>Whether this target participates in Fruity drag-over resolution.</summary>
+        bool ReceivesDragOver { get => true; }
         
         /// <summary>
         /// Called every frame while a drag operation is hovering over this target.

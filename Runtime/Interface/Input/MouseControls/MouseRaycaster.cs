@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using LycheeLabs.FruityInterface;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 
 public class MouseRaycaster  {
@@ -11,6 +13,9 @@ public class MouseRaycaster  {
 
     private RaycastHit[] RaycastBuffer = new RaycastHit[MAX_HITS];
     private RaycastHit2D[] RaycastBuffer2D = new RaycastHit2D[MAX_HITS];
+    private readonly List<RaycastResult> graphicResults = new List<RaycastResult>();
+    private GraphicRaycaster[] graphicRaycasters;
+    private int graphicRaycasterRefreshFrame = -1;
 
     public void CollideAndResolve (MouseButton button, out MouseTarget target, out InterfaceNode targetNode, out Vector3 targetPoint) {
         target = null;
@@ -18,6 +23,10 @@ public class MouseRaycaster  {
         targetPoint = Vector3.zero; 
 
         if (!FruityUI.MouseIsOnscreen) {
+            return;
+        }
+
+        if (TryGraphicRaycast(button, out target, out targetNode, out targetPoint)) {
             return;
         }
 
@@ -84,6 +93,68 @@ public class MouseRaycaster  {
     private static InterfaceNode ResolveNode (Collider2D col) {
         return col.GetComponent<InputForwarder>()?.Target
             ?? col.GetComponent<InterfaceNode>();
+    }
+
+    private bool TryGraphicRaycast(
+        MouseButton button,
+        out MouseTarget target,
+        out InterfaceNode targetNode,
+        out Vector3 targetPoint) {
+        target = null;
+        targetNode = null;
+        targetPoint = Vector3.zero;
+
+        var eventSystem = EventSystem.current;
+        if (eventSystem == null) return false;
+
+        var pointerData = new PointerEventData(eventSystem) {
+            position = FruityUI.RawMouseScreenPosition,
+            button = ToPointerEventButton(button)
+        };
+
+        if (graphicRaycasters == null || Time.frameCount - graphicRaycasterRefreshFrame >= 30) {
+            graphicRaycasters = Object.FindObjectsByType<GraphicRaycaster>(FindObjectsInactive.Exclude);
+            graphicRaycasterRefreshFrame = Time.frameCount;
+        }
+
+        for (var i = 0; i < graphicRaycasters.Length; i++) {
+            var graphicRaycaster = graphicRaycasters[i];
+            if (graphicRaycaster == null || !graphicRaycaster.isActiveAndEnabled) continue;
+
+            graphicResults.Clear();
+            graphicRaycaster.Raycast(pointerData, graphicResults);
+            for (var resultIndex = 0; resultIndex < graphicResults.Count; resultIndex++) {
+                var result = graphicResults[resultIndex];
+                var node = ResolveNode(result.gameObject);
+                if (node == null || !node.InputEnabledInHierarchy) continue;
+
+                var candidate = node.GetMouseTarget(result.worldPosition, button);
+                if (candidate == null) continue;
+
+                target = candidate;
+                targetNode = node;
+                targetPoint = result.worldPosition;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static InterfaceNode ResolveNode(GameObject gameObject) {
+        return gameObject.GetComponentInParent<InputForwarder>()?.Target
+            ?? gameObject.GetComponentInParent<InterfaceNode>();
+    }
+
+    private static PointerEventData.InputButton ToPointerEventButton(MouseButton button) {
+        switch (button) {
+            case MouseButton.Right:
+                return PointerEventData.InputButton.Right;
+            case MouseButton.Middle:
+                return PointerEventData.InputButton.Middle;
+            default:
+                return PointerEventData.InputButton.Left;
+        }
     }
 
 }

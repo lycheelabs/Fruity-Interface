@@ -10,7 +10,7 @@ namespace LycheeLabs.FruityInterface {
 
         protected override bool ShouldIncludeTarget(MouseTarget target) {
             // Only DragOverTargets participate
-            return target is DraggedOverTarget;
+            return target is DraggedOverTarget dragOverTarget && dragOverTarget.ReceivesDragOver;
         }
 
         protected override void CallUpdate<TParams>(MouseTarget target, bool firstFrame, TParams parameters, bool isLeaf) {
