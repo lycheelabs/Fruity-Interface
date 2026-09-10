@@ -1,41 +1,63 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Unity.Scripting.LifecycleManagement;
 
 namespace LycheeLabs.FruityInterface {
 
     /// <summary>
     /// Static access point for UI system state and utilities.
     /// </summary>
-    public static class FruityUI {
+    public static partial class FruityUI {
 
         private static readonly bool DEBUG_LAYER_LOCK = false;
 
         // ----------------------- Screen Bounds -----------------------
 
-        private static ScreenBounds _screenBounds;
-        private static AspectRatio _minAspect;
-        private static AspectRatio _maxAspect;
+        public const float DefaultMinAspect = 9f / 21f;
+        public const float DefaultMaxAspect = 21f / 9f;
+
+        [AutoStaticsCleanup]
+        private static ScreenBounds _screenBounds = CreateDefaultScreenBounds();
+        [AutoStaticsCleanup]
+        private static float _minAspect = DefaultMinAspect;
+        [AutoStaticsCleanup]
+        private static float _maxAspect = DefaultMaxAspect;
+
+        private static ScreenBounds CreateDefaultScreenBounds() {
+            var bounds = new ScreenBounds();
+            bounds.Update(DefaultMinAspect, DefaultMaxAspect);
+            return bounds;
+        }
 
         public static ScreenBounds ScreenBounds => _screenBounds;
 
-        public static void SetAspect(AspectRatio min, AspectRatio max) {
+        public static void SetAspect(float min, float max) {
+            if (!float.IsFinite(min) || !float.IsFinite(max) || min <= 0 || max <= 0 || min > max) {
+                Debug.LogError($"Invalid FruityUI aspect range: {min} to {max}.");
+                return;
+            }
+
             _minAspect = min;
             _maxAspect = max;
-            _screenBounds = new ScreenBounds();
             _screenBounds.Update(_minAspect, _maxAspect);
         }
 
         // ----------------------- Projection -----------------------
 
         /// <summary>The camera used for UI raycasting and coordinate conversion.</summary>
-        public static Camera UICamera { get; private set; }
+        [AutoStaticsCleanup]
+        private static Camera uiCamera;
+        public static Camera UICamera => uiCamera;
         
         /// <summary>The plane used for 3D world position calculations.</summary>
-        public static Plane WorldPlane { get; private set; }
+        [AutoStaticsCleanup]
+        private static Plane worldPlane;
+        public static Plane WorldPlane => worldPlane;
 
         // ----------------------- Mouse Position -----------------------
 
+        [AutoStaticsCleanup]
         private static Vector2 _rawMouseScreenPosition;
 
         internal static Vector2 RawMouseScreenPosition => _rawMouseScreenPosition;
@@ -75,28 +97,50 @@ namespace LycheeLabs.FruityInterface {
         /// The target currently being highlighted (receiving MouseHovering calls).
         /// During a drag, this is the dragged target, not what's under the mouse.
         /// </summary>
-        public static MouseTarget HighlightedTarget { get; internal set; }
+        [AutoStaticsCleanup]
+        private static MouseTarget highlightedTarget;
+        public static MouseTarget HighlightedTarget {
+            get => highlightedTarget;
+            internal set => highlightedTarget = value;
+        }
  
         /// <summary>
         /// The target that was last clicked (received MouseClick).
         /// </summary>
-        public static ClickTarget SelectedTarget { get; internal set; }
+        [AutoStaticsCleanup]
+        private static ClickTarget selectedTarget;
+        public static ClickTarget SelectedTarget {
+            get => selectedTarget;
+            internal set => selectedTarget = value;
+        }
         
         /// <summary>
         /// The target currently being dragged (receiving MouseDragging calls).
         /// Null when no drag is active.
         /// </summary>
-        public static DragTarget DraggedTarget { get; internal set; }
+        [AutoStaticsCleanup]
+        private static DragTarget draggedTarget;
+        public static DragTarget DraggedTarget {
+            get => draggedTarget;
+            internal set => draggedTarget = value;
+        }
         
         /// <summary>
         /// The target currently under the mouse cursor (raw raycast result).
         /// During a drag, this is what the dragged item is being dragged over.
         /// </summary>
-        public static DraggedOverTarget DraggedOverTarget { get; internal set; }
+        [AutoStaticsCleanup]
+        private static DraggedOverTarget draggedOverTarget;
+        public static DraggedOverTarget DraggedOverTarget {
+            get => draggedOverTarget;
+            internal set => draggedOverTarget = value;
+        }
 
         // ----------------------- Layer Lock State -----------------------
 
+        [AutoStaticsCleanup]
         private static readonly Dictionary<int, int> _layerLockCounts = new Dictionary<int, int>();
+        [AutoStaticsCleanup]
         private static int _activeLayerThreshold;
 
         /// <summary>The highest locked layer, or 0 if no layers are locked.
@@ -108,7 +152,12 @@ namespace LycheeLabs.FruityInterface {
 
         /// <summary>When true, all mouse input is disabled.
         /// (However - for safety, when InterfaceIsLocked the locked layer is never disabled)</summary>
-        public static bool DisableInput { get; set; }
+        [AutoStaticsCleanup]
+        private static bool disableInput;
+        public static bool DisableInput {
+            get => disableInput;
+            set => disableInput = value;
+        }
 
         /// <summary>Lock the given layer. Nodes below this layer will not receive input.
         /// Multiple locks on the same layer are refcounted.</summary>
@@ -148,16 +197,16 @@ namespace LycheeLabs.FruityInterface {
         // ----------------------- Methods -----------------------
 
         public static void SetUICamera(Camera camera) {
-            UICamera = camera;
+            uiCamera = camera;
         }
 
         public static void SetWorldPlane(Plane plane) {
-            WorldPlane = plane;
+            worldPlane = plane;
         }
 
         /// <summary>
         /// Updates screen bounds to match current window/display dimensions.
-        /// Called automatically by FruityUIManager each frame.
+        /// Called automatically by FruityInterfaceInputModule each frame.
         /// </summary>
         public static void Update() {
             if (_screenBounds != null) {
@@ -173,7 +222,7 @@ namespace LycheeLabs.FruityInterface {
         /// Targets that don't implement ClickTarget or DragTarget are silently ignored.
         /// </summary>
         public static void TriggerNewClick(MouseTarget target, MouseButton button) {
-            FruityUIManager.TriggerNewClick(target, button);
+            FruityInputRuntime.TriggerNewClick(target, button);
         }
 
         /// <summary>
@@ -182,7 +231,7 @@ namespace LycheeLabs.FruityInterface {
         /// Safe to call at any time, even during event processing or from within drag callbacks.
         /// </summary>
         public static void CancelDrag(DragTarget target) {
-            FruityUIManager.CancelDrag(target);
+            FruityInputRuntime.CancelDrag(target);
         }
 
     }

@@ -28,13 +28,13 @@ namespace LycheeLabs.FruityInterface {
             UIScaling = 1;
         }
 
-        public void Update (AspectRatio minAspect = AspectRatio.STANDARD, AspectRatio maxAspect = AspectRatio.WIDESCREEN) {
+        public void Update (float minAspect = FruityUI.DefaultMinAspect, float maxAspect = FruityUI.DefaultMaxAspect) {
             float screenWidth = Mathf.Max(Screen.width, 1);
             float screenHeight = Mathf.Max(Screen.height, 1);
 
             // Clamp aspect ratio
-            var minRatio = minAspect.Value();
-            var maxRatio = maxAspect.Value();
+            var minRatio = minAspect;
+            var maxRatio = maxAspect;
             WindowAspectRatio = screenWidth / screenHeight;
             BoxedAspectRatio = Mathf.Clamp(WindowAspectRatio, minRatio, maxRatio);
             BoxedCanvasSize = new Vector2(1080f * BoxedAspectRatio, 1080f);
