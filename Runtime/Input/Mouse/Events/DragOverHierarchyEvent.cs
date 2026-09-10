@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unity.Scripting.LifecycleManagement;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -9,8 +8,12 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public partial class DragOverHierarchyEvent : ControlEvent {
 
-        [AutoStaticsCleanup]
         private static DragOverHierarchy hierarchy = new DragOverHierarchy();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad() {
+            hierarchy.Clear();
+        }
 
         public MouseTarget RaycastTarget;
         public InterfaceNode RaycastNode;

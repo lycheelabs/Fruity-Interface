@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Unity.Scripting.LifecycleManagement;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -9,8 +8,12 @@ namespace LycheeLabs.FruityInterface {
     /// </summary>
     public partial class HoverHierarchyEvent : ControlEvent {
 
-        [AutoStaticsCleanup]
         private static HoverHierarchy hierarchy = new HoverHierarchy();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad() {
+            hierarchy.Clear();
+        }
 
         public MouseTarget Target;
         public HoverParams Params;

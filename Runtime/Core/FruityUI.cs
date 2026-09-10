@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Unity.Scripting.LifecycleManagement;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -17,11 +16,8 @@ namespace LycheeLabs.FruityInterface {
         public const float DefaultMinAspect = 9f / 21f;
         public const float DefaultMaxAspect = 21f / 9f;
 
-        [AutoStaticsCleanup]
         private static ScreenBounds _screenBounds = CreateDefaultScreenBounds();
-        [AutoStaticsCleanup]
         private static float _minAspect = DefaultMinAspect;
-        [AutoStaticsCleanup]
         private static float _maxAspect = DefaultMaxAspect;
 
         private static ScreenBounds CreateDefaultScreenBounds() {
@@ -46,18 +42,15 @@ namespace LycheeLabs.FruityInterface {
         // ----------------------- Projection -----------------------
 
         /// <summary>The camera used for UI raycasting and coordinate conversion.</summary>
-        [AutoStaticsCleanup]
         private static Camera uiCamera;
         public static Camera UICamera => uiCamera;
         
         /// <summary>The plane used for 3D world position calculations.</summary>
-        [AutoStaticsCleanup]
         private static Plane worldPlane;
         public static Plane WorldPlane => worldPlane;
 
         // ----------------------- Mouse Position -----------------------
 
-        [AutoStaticsCleanup]
         private static Vector2 _rawMouseScreenPosition;
 
         internal static Vector2 RawMouseScreenPosition => _rawMouseScreenPosition;
@@ -97,7 +90,6 @@ namespace LycheeLabs.FruityInterface {
         /// The target currently being highlighted (receiving MouseHovering calls).
         /// During a drag, this is the dragged target, not what's under the mouse.
         /// </summary>
-        [AutoStaticsCleanup]
         private static MouseTarget highlightedTarget;
         public static MouseTarget HighlightedTarget {
             get => highlightedTarget;
@@ -107,7 +99,6 @@ namespace LycheeLabs.FruityInterface {
         /// <summary>
         /// The target that was last clicked (received MouseClick).
         /// </summary>
-        [AutoStaticsCleanup]
         private static ClickTarget selectedTarget;
         public static ClickTarget SelectedTarget {
             get => selectedTarget;
@@ -118,7 +109,6 @@ namespace LycheeLabs.FruityInterface {
         /// The target currently being dragged (receiving MouseDragging calls).
         /// Null when no drag is active.
         /// </summary>
-        [AutoStaticsCleanup]
         private static DragTarget draggedTarget;
         public static DragTarget DraggedTarget {
             get => draggedTarget;
@@ -129,7 +119,6 @@ namespace LycheeLabs.FruityInterface {
         /// The target currently under the mouse cursor (raw raycast result).
         /// During a drag, this is what the dragged item is being dragged over.
         /// </summary>
-        [AutoStaticsCleanup]
         private static DraggedOverTarget draggedOverTarget;
         public static DraggedOverTarget DraggedOverTarget {
             get => draggedOverTarget;
@@ -138,9 +127,7 @@ namespace LycheeLabs.FruityInterface {
 
         // ----------------------- Layer Lock State -----------------------
 
-        [AutoStaticsCleanup]
         private static readonly Dictionary<int, int> _layerLockCounts = new Dictionary<int, int>();
-        [AutoStaticsCleanup]
         private static int _activeLayerThreshold;
 
         /// <summary>The highest locked layer, or 0 if no layers are locked.
@@ -152,7 +139,6 @@ namespace LycheeLabs.FruityInterface {
 
         /// <summary>When true, all mouse input is disabled.
         /// (However - for safety, when InterfaceIsLocked the locked layer is never disabled)</summary>
-        [AutoStaticsCleanup]
         private static bool disableInput;
         public static bool DisableInput {
             get => disableInput;
@@ -195,6 +181,23 @@ namespace LycheeLabs.FruityInterface {
         }
         
         // ----------------------- Methods -----------------------
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad() {
+            _screenBounds = CreateDefaultScreenBounds();
+            _minAspect = DefaultMinAspect;
+            _maxAspect = DefaultMaxAspect;
+            uiCamera = null;
+            worldPlane = default;
+            _rawMouseScreenPosition = default;
+            highlightedTarget = null;
+            selectedTarget = null;
+            draggedTarget = null;
+            draggedOverTarget = null;
+            _layerLockCounts.Clear();
+            _activeLayerThreshold = 0;
+            disableInput = false;
+        }
 
         public static void SetUICamera(Camera camera) {
             uiCamera = camera;

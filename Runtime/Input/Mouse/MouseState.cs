@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.Scripting.LifecycleManagement;
 
 namespace LycheeLabs.FruityInterface {
 
@@ -21,19 +20,23 @@ namespace LycheeLabs.FruityInterface {
 
         // ---------------------------------------------------
         
-        [AutoStaticsCleanup]
         private static bool mouseIsMoving;
         public static bool MouseIsMoving => mouseIsMoving;
-        [AutoStaticsCleanup]
         private static bool disableMouse;
         public static bool DisableMouse {
             get => disableMouse;
             set => disableMouse = value;
         }
         public bool LogRaycasts { get; set; }
-        [field: AutoStaticsCleanup]
         public static event TargetDelegate OnNewPress;
         public delegate void TargetDelegate(ClickTarget newTarget);
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad() {
+            mouseIsMoving = false;
+            disableMouse = false;
+            OnNewPress = null;
+        }
     
         private readonly MouseRaycaster raycaster;
         private readonly Queue<PressEvent> pressEventQueue;

@@ -1,13 +1,16 @@
 using System;
 using UnityEngine;
-using Unity.Scripting.LifecycleManagement;
 
 namespace LycheeLabs.FruityInterface {
 
     internal sealed partial class FruityInputRuntime {
 
-        [AutoStaticsCleanup]
         private static FruityInputRuntime active = null;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad() {
+            active = null;
+        }
 
         public static void SubmitRawInput(RawInputEvent inputEvent) {
             if (active != null) {
