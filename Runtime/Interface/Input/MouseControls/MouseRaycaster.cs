@@ -25,7 +25,7 @@ public class MouseRaycaster  {
         // SyncTransforms ensures 2D colliders reflect their current transform positions,
         // since Physics2D only syncs automatically during FixedUpdate.
         Physics2D.SyncTransforms();
-        Ray ray = InterfaceHelpers.ScreenPointToRay(FruityUI.UICamera, Input.mousePosition);
+        Ray ray = InterfaceHelpers.ScreenPointToRay(FruityUI.UICamera, FruityUI.RawMouseScreenPosition);
         int hitCount = Physics.RaycastNonAlloc(ray, RaycastBuffer, MAX_DISTANCE);
         int hitCount2D = Physics2D.GetRayIntersectionNonAlloc(ray, RaycastBuffer2D, MAX_DISTANCE, everything);
 

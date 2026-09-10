@@ -29,18 +29,28 @@ namespace LycheeLabs.FruityInterface {
         private readonly Queue<PressEvent> pressEventQueue;
 
         private MouseButton activeButton;
-        private bool buttonDownThisFrame;
+        private bool buttonDownThisEvent;
+        private MouseButton buttonDownEventButton;
+        private bool leftButtonHeld;
+        private bool rightButtonHeld;
+        private bool middleButtonHeld;
         private MousePress activePress;
         private float lastPressTime;
         private MouseTarget lastRaycastTarget;
         private InterfaceNode lastRaycastNode;
         private Vector3 lastRaycastWorldPos;
-        private Vector3 oldMousePosition;
+        private Vector2 oldMousePosition;
+        private readonly Queue<RawInputEvent> inputEvents;
 
         public MouseState() {
             raycaster = new MouseRaycaster();
             pressEventQueue = new Queue<PressEvent>();
+            inputEvents = new Queue<RawInputEvent>();
             activeButton = MouseButton.None;
+        }
+
+        internal void QueueInputEvent(RawInputEvent inputEvent) {
+            inputEvents.Enqueue(inputEvent);
         }
 
         /// <summary>
@@ -91,57 +101,78 @@ namespace LycheeLabs.FruityInterface {
 #if UNITY_EDITOR
             ValidateState();
 #endif
-            // Update input state and detect new mouse presses
-            UpdateInput();
-            
-            // Process any queued synthetic or real mouse presses
+            while (inputEvents.Count > 0) {
+                ProcessInputEvent(inputEvents.Dequeue());
+            }
+
+            // Keep hover state alive on frames without input transitions.
+            buttonDownThisEvent = false;
+            UpdateRaycasting();
             ProcessQueuedPress();
-            
-            // Update the ongoing mouse press (if any)
             UpdateActivePress();
         }
 
-        /// <summary>
-        /// Update input state: active button, raycasting, hovering, and detect new real mouse presses.
-        /// </summary>
-        private void UpdateInput() {
-            UpdateActiveButton();
+        private void ProcessInputEvent(RawInputEvent inputEvent) {
+            FruityUI.SetRawMouseScreenPosition(inputEvent.ScreenPosition);
+            buttonDownThisEvent = false;
+
+            switch (inputEvent.Type) {
+                case RawInputEventType.Move:
+                    break;
+                case RawInputEventType.ButtonDown:
+                    activeButton = inputEvent.Button;
+                    buttonDownThisEvent = true;
+                    buttonDownEventButton = inputEvent.Button;
+                    SetButtonHeld(inputEvent.Button, true);
+                    break;
+                case RawInputEventType.ButtonUp:
+                    SetButtonHeld(inputEvent.Button, false);
+                    if (!AnyMouseButtonHeld()) {
+                        activeButton = MouseButton.None;
+                    }
+                    break;
+                case RawInputEventType.Cancel:
+                    CancelActiveInput();
+                    break;
+                case RawInputEventType.Scroll:
+                    break;
+            }
+
             UpdateRaycasting();
-            
-            // Only check for new input when idle
-            if (pressEventQueue.Count == 0 && buttonDownThisFrame && !activePress.isPressed) {
+            if (buttonDownThisEvent) {
                 CheckForNewPress();
             }
+            ProcessQueuedPress();
+            UpdateActivePress();
         }
 
-        /// <summary>
-        /// Update which mouse button is currently active.
-        /// </summary>
-        private void UpdateActiveButton() {
-            buttonDownThisFrame = false;
-            
-            if (Input.GetMouseButtonDown((int)MouseButton.Left)) {
-                activeButton = MouseButton.Left;
-                buttonDownThisFrame = true;
-                return;
-            } 
-            if (Input.GetMouseButtonDown((int)MouseButton.Right)) {
-                activeButton = MouseButton.Right;
-                buttonDownThisFrame = true;
-                return;
-            } 
-
-            if (!AnyMouseButtonHeld()) {
-                activeButton = MouseButton.None;
+        private void CancelActiveInput() {
+            if (activePress.pressIsDrag) {
+                QueueDragCancelEvent();
+                ClearDragOverState();
             }
+            activePress.Clear();
+            activeButton = MouseButton.None;
+            buttonDownThisEvent = false;
+            buttonDownEventButton = MouseButton.None;
         }
 
-        /// <summary>
-        /// Check if any mouse button is currently held down.
-        /// </summary>
         private bool AnyMouseButtonHeld() {
-            return Input.GetMouseButton((int)MouseButton.Left) || 
-                   Input.GetMouseButton((int)MouseButton.Right);
+            return IsButtonHeld(MouseButton.Left) ||
+                   IsButtonHeld(MouseButton.Right) ||
+                   IsButtonHeld(MouseButton.Middle);
+        }
+
+        private bool IsButtonHeld(MouseButton button) {
+            return button == MouseButton.Left ? leftButtonHeld :
+                button == MouseButton.Right ? rightButtonHeld :
+                button == MouseButton.Middle && middleButtonHeld;
+        }
+
+        private void SetButtonHeld(MouseButton button, bool held) {
+            if (button == MouseButton.Left) leftButtonHeld = held;
+            if (button == MouseButton.Right) rightButtonHeld = held;
+            if (button == MouseButton.Middle) middleButtonHeld = held;
         }
 
         /// <summary>
@@ -189,7 +220,7 @@ namespace LycheeLabs.FruityInterface {
         /// Check for a new mouse button press and queue it for processing.
         /// </summary>
         private void CheckForNewPress() {
-            // activeButton is already set by UpdateActiveButton() when GetMouseButtonDown fires
+            // activeButton is set by the most recent raw button-down event.
             if (activeButton == MouseButton.None) return;
 
             // Time-based debounce: prevent rapid re-clicks from faulty hardware
@@ -265,7 +296,7 @@ namespace LycheeLabs.FruityInterface {
         /// Returns true if the drag was started successfully.
         /// </summary>
         private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, MouseDragMode dragMode) {
-            var screenPosition = (Vector2)Input.mousePosition;
+            var screenPosition = FruityUI.RawMouseScreenPosition;
             activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition);
 
             // Start with null DragOverTarget - will be updated on first drag update
@@ -306,7 +337,7 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         private void GetRaycastTarget() {
             // Track mouse movement
-            var newMousePosition = Input.mousePosition;
+            var newMousePosition = FruityUI.RawMouseScreenPosition;
             MouseIsMoving = (newMousePosition != oldMousePosition);
             oldMousePosition = newMousePosition;
 
@@ -369,7 +400,7 @@ namespace LycheeLabs.FruityInterface {
                 FruityUI.DraggedTarget,
                 FruityUI.DraggedOverTarget,
                 activePress.pressScreenPosition,
-                (Vector2)Input.mousePosition,
+                FruityUI.RawMouseScreenPosition,
                 activePress.button
             );
         }
@@ -383,7 +414,7 @@ namespace LycheeLabs.FruityInterface {
             
             // Pickup mode: complete on second click of same button
             if (activePress.pressIsDrag && activePress.isPickUpDrag) {
-                if (Input.GetMouseButtonDown((int)activePress.button) && activePress.pressStartFrame != Time.frameCount) {
+                if (buttonDownThisEvent && buttonDownEventButton == activePress.button && activePress.pressStartFrame != Time.frameCount) {
                     // Build params after hierarchy has processed to get current DraggedOverTarget
                     var dragParams = BuildCurrentDragParams();
 
@@ -408,12 +439,12 @@ namespace LycheeLabs.FruityInterface {
             }
 
             // Normal mode: handle mouse button release
-            var buttonWasReleased = !activePress.isPickUpDrag && !Input.GetMouseButton((int)activePress.button);
+            var buttonWasReleased = !activePress.isPickUpDrag && !IsButtonHeld(activePress.button);
             if (buttonWasReleased) {
                 // Complete or convert drag
                 if (activePress.pressIsDrag) {
                     // For DragOrPickUp: short click converts to pickup mode
-                    var screenPosition = (Vector2)Input.mousePosition;
+                    var screenPosition = FruityUI.RawMouseScreenPosition;
                     if (activePress.dragMode == MouseDragMode.DragOrPickUp && !activePress.WasRealDrag(screenPosition)) {
                         activePress.ConvertToPickUp();
                         return;
@@ -456,7 +487,7 @@ namespace LycheeLabs.FruityInterface {
 
                 // Check for cancel via opposite button
                 var cancelButton = (activePress.button == MouseButton.Left) ? MouseButton.Right : MouseButton.Left;
-                if (Input.GetMouseButtonDown((int)cancelButton)) {
+                if (buttonDownThisEvent && buttonDownEventButton == cancelButton) {
                     QueueDragCancelEvent();
                     ClearDragOverState();
                     CancelDragPress();

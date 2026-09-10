@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -44,11 +45,25 @@ namespace LycheeLabs.FruityInterface {
 
         private MouseState mouseState;
         private ControlEventQueue events;
+        private RawInputEventQueue inputEvents;
+
+        internal void QueueInputEvent(RawInputEvent inputEvent) {
+            inputEvents.Enqueue(inputEvent);
+        }
+
+        internal void DrainInputEvents(Action<RawInputEvent> handler) {
+            inputEvents.Drain(handler);
+        }
+
+        internal void ClearInputEvents() {
+            inputEvents.Clear();
+        }
         
         private void Awake () { 
             Instance = this;
             mouseState = new MouseState();
             events = new ControlEventQueue();
+            inputEvents = new RawInputEventQueue();
             
             FruityUI.SetAspect(MinAspectRatio, MaxAspectRatio);
 
@@ -59,6 +74,7 @@ namespace LycheeLabs.FruityInterface {
 
         void Update () {
             FruityUI.Update();
+            inputEvents.Drain(mouseState.QueueInputEvent);
             mouseState.Update();
             events.Update(LogEvents);
         }

@@ -35,12 +35,20 @@ namespace LycheeLabs.FruityInterface {
         public static Plane WorldPlane { get; private set; }
 
         // ----------------------- Mouse Position -----------------------
+
+        private static Vector2 _rawMouseScreenPosition;
+
+        internal static Vector2 RawMouseScreenPosition => _rawMouseScreenPosition;
+
+        internal static void SetRawMouseScreenPosition(Vector2 screenPosition) {
+            _rawMouseScreenPosition = screenPosition;
+        }
         
         /// <summary>Current mouse position in UI coordinates (accounting for letterboxing).</summary>
-        public static Vector2 MouseScreenPosition => ((Vector2)Input.mousePosition * ScreenBounds.UIScaling) - ScreenBounds.LetterboxOffset;
+        public static Vector2 MouseScreenPosition => (_rawMouseScreenPosition * ScreenBounds.UIScaling) - ScreenBounds.LetterboxOffset;
         
         /// <summary>Current mouse position projected onto the world plane.</summary>
-        public static Vector3 MouseWorldPosition => InterfaceHelpers.ScreenPointToWorldPoint(UICamera, Input.mousePosition, WorldPlane);
+        public static Vector3 MouseWorldPosition => InterfaceHelpers.ScreenPointToWorldPoint(UICamera, _rawMouseScreenPosition, WorldPlane);
         
         /// <summary>Convert a screen position to world position on the world plane.</summary>
         public static Vector3 ScreenPointToWorldPoint(Vector2 screenPosition) => 
@@ -56,10 +64,10 @@ namespace LycheeLabs.FruityInterface {
         
         /// <summary>True if the mouse cursor is within the screen bounds.</summary>
         public static bool MouseIsOnscreen =>
-            Input.mousePosition.x >= 0 && 
-            Input.mousePosition.y >= 0 && 
-            Input.mousePosition.x < Screen.width && 
-            Input.mousePosition.y < Screen.height;
+            _rawMouseScreenPosition.x >= 0 &&
+            _rawMouseScreenPosition.y >= 0 &&
+            _rawMouseScreenPosition.x < Screen.width &&
+            _rawMouseScreenPosition.y < Screen.height;
 
         // ----------------------- Mouse Targets -----------------------
 

@@ -25,7 +25,7 @@ namespace LycheeLabs.FruityInterface {
                 FruityUI.DraggedTarget,
                 FruityUI.DraggedOverTarget,
                 Vector2.zero,  // Not used by DragOver callbacks
-                (Vector2)Input.mousePosition,
+                FruityUI.RawMouseScreenPosition,
                 DragButton
             );
             
