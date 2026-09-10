@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
 
-    internal sealed partial class FruityInputRuntime {
+    internal sealed class FruityInputRuntime {
 
         private static FruityInputRuntime active = null;
 
