@@ -30,10 +30,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             set { offset = value; rectTransform.anchoredPosition = basePosition + offset; }
         }
 
-        public Anchor Anchor {
-            set { rectTransform.SetAnchor(value); }
-        }
-
         private ButtonEffect _effect;
         public ButtonEffect TryGetEffect {
             get {

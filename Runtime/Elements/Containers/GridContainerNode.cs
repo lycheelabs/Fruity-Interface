@@ -95,7 +95,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         private void PositionNode(LayoutNode node, float slotIndex, Vector2 gridOffset)  {
             var cell = IndexToCell(slotIndex);
             Vector2 position = CellToPosition(cell, gridOffset);
-            node.rectTransform.SetAnchorAndPosition(position);
+            node.rectTransform.anchoredPosition = position;
         }
 
         private Vector2 IndexToCell(float placedIndex) {

@@ -37,7 +37,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 var newHeight = node.TotalHeightPixels;
                 var shift = y - containedHeight / 2f + newHeight / 2f;
                 var newPosition = new Vector3(0, -shift);
-                node.rectTransform.SetAnchorAndPosition(newPosition);
+                node.rectTransform.localPosition = newPosition;
                 y += newHeight;
             }
 
@@ -69,7 +69,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 var newWidth = node.TotalWidthPixels;
                 var shift = x - containedWidth / 2f + newWidth / 2f;
                 var newPosition = new Vector3(shift, 0);
-                node.rectTransform.SetAnchorAndPosition(newPosition);
+                node.rectTransform.localPosition = newPosition;
                 x += newWidth;
             }
 
