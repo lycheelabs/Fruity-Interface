@@ -60,7 +60,6 @@ MonoBehaviour:
   ButtonAnimator: {fileID: 176158420684989700}
   ButtonImage: {fileID: 7717136076479044669}
   BoxCollider: {fileID: 859855964750334821}
-  sprite: {fileID: 0}
   size: {x: 50, y: 50}
   colliderPadding: 10
   iconScaling: 1
@@ -84,7 +83,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 60, y: 60, z: 0}
+  m_Size: {x: 60, y: 60, z: 1}
   m_Center: {x: 0, y: 0, z: -1}
 --- !u!1 &7717136076479044659
 GameObject:
@@ -155,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

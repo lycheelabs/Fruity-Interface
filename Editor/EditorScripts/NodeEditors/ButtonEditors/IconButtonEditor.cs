@@ -11,7 +11,7 @@ namespace LycheeLabs.FruityInterface.Editors {
         public override void OnInspectorGUI () {
             var isDriven = FruityEditorDrawer.LayoutIsDriven(serializedObject);
 
-            FruityEditorDrawer.DrawConfigProperties(serializedObject, DrivenConfig, FreeConfig);
+            FruityEditorDrawer.DrawConfigProperties(serializedObject, DrivenConfig, null);
             FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             FruityEditorDrawer.DrawPrefabProperties(serializedObject, ref PrefabFoldout, PrefabConfig);
         }
@@ -21,10 +21,6 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.PropertyField(so.FindProperty("colliderPadding"));
             EditorGUILayout.PropertyField(so.FindProperty("iconScaling"));
             EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));
-        }
-
-        private static void FreeConfig (SerializedObject so) {
-            EditorGUILayout.PropertyField(so.FindProperty("sprite"));
         }
 
         private static void PrefabConfig (SerializedObject so) {
