@@ -15,9 +15,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private Vector2 size = new Vector2(50, 50);
         [SerializeField] private float colliderPadding = 10;
         [SerializeField] private float iconScaling = 1;
-        [SerializeField] private bool inputDisabled;
-
-        public override bool InputIsDisabled => inputDisabled;
 
         private new void OnValidate () {
             RefreshLayoutDeferred();
@@ -65,10 +62,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             ButtonImage.rectTransform.sizeDelta = size * iconScaling;
             LayoutSizePixels = size;
             BoxCollider.size = (Vector3)(size * iconScaling) + new Vector3(colliderPadding, colliderPadding, 1);
-        }
-
-        public void SetInputDisabled (bool disabled) {
-            inputDisabled = disabled;
         }
 
     }

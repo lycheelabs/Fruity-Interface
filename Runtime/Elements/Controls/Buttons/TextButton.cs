@@ -20,7 +20,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         [SerializeField] private float maxWidth = 200;
         [SerializeField] private bool cropWidth = false;
         [SerializeField] private Sprite iconSprite = null;
-        [SerializeField] private bool inputDisabled;
 
         [Range(0f, 2f)] [SerializeField] private float fontHeightScaling = 1f;
 
@@ -70,12 +69,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected override void AnimateClick () {
             ButtonAnimator.Squash(0.5f * AnimationScaling);
         }
-
-        public void SetInputDisabled (bool disabled) {
-            inputDisabled = disabled;
-        }
-
-        public override bool InputIsDisabled => inputDisabled;
 
         // ---------------------------------------------
 

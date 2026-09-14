@@ -21,13 +21,6 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
         }
 
-        public override bool InputIsDisabled => inputDisabled;
-        private bool inputDisabled;
-
-        public void SetInputDisabled (bool disabled) {
-            inputDisabled = disabled;
-        }
-
         public virtual void UpdateMouseHover (bool firstFrame, HoverParams highlightParams) { }
         public virtual void EndMouseHover () { }
         public virtual void ApplyMouseClick (ClickParams clickParams) { }

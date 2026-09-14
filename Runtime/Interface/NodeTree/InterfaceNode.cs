@@ -11,6 +11,7 @@ namespace LycheeLabs.FruityInterface {
 
         private InterfaceNode automaticInputParent;
         [SerializeField] private InterfaceNode inputParentOverride;
+        [SerializeField] private bool inputDisabled;
         [Obsolete, SerializeField, HideInInspector] private bool ignoreInterfaceLock;
         private int _cachedLayer;
         private int _cachedLayerFrame;
@@ -36,7 +37,13 @@ namespace LycheeLabs.FruityInterface {
             }
         }
 
-        public virtual bool InputIsDisabled { get; }
+        public bool InputIsDisabled => inputDisabled || ForceInputDisabled;
+
+        protected virtual bool ForceInputDisabled => false;
+
+        public void SetInputDisabled (bool disabled) {
+            inputDisabled = disabled;
+        }
 
         /// <summary>The layer index for this node, resolved from the first InterfaceLayer found walking up the hierarchy.</summary>
         public int LayerIndex {
