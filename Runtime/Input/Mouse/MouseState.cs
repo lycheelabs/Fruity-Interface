@@ -14,6 +14,7 @@ namespace LycheeLabs.FruityInterface {
         /// <summary> Mouse button press event to be processed. </summary>
         private struct PressEvent {
             public MouseTarget target;
+            public InterfaceNode sourceNode;
             public MouseButton button;
             public Vector3 worldPosition;
         }
@@ -252,6 +253,7 @@ namespace LycheeLabs.FruityInterface {
             if (lastRaycastTarget != null) {
                 pressEventQueue.Enqueue(new PressEvent {
                     target = lastRaycastTarget,
+                    sourceNode = lastRaycastNode,
                     button = activeButton,
                     worldPosition = FruityUI.MouseWorldPosition
                 });
@@ -320,7 +322,7 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, MouseDragMode dragMode) {
             var screenPosition = FruityUI.RawMouseScreenPosition;
-            activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition);
+            activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition, pressEvent.sourceNode);
 
             // Start with null DragOverTarget - will be updated on first drag update
             var dragParams = new DragParams(dragTarget, null, screenPosition, screenPosition, pressEvent.button);
@@ -434,6 +436,13 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         private void UpdateMousePress(MouseTarget pressTarget) {
             var clickTarget = pressTarget as ClickTarget;
+
+            if (activePress.pressIsDrag && FruityUI.DraggedTarget != null &&
+                activePress.hasDragSourceNode &&
+                (activePress.dragSourceNode == null || !activePress.dragSourceNode.InputEnabledInHierarchy)) {
+                CancelDrag(FruityUI.DraggedTarget);
+                return;
+            }
             
             // Pickup mode: complete on second click of same button
             if (activePress.pressIsDrag && activePress.isPickUpDrag) {

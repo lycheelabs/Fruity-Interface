@@ -32,6 +32,8 @@ namespace LycheeLabs.FruityInterface  {
         
         // Target and button
         public MouseTarget target;
+        public InterfaceNode dragSourceNode;
+        public bool hasDragSourceNode;
         public MouseButton button;
 
         // Position tracking
@@ -55,10 +57,12 @@ namespace LycheeLabs.FruityInterface  {
             button = pressedButton;
         }
 
-        public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, MouseDragMode mode, Vector3 worldPosition, Vector2 screenPosition) {
+        public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, MouseDragMode mode, Vector3 worldPosition, Vector2 screenPosition, InterfaceNode sourceNode) {
             isPressed = true;
             target = pressedTarget;
             pressIsDrag = true;
+            dragSourceNode = sourceNode;
+            hasDragSourceNode = sourceNode != null;
             button = pressedButton;
             dragMode = mode;
             // Only PickUpOnly starts as latched pickup
@@ -95,6 +99,8 @@ namespace LycheeLabs.FruityInterface  {
         public void Clear() {
             isPressed = false;
             target = null;
+            dragSourceNode = null;
+            hasDragSourceNode = false;
             pressIsClick = false;
             pressIsDrag = false;
             button = MouseButton.None;
