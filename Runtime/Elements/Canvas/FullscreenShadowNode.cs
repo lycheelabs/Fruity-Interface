@@ -17,26 +17,39 @@ namespace LycheeLabs.FruityInterface.Elements {
 
 		private Image shadow;
 		private bool active;
-		private float tween = 0;
+		private float tween;
+
+		public bool IsActive => tween > 0;
 
         private void Awake () {
 			shadow = GetComponent<Image>();
 		}
 
+		public void Show() {
+			active = true;
+		}
+
+		public void Hide(bool immediate = false) {
+			active = false;
+			if (immediate) {
+				tween = 0;
+				ApplyVisualState();
+			}
+		}
+
 		public void SetShadowActive(bool active) {
-			this.active = active;
+			if (active) Show();
+			else Hide();
 		}
 
 		private void Update () {
-			if (active) {
-				tween = Mathf.Min(tween + Time.deltaTime * 8, TargetAlpha);
-			} else {
-				tween = Mathf.Max(tween - Time.deltaTime * 8, 0);
-			}
-			tween = tween.MoveTowards(active, 8);
+			tween = tween.MoveTowardsUnscaled(active, 8);
+			ApplyVisualState();
+		}
 
+		private void ApplyVisualState() {
 			shadow.color = new Color(0, 0, 0, tween * TargetAlpha);
-            shadow.enabled = (tween > 0);
+			shadow.enabled = tween > 0;
 		}
 
 	}
