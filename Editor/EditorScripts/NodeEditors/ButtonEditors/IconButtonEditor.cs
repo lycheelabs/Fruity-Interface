@@ -17,7 +17,7 @@ namespace LycheeLabs.FruityInterface.Editors {
         }
 
         private static void DrivenConfig (SerializedObject so) {
-            EditorGUILayout.PropertyField(so.FindProperty("size"));
+            FruityEditorDrawer.DrawSizeProperties(so.FindProperty("size"));
             EditorGUILayout.PropertyField(so.FindProperty("colliderPadding"));
             EditorGUILayout.PropertyField(so.FindProperty("iconScaling"));
             EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));

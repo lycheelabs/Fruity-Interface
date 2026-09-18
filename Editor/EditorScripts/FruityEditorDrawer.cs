@@ -49,7 +49,7 @@ public static class FruityEditorDrawer {
     }
 
     public static void DrawLayoutProperties (SerializedObject so, bool restrictSize = false, bool restrictPadding = false,
-            bool sizeIsDriven = false) {
+            bool sizeIsDriven = false, string drivenSizeSource = "contents") {
         if (restrictSize && restrictPadding) return;
         
         so.Update();
@@ -57,21 +57,29 @@ public static class FruityEditorDrawer {
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
         
         if (!restrictSize) {
-            DrawDrivenProperty(so.FindProperty("LayoutSizePixels"), sizeIsDriven,
-                "(Size is driven from contents)");
+            DrawSizeProperties(so.FindProperty("LayoutSizePixels"), sizeIsDriven, drivenSizeSource);
         }
 
         if (!restrictPadding) {
-            EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"));
+            EditorGUILayout.PropertyField(so.FindProperty("LayoutPaddingPixels"), new GUIContent("Padding"));
         }
 
         EditorGUILayout.EndVertical();
         so.ApplyModifiedProperties();
     }
 
-    public static void DrawDrivenProperty (SerializedProperty property, bool isDriven, string warning) {
+    public static void DrawSizeProperties (SerializedProperty property, bool isDriven = false,
+            string drivenSource = "contents", string widthLabel = "Width", string heightLabel = "Height") {
+        DrawDrivenProperty(property.FindPropertyRelative("x"), isDriven,
+            $"({widthLabel} is driven from {drivenSource})", widthLabel);
+        DrawDrivenProperty(property.FindPropertyRelative("y"), isDriven,
+            $"({heightLabel} is driven from {drivenSource})", heightLabel);
+    }
+
+    public static void DrawDrivenProperty (SerializedProperty property, bool isDriven, string warning,
+            string label = null) {
         EditorGUI.BeginDisabledGroup(isDriven);
-        EditorGUILayout.PropertyField(property);
+        EditorGUILayout.PropertyField(property, label == null ? GUIContent.none : new GUIContent(label));
         EditorGUI.EndDisabledGroup();
 
         if (isDriven) {

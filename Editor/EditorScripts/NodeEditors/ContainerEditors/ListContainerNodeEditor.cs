@@ -10,7 +10,8 @@ namespace LycheeLabs.FruityInterface.Editors {
 
         public override void OnInspectorGUI () {
             DrawConfigProperties(serializedObject);
-            FruityEditorDrawer.DrawLayoutProperties(serializedObject, sizeIsDriven: true);
+            FruityEditorDrawer.DrawLayoutProperties(serializedObject, sizeIsDriven: true,
+                drivenSizeSource: "contents");
             FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
         }
 
@@ -20,7 +21,8 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
             EditorGUILayout.PropertyField(so.FindProperty("Orientation"));
-            EditorGUILayout.PropertyField(so.FindProperty("minimumSize"));
+            FruityEditorDrawer.DrawSizeProperties(so.FindProperty("minimumSize"),
+                widthLabel: "Minimum Width", heightLabel: "Minimum Height");
 
             EditorGUILayout.EndVertical();
             so.ApplyModifiedProperties();

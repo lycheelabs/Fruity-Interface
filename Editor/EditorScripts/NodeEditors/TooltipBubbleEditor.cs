@@ -12,7 +12,8 @@ namespace LycheeLabs.FruityInterface.Editors {
             var contentsNode = serializedObject.FindProperty("contentsNode").objectReferenceValue;
 
             FruityEditorDrawer.DrawAdditionalProperties(serializedObject, "Config", ConfigProps);
-            FruityEditorDrawer.DrawLayoutProperties(serializedObject, sizeIsDriven: contentsNode != null);
+            FruityEditorDrawer.DrawLayoutProperties(serializedObject, sizeIsDriven: contentsNode != null,
+                drivenSizeSource: "contents");
             FruityEditorDrawer.DrawNodeTreeProperties(serializedObject);
             FruityEditorDrawer.DrawPrefabProperties(serializedObject, ref PrefabFoldout, PrefabProps);
         }
