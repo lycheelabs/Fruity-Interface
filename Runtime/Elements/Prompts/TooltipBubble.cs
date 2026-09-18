@@ -37,6 +37,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         private Direction offsetDirection;
         private bool hasPosition;
 
+        public bool IsShowing => active;
+
         private void Awake () {
             root.transform.localScale = Vector3.zero;
         }
