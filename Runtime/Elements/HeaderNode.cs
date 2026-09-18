@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 namespace LycheeLabs.FruityInterface {
@@ -5,37 +6,19 @@ namespace LycheeLabs.FruityInterface {
     [ExecuteAlways]
     public class HeaderNode : LayoutNode {
 
-        [SerializeField, Min(0)] private float size = 106f;
-        [SerializeField] private RectTransform content;
+        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] private float textScale = 0.5f;
 
-        public float Size {
-            get => size;
-            set {
-                size = Mathf.Max(value, 0);
-                RefreshLayoutDeferred();
-            }
+        new private void OnValidate() {
+            RefreshLayoutDeferred();
         }
 
         protected override void RefreshLayout() {
-            rectTransform.anchorMin = new Vector2(0, 0.5f);
-            rectTransform.anchorMax = new Vector2(1, 0.5f);
-            rectTransform.sizeDelta = new Vector2(0, size);
-            LayoutSizePixels = new Vector2(0, size);
-            LayoutPaddingPixels = default;
+            rectTransform.sizeDelta = LayoutSizePixels;
 
-            if (content == null) {
-                return;
-            }
-
-            content.anchorMin = Vector2.zero;
-            content.anchorMax = Vector2.one;
-            content.anchoredPosition = Vector2.zero;
-            content.sizeDelta = Vector2.zero;
-        }
-
-        new private void OnValidate() {
-            size = Mathf.Max(size, 0);
-            RefreshLayoutDeferred();
+            var height = LayoutSizePixels.y;
+            text.fontSizeMax = height * textScale;
+            text.fontSizeMin = height * textScale * 0.25f;
         }
 
     }
