@@ -58,9 +58,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62c5288ed5a85d4d84eaa8254bdd2d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputParent: {fileID: 0}
-  ignoresInterfaceLock: 0
-  LayoutSizePixels: {x: 500, y: 0}
+  inputParentOverride: {fileID: 0}
+  inputDisabled: 0
+  ignoreInterfaceLock: 0
+  LayoutSizePixels: {x: 500, y: 35.16}
   LayoutPaddingPixels: {x: 0, y: 0}
   Width: 500
   _text: {fileID: 6690005742307943181}
@@ -86,8 +87,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Text Box...
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 966ab7570045ac9478218fce9c654648, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 6bf883c4675cd314ea9eee5e1b484e14, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: c0553a0d261b10645816f24c6f1ab7e8, type: 2}
+  m_sharedMaterial: {fileID: 21770866985822968, guid: c0553a0d261b10645816f24c6f1ab7e8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -122,6 +123,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 5
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -133,7 +135,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
