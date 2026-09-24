@@ -14,6 +14,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 		private bool active;
 		private float tween;
 
+		public float Tween => tween;
 		public bool IsActive => tween > 0;
 
         private void Awake () {

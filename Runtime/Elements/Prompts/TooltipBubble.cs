@@ -34,8 +34,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         // Position
         private Vector3 screenPosition;
         private WorldAnchor basePosition;
+        private ScreenAnchor pinnedPosition;
         private Direction offsetDirection;
         private bool hasPosition;
+        private bool hasPinnedPosition;
 
         public bool IsShowing => active;
 
@@ -63,6 +65,15 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         public void Show(WorldAnchor position, Direction offsetDirection, float scale = 1f) {
+            BeginShow();
+
+            this.scale = scale;
+            RefreshSize();
+            SetArrowDirection(offsetDirection.Reverse());
+            SetPosition(position, offsetDirection, scale);
+        }
+
+        public void Show(ScreenAnchor position, Direction offsetDirection, float scale = 1f) {
             BeginShow();
 
             this.scale = scale;
@@ -111,6 +122,14 @@ namespace LycheeLabs.FruityInterface.Elements {
         private void SetPosition (WorldAnchor newAnchor, Direction newOffsetDirection, float newScale) {
             basePosition = newAnchor;
             hasPosition = true;
+            hasPinnedPosition = false;
+            SetPosition(newAnchor.ScreenVector(), newOffsetDirection, newScale);
+        }
+
+        private void SetPosition (ScreenAnchor newAnchor, Direction newOffsetDirection, float newScale) {
+            pinnedPosition = newAnchor;
+            hasPosition = true;
+            hasPinnedPosition = true;
             SetPosition(newAnchor.ScreenVector(), newOffsetDirection, newScale);
         }
 
@@ -142,7 +161,9 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         private void RefreshPosition () {
             if (hasPosition) {
-                screenPosition = basePosition.ScreenVector();
+                screenPosition = hasPinnedPosition
+                    ? pinnedPosition.ScreenVector()
+                    : basePosition.ScreenVector();
                 var offset = TotalSizePixels / 2f + new Vector2(arrowLength, arrowLength);
                 screenPosition.x += offset.x * offsetDirection.XIndex() * scale;
                 screenPosition.y += offset.y * offsetDirection.ZIndex() * scale;

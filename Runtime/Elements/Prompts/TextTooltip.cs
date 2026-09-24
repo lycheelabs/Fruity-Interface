@@ -17,6 +17,15 @@ namespace LycheeLabs.FruityInterface.Elements {
             Bubble.Show(position, offsetDirection, scale * 0.88f);
         }
 
+        public void Show(string text, ScreenAnchor position, Direction offsetDirection, float wrapWidth, float scale = 1f, float padding = 0f) {
+            Text.Width = wrapWidth;
+            Bubble.LayoutPaddingPixels = new Vector2(padding, padding);
+            Text.SetText(text, crop: true);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(Text.rectTransform);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(Bubble.rectTransform);
+            Bubble.Show(position, offsetDirection, scale * 0.88f);
+        }
+
         public void Show () {
             Bubble.Show();
         }
