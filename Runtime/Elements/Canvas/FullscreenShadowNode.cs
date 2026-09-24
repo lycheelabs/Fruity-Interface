@@ -7,11 +7,9 @@ namespace LycheeLabs.FruityInterface.Elements {
     [RequireComponent(typeof(Image))]
     public class FullscreenShadowNode : InterfaceNode {
 
-		public static FullscreenShadowNode Instantiate (Transform parent) {
-            var instance = FruityUIPrefabs.FullscreenShadow.Instantiate();
-			instance.transform.SetParent(parent, false);
-			return instance;
-		}
+        public static FullscreenShadowNode Instantiate () {
+            return FruityUIPrefabs.FullscreenShadow.Instantiate();
+        }
 
 		public float TargetAlpha = 0.85f;
 
@@ -43,12 +41,12 @@ namespace LycheeLabs.FruityInterface.Elements {
 		}
 
 		private void Update () {
-			tween = tween.MoveTowardsUnscaled(active, 8);
+			tween = tween.MoveTowardsUnscaled(active, 10);
 			ApplyVisualState();
 		}
 
 		private void ApplyVisualState() {
-			shadow.color = new Color(0, 0, 0, tween * TargetAlpha);
+			shadow.color = new Color(0, 0, 0, Tweens.EaseInOutQuad(tween) * TargetAlpha);
 			shadow.enabled = tween > 0;
 		}
 

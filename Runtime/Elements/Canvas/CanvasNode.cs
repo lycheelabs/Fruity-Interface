@@ -5,7 +5,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     [RequireComponent(typeof(Canvas))]
     public sealed class CanvasNode : InterfaceNode {
 
-        public static CanvasNode Spawn (string name, Camera camera, float planeDistance) {
+        public static CanvasNode Spawn (string name, Camera camera, float planeDistance = 1f) {
             var instance = FruityUIPrefabs.Canvas.Instantiate();
             instance.name = "Canvas-" + name;
             instance.SetCamera(camera, planeDistance);
@@ -20,9 +20,16 @@ namespace LycheeLabs.FruityInterface.Elements {
         protected override Transform AttachTarget => contents.transform;
 
         public CanvasNode SetCamera (Camera camera, float planeDistance) {
-            canvas.worldCamera = camera ?? Camera.main;
-            canvas.planeDistance = planeDistance + 5;
+            var targetCamera = camera ?? Camera.main;
+            canvas.worldCamera = targetCamera;
+            canvas.planeDistance = targetCamera.nearClipPlane + planeDistance;
             return this;
+        }
+
+        public CanvasNode Reconfigure (float nearPlaneDist, int interfaceLayer, string sortingLayer, int sortingOrder = 0) {
+            canvas.planeDistance = canvas.worldCamera.nearClipPlane + nearPlaneDist;
+            return SetInterfaceLayer(interfaceLayer)
+                .SetSorting(sortingLayer, sortingOrder);
         }
 
         public CanvasNode SetInterfaceLayer (int interfaceLayer) {

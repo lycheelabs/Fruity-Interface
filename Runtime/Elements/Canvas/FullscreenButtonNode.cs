@@ -13,7 +13,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 			var instance = FruityUIPrefabs.FullscreenButton.Instantiate();
 			instance.transform.SetParent(parent?.transform, false);
 			instance.InputParentOverride = parent;
-			instance.Callbacks = callbacks;
+			instance.SetCallbacks(callbacks);
 			return instance;
 		}
 
@@ -35,10 +35,18 @@ namespace LycheeLabs.FruityInterface.Elements {
 			Callbacks?.OnFullscreenClick(clickParams);
         }
 
+		public void SetCallbacks (FullscreenButtonCallbacks callbacks) {
+			Callbacks = callbacks;
+		}
+
         public void UpdateMouseHover (bool firstFrame, HoverParams highlightParams) {}
         public void EndMouseHover () {}
 
-        public void Disable () {
+        public void Enable () {
+			collider.enabled = true;
+		}
+
+		public void Disable () {
 			collider.enabled = false;
 		}
 
