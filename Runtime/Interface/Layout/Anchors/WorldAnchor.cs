@@ -26,9 +26,9 @@ namespace LycheeLabs.FruityInterface {
             offset = screenOffset;
         }
 
-        public ScreenAnchor PinScreen() => PinScreen(FruityUI.UICamera);
+        public ScreenAnchor PinToScreen() => PinToScreen(FruityUI.UICamera);
 
-        public ScreenAnchor PinScreen(Camera camera) {
+        public ScreenAnchor PinToScreen(Camera camera) {
             return new ScreenAnchor(camera.WorldToScreenPoint(position), offset);
         }
 

@@ -7,11 +7,8 @@ namespace LycheeLabs.FruityInterface.Elements {
     [RequireComponent(typeof(Image))]
     public class FullscreenShadowNode : InterfaceNode {
 
-        public static FullscreenShadowNode Instantiate () {
-            return FruityUIPrefabs.FullscreenShadow.Instantiate();
-        }
-
 		public float TargetAlpha = 0.85f;
+		public float TransitionSpeedScale = 1f;
 
 		private Image shadow;
 		private bool active;
@@ -41,7 +38,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 		}
 
 		private void Update () {
-			tween = tween.MoveTowardsUnscaled(active, 10);
+			tween = tween.MoveTowardsUnscaled(active, 10 * TransitionSpeedScale);
 			ApplyVisualState();
 		}
 

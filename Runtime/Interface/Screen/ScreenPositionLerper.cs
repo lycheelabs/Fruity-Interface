@@ -16,13 +16,13 @@ namespace LycheeLabs.FruityInterface {
                 throw new NullReferenceException();
             }
             this.transform = transform;
-            this.startAnchor = startPosition.PinScreen();
-            this.endAnchor = endPosition.PinScreen();
+            this.startAnchor = startPosition.PinToScreen();
+            this.endAnchor = endPosition.PinToScreen();
             this.zOffset = zOffset;
         }
 
         public void ChangeDestination(WorldAnchor endPosition, float zOffset = 0) {
-            this.endAnchor = endPosition.PinScreen();
+            this.endAnchor = endPosition.PinToScreen();
             this.zOffset = zOffset;
         }
 
