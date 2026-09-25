@@ -24,6 +24,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444918794039318579}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.SimpleTooltip
   inputParentOverride: {fileID: 0}
+  inputDisabled: 0
   ignoreInterfaceLock: 0
   Text: {fileID: 332920712348534510}
   Bubble: {fileID: 1994885856237080225}
@@ -295,6 +297,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6091359942420862792, guid: 032311e73e0c4d34d8f152995f1caa71, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6690005742307943181, guid: 032311e73e0c4d34d8f152995f1caa71, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 43d89b99139ef874881912e762c87042, type: 2}
+    - target: {fileID: 6690005742307943181, guid: 032311e73e0c4d34d8f152995f1caa71, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -2296131802547527662, guid: 43d89b99139ef874881912e762c87042, type: 2}
+    - target: {fileID: 6690005742307943181, guid: 032311e73e0c4d34d8f152995f1caa71, type: 3}
+      propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6690005742307943181, guid: 032311e73e0c4d34d8f152995f1caa71, type: 3}
