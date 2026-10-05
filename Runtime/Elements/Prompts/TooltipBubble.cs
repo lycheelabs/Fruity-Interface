@@ -47,8 +47,8 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         private void LateUpdate() {
-            activeTween = activeTween.MoveTowards(active, 8 * lerpSpeed);
-            overrideHiddenTween = overrideHiddenTween.MoveTowards(overrideHidden, 8 * lerpSpeed);
+            activeTween = activeTween.MoveTowardsUnscaled(active, 8 * lerpSpeed);
+            overrideHiddenTween = overrideHiddenTween.MoveTowardsUnscaled(overrideHidden, 8 * lerpSpeed);
             RefreshSize();
         }
 
