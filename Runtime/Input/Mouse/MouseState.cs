@@ -112,6 +112,8 @@ namespace LycheeLabs.FruityInterface {
         public void Update() {
             //if (!Application.isFocused || DisableMouse) return;
 
+            ClearDestroyedPressTarget();
+
 #if UNITY_EDITOR
             ValidateState();
 #endif
@@ -124,6 +126,23 @@ namespace LycheeLabs.FruityInterface {
             UpdateRaycasting();
             ProcessQueuedPress();
             UpdateActivePress();
+        }
+
+        private void ClearDestroyedPressTarget() {
+            if (!activePress.isPressed) return;
+
+            var target = activePress.target;
+            var targetIsMissing = target == null ||
+                (target is UnityEngine.Object unityObject && unityObject == null);
+
+            if (!targetIsMissing) return;
+
+            if (activePress.pressIsDrag) {
+                FruityUI.DraggedTarget = null;
+                ClearDragOverState();
+            }
+
+            activePress.Clear();
         }
 
         private void ProcessInputEvent(RawInputEvent inputEvent) {
