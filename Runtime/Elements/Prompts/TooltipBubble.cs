@@ -10,6 +10,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         public RectTransform root;
         public Image backing;
         public Image arrow;
+        public Image arrowInterior;
         public LayoutNode contentsNode;
 
         // Graphics config
@@ -61,6 +62,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 arrow.rectTransform.anchoredPosition = new Vector3(
                     TotalSizePixels.x / 2f - arrowOffset, 0, 0
                 );
+                SyncArrowInteriorTransform();
             }
         }
 
@@ -117,6 +119,17 @@ namespace LycheeLabs.FruityInterface.Elements {
                 (TotalSizePixels.x / 2f - arrowOffset) * direction.XIndex(), 
                 (TotalSizePixels.y / 2f - arrowOffset) * direction.ZIndex()
             );
+            SyncArrowInteriorTransform();
+        }
+
+        private void SyncArrowInteriorTransform () {
+            if (arrowInterior == null) {
+                return;
+            }
+
+            arrowInterior.rectTransform.anchoredPosition = arrow.rectTransform.anchoredPosition;
+            arrowInterior.rectTransform.localRotation = arrow.rectTransform.localRotation;
+            arrowInterior.rectTransform.localScale = arrow.rectTransform.localScale;
         }
 
         private void SetPosition (WorldAnchor newAnchor, Direction newOffsetDirection, float newScale) {
@@ -204,6 +217,7 @@ namespace LycheeLabs.FruityInterface.Elements {
                 var arrowScale = Mathf.Clamp01(1f - (Mathf.Abs(parallelShift) + adjustOverflow.magnitude) / arrowLength);
 
                 arrow.rectTransform.localScale = Vector3.one * arrowScale;
+                SyncArrowInteriorTransform();
             }
         }
 

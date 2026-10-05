@@ -31,6 +31,7 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.PropertyField(so.FindProperty("root"));
             EditorGUILayout.PropertyField(so.FindProperty("backing"));
             EditorGUILayout.PropertyField(so.FindProperty("arrow"));
+            EditorGUILayout.PropertyField(so.FindProperty("arrowInterior"));
         }
 
     }
