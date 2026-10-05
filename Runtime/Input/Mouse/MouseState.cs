@@ -263,6 +263,9 @@ namespace LycheeLabs.FruityInterface {
         /// Check for a new mouse button press and queue it for processing.
         /// </summary>
         private void CheckForNewPress() {
+            // Physical presses are only detected while the input state is idle.
+            if (pressEventQueue.Count > 0 || activePress.isPressed) return;
+
             // activeButton is set by the most recent raw button-down event.
             if (activeButton == MouseButton.None) return;
 
