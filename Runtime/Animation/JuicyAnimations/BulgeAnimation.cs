@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface.Animation {
             value = value.MoveTowardsDelta(0, speedScale * deltaTime);
             var tweened = (tween != null) ? tween.ApplyInverted(value) : value;
 
-            var squash = Mathf.Sin(tweened * Mathf.PI) * sizeScale;
+            var squash = Mathf.Sin(Mathf.Clamp01(tweened) * Mathf.PI) * sizeScale;
             var squashScale = new Vector3(1 + squash, 1 + squash, 1);
 
             var existingScale = transform.scale;

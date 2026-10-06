@@ -24,6 +24,7 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.PropertyField(so.FindProperty("arrowLength"));
             EditorGUILayout.PropertyField(so.FindProperty("arrowClearance"));
             EditorGUILayout.PropertyField(so.FindProperty("lerpSpeed"));
+            EditorGUILayout.PropertyField(so.FindProperty("quickShow"));
             EditorGUILayout.PropertyField(so.FindProperty("MinimumSize"));
         }
 

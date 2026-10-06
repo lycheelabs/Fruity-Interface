@@ -18,6 +18,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         public float arrowLength = 32; // Shifts the whole bubble to make space for the arrow
         public float arrowClearance = 32; // Affects how close the arrow can shift laterally towards bubble edges
         public float lerpSpeed = 1;
+        public bool quickShow;
         public float MinimumSize = 60;
         private float screenEdgePadding = 10;
 
@@ -98,7 +99,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         private void BeginShow() {
             if (!active) {
-                activeTween = 0.35f;
+                activeTween = quickShow ? 0.35f : 0;
                 root.transform.localScale = Vector3.zero;
             }
             active = true;

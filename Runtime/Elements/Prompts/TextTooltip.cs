@@ -14,6 +14,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             Text.SetText(text, crop: true);
             LayoutRebuilder.ForceRebuildLayoutImmediate(Text.rectTransform);
             LayoutRebuilder.ForceRebuildLayoutImmediate(Bubble.rectTransform);
+
+            if (!Bubble.IsShowing) OnShow();
             Bubble.Show(position, offsetDirection, scale * 0.88f);
         }
 
@@ -23,11 +25,18 @@ namespace LycheeLabs.FruityInterface.Elements {
             Text.SetText(text, crop: true);
             LayoutRebuilder.ForceRebuildLayoutImmediate(Text.rectTransform);
             LayoutRebuilder.ForceRebuildLayoutImmediate(Bubble.rectTransform);
+
+            if (!Bubble.IsShowing) OnShow();
             Bubble.Show(position, offsetDirection, scale * 0.88f);
         }
 
         public void Show () {
+            if (!Bubble.IsShowing) OnShow();
             Bubble.Show();
+        }
+
+        protected virtual void OnShow () {
+            //
         }
 
         public void Hide () {

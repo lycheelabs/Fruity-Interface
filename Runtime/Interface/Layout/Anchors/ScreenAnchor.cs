@@ -3,23 +3,31 @@ using UnityEngine;
 namespace LycheeLabs.FruityInterface {
 
     /// <summary>
-    /// Stores a locked screen position and screen offset. Resolves to world coordinates dynamically
-    /// via a camera each time. Call PinWorld() to reverse-lock the current world position as a WorldAnchor.
+    /// Stores a locked viewport position and screen offset. Resolves to current screen coordinates
+    /// dynamically, so the position adapts when the screen is resized. Call PinWorld() to
+    /// reverse-lock the current world position as a WorldAnchor.
     /// Created via WorldAnchor.PinScreen() or ScreenAnchor.Lerp().
     /// </summary>
     public struct ScreenAnchor {
 
         public static ScreenAnchor Lerp(ScreenAnchor a, ScreenAnchor b, float tween, Vector2 screenOffset = default) {
-            var lerpScreen = Vector3.Lerp(a.screenPosition, b.screenPosition, tween);
+            var lerpScreen = Vector3.Lerp(a.viewportPosition, b.viewportPosition, tween);
             var lerpOffset = Vector2.Lerp(a.offset, b.offset, tween);
-            return new ScreenAnchor(lerpScreen, lerpOffset + screenOffset);
+            return new ScreenAnchor {
+                viewportPosition = lerpScreen,
+                offset = lerpOffset + screenOffset
+            };
         }
 
-        private Vector3 screenPosition;
+        private Vector3 viewportPosition;
         private Vector2 offset;
 
         internal ScreenAnchor(Vector3 screenPosition, Vector2 offset) {
-            this.screenPosition = screenPosition;
+            viewportPosition = new Vector3(
+                screenPosition.x / Mathf.Max(Screen.width, 1),
+                screenPosition.y / Mathf.Max(Screen.height, 1),
+                screenPosition.z
+            );
             this.offset = offset;
         }
 
@@ -44,6 +52,11 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public Vector3 RawScreenVector() {
+            var screenPosition = new Vector3(
+                viewportPosition.x * Screen.width,
+                viewportPosition.y * Screen.height,
+                viewportPosition.z
+            );
             return screenPosition + (Vector3)offset / FruityUI.ScreenBounds.UIScaling;
         }
 
