@@ -49,7 +49,7 @@ public static class FruityEditorDrawer {
     }
 
     public static void DrawLayoutProperties (SerializedObject so, bool restrictSize = false, bool restrictPadding = false,
-            bool sizeIsDriven = false, string drivenSizeSource = "contents") {
+            bool restrictWidth = false, bool sizeIsDriven = false, string drivenSizeSource = "contents") {
         if (restrictSize && restrictPadding) return;
         
         so.Update();
@@ -57,7 +57,8 @@ public static class FruityEditorDrawer {
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);
         
         if (!restrictSize) {
-            DrawSizeProperties(so.FindProperty("LayoutSizePixels"), sizeIsDriven, drivenSizeSource);
+            DrawSizeProperties(so.FindProperty("LayoutSizePixels"), sizeIsDriven, drivenSizeSource,
+                restrictWidth: restrictWidth);
         }
 
         if (!restrictPadding) {
@@ -69,9 +70,12 @@ public static class FruityEditorDrawer {
     }
 
     public static void DrawSizeProperties (SerializedProperty property, bool isDriven = false,
-            string drivenSource = "contents", string widthLabel = "Width", string heightLabel = "Height") {
-        DrawDrivenProperty(property.FindPropertyRelative("x"), isDriven,
-            $"({widthLabel} is driven from {drivenSource})", widthLabel);
+            string drivenSource = "contents", string widthLabel = "Width", string heightLabel = "Height",
+            bool restrictWidth = false) {
+        if (!restrictWidth) {
+            DrawDrivenProperty(property.FindPropertyRelative("x"), isDriven,
+                $"({widthLabel} is driven from {drivenSource})", widthLabel);
+        }
         DrawDrivenProperty(property.FindPropertyRelative("y"), isDriven,
             $"({heightLabel} is driven from {drivenSource})", heightLabel);
     }

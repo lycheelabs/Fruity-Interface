@@ -191,6 +191,13 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 
 Events go through queues: `HoverHierarchyEvent` → `ClickEvent` → `StartDragEvent` → ... → `EndDragEvent`.
 
+`MouseState` resolves raw input and active press state before deferred callbacks
+are delivered. Drag callbacks are emitted as queued start, over, update, and end
+events, so target callbacks observe a settled input state for the frame. The
+global `FruityUI.DraggedTarget` reference and the active press are cleared during
+normal cancellation and when a Unity target is destroyed between frames. A
+physical button-down event cannot preempt an active or queued press.
+
 ---
 
 ## Animation (`Runtime/Animation/`)

@@ -14,7 +14,7 @@ namespace LycheeLabs.FruityInterface {
         }
 
         protected override void RefreshLayout() {
-            rectTransform.sizeDelta = LayoutSizePixels;
+            rectTransform.sizeDelta = new Vector2(-LayoutPaddingPixels.x, LayoutSizePixels.y);
 
             var height = LayoutSizePixels.y;
             text.fontSizeMax = height * textScale;
