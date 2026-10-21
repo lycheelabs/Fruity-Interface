@@ -91,7 +91,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             // Calculate sizes
             var textWidth = ButtonText.preferredWidth;
             if (hasIcon) textWidth += height;
-            var width = Mathf.Min(maxWidth, textWidth + 32);
+            var width = Mathf.Min(maxWidth, textWidth + 38);
             if (!cropWidth) width = maxWidth;
             var size = new Vector2(width, height);
 
@@ -99,7 +99,7 @@ namespace LycheeLabs.FruityInterface.Elements {
             LayoutSizePixels = size;
             rectTransform.sizeDelta = LayoutSizePixels;
 
-            BoxCollider.size = LayoutSizePixels;
+            BoxCollider.size = new Vector3(LayoutSizePixels.x, LayoutSizePixels.y, 1);
             IconImage.rectTransform.sizeDelta = new Vector2(height, height) * 0.8f;
             IconImage.rectTransform.localPosition = new Vector3(height * 0.5f, 0);
 

@@ -42,8 +42,7 @@ namespace LycheeLabs.FruityInterface {
             AssignActionsIfNeeded();
         }
 
-        protected override void OnValidate() {
-            base.OnValidate();
+        private void OnValidate() {
             if (actionsAsset == validatedActionsAsset) return;
             validatedActionsAsset = actionsAsset;
             AssignActionsFromAsset();
