@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6997434207325368650}
   - component: {fileID: 6782676680831923687}
   m_Layer: 5
-  m_Name: FullscreenShadowNode
+  m_Name: ShadowBackgroundNode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,10 +49,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a92bb436c8a413f4c9a692aeb7e237af, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.FullscreenShadowNode
+  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.ShadowBackgroundNode
   inputParent: {fileID: 0}
   ignoresInterfaceLock: 0
-  TargetAlpha: 0.85
+  maxEntry: 0.45
+  transitionSpeed: 10
 --- !u!222 &6997434207325368650
 CanvasRenderer:
   m_ObjectHideFlags: 0

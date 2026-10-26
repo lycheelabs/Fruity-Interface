@@ -71,6 +71,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             }
 
             var containedSize = gridSize * GridCellSize;
+            containedSize.x = Mathf.Max(containedSize.x, minimumSize.x);
+            containedSize.y = Mathf.Max(containedSize.y, minimumSize.y);
             LayoutSizePixels = containedSize;
             rectTransform.sizeDelta = containedSize;
         }

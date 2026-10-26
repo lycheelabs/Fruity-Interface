@@ -172,7 +172,13 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 | `CanvasNode` | Root Canvas wrapper. |
 | `FullscreenButtonNode` | Fullscreen toggle button. |
 | `FullscreenLetterboxNode` | Letterbox bars for aspect ratio. |
-| `FullscreenShadowNode` | Dimming shadow under modal prompts. |
+| `ShadowBackgroundNode` | Dimming shadow under modal prompts. Extends `BackgroundNode` and follows its target directly. |
+
+### Backgrounds
+
+| Class | Role |
+|---|---|
+| `BackgroundNode` | Base show/hide lifecycle with tweened progress, instant `jump`, and `MaxEntry`/`TransitionSpeed` properties. Subclasses override `OnInitialise` and `ApplyTween`. Set `WaitForFullTransition` to false to follow the target without waiting for a fade to finish. |
 
 ---
 

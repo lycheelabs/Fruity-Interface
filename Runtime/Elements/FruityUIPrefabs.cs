@@ -20,7 +20,7 @@ namespace LycheeLabs.FruityInterface {
 
         public static readonly Prefab<CanvasNode> Canvas = LoadPrefab<CanvasNode>(CANVAS_FOLDER, "CanvasNode");
         public static readonly Prefab<FullscreenLetterboxNode> FullscreenLetterbox = LoadPrefab<FullscreenLetterboxNode>(CANVAS_FOLDER, "FullscreenLetterboxNode");
-        public static readonly Prefab<FullscreenShadowNode> FullscreenShadow = LoadPrefab<FullscreenShadowNode>(CANVAS_FOLDER, "FullscreenShadowNode");
+        public static readonly Prefab<ShadowBackgroundNode> ShadowBackground = LoadPrefab<ShadowBackgroundNode>(CANVAS_FOLDER, "ShadowBackgroundNode");
         public static readonly Prefab<FullscreenButtonNode> FullscreenButton = LoadPrefab<FullscreenButtonNode>(CANVAS_FOLDER, "FullscreenButtonNode");
         public static readonly Prefab<TextTooltip> TextTooltip = LoadPrefab<TextTooltip>(PROMPT_FOLDER, "TextTooltip");
 
@@ -36,8 +36,8 @@ namespace LycheeLabs.FruityInterface {
             return FullscreenLetterbox.InstantiateGameObject();
         }
 
-        public static GameObject NewFullscreenShadow () {
-            return FullscreenShadow.InstantiateGameObject();
+        public static GameObject NewShadowBackground () {
+            return ShadowBackground.InstantiateGameObject();
         }
 
         public static GameObject NewFullscreenButton () {

@@ -1,4 +1,3 @@
-using LycheeLabs.FruityInterface.Animation;
 using System.Collections.Generic;
 using UnityEngine;
 
