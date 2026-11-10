@@ -12,7 +12,7 @@ namespace LycheeLabs.FruityInterface {
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetOnLoad() {
-            hierarchy.Clear();
+            hierarchy.ClearSilently();
         }
 
         public MouseTarget Target;

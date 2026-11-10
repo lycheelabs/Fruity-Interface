@@ -72,6 +72,14 @@ namespace LycheeLabs.FruityInterface {
             for (var i = 0; i < current.Count; i++) {
                 CallEnd(current[i].Target);
             }
+            ClearSilently();
+        }
+
+        /// <summary>
+        /// Clear all state without calling end callbacks.
+        /// Use when tracked targets may no longer be valid, such as on scene load.
+        /// </summary>
+        public void ClearSilently() {
             current.Clear();
             previous.Clear();
             UpdateGlobalState(null);
