@@ -29,6 +29,7 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.PropertyField(so.FindProperty("barCollider"));
             EditorGUILayout.PropertyField(so.FindProperty("bar"));
             EditorGUILayout.PropertyField(so.FindProperty("handle"));
+            EditorGUILayout.PropertyField(so.FindProperty("HandleAnimator"));
             EditorGUILayout.PropertyField(so.FindProperty("barFill"));
             EditorGUILayout.PropertyField(so.FindProperty("counterBounds"));
             EditorGUILayout.PropertyField(so.FindProperty("counter"));

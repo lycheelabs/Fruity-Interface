@@ -457,6 +457,7 @@ MonoBehaviour:
   bar: {fileID: 1882219624114187289}
   barCollider: {fileID: 4324462555525813841}
   handle: {fileID: 268123625904716406}
+  HandleAnimator: {fileID: 3647565707669696525}
   barFill: {fileID: 972740255773931916}
   counterBounds: {fileID: 5495009388970061760}
   counter: {fileID: 7146272252736616919}

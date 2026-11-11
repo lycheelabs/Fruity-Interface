@@ -13,6 +13,7 @@ namespace LycheeLabs.FruityInterface {
         public RectTransform bar;
         public BoxCollider barCollider;
         public Image handle;
+        public JuicyAnimator HandleAnimator;
         public Image barFill;
         
         public RectTransform counterBounds;
@@ -44,9 +45,14 @@ namespace LycheeLabs.FruityInterface {
         private float lastSFXTime;
         private int lastSFXValue;
 
+        void OnEnable() {
+            UpdateHandle();
+            HandleAnimator.UpdateNow();
+        }
+
         void Update() {
             highlightTween = highlightTween.MoveTowardsUnscaled(isHighlighted, 10);
-            handle.rectTransform.localScale = Vector3.one * (1 + 0.28f * highlightTween); 
+            HandleAnimator.BaseScale = Vector3.one * (1 + 0.28f * highlightTween);
             UpdateHandle();        
         }
 
@@ -80,9 +86,9 @@ namespace LycheeLabs.FruityInterface {
 
         public void SetValueSilent (int newValue) {
             value = ClampValue(newValue);
-            var progress = Progress(value);
-
             UpdateCounter();
+            UpdateHandle();
+            HandleAnimator.UpdateNow();
         }
 
         public void UpdateMouseHover(bool isFirstFrame, HoverParams highlightParams) {
@@ -159,7 +165,7 @@ namespace LycheeLabs.FruityInterface {
 
         private void UpdateHandle () {
             if (handle != null) {
-                handle.rectTransform.anchoredPosition = new Vector2((Progress(value) - 0.5f) * BarWidth(), 0);
+                HandleAnimator.BasePosition = new Vector2((Progress(value) - 0.5f) * BarWidth(), 0);
             }
         }
 

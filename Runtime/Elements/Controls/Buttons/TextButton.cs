@@ -9,7 +9,7 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// <summary>
     /// Implementation of a button using the TextButton prefab.
     /// </summary>
-    public class TextButton : ButtonNode {
+    public class TextButton : ButtonNode, SelectableButton {
 
         public Image BackingImage;
         public TextMeshProUGUI ButtonText;
@@ -50,6 +50,10 @@ namespace LycheeLabs.FruityInterface.Elements {
         }
 
         public void SetColor (Color color) {
+            BackingImage.color = color;
+        }
+
+        public void SetBackingColor (Color color) {
             BackingImage.color = color;
         }
 

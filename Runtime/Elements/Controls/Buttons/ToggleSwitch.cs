@@ -1,5 +1,4 @@
 ﻿using LycheeLabs.FruityInterface.Animation;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,6 +19,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         public Image Dot;
         public Image Icon;
         public JuicyAnimator Animator;
+        public JuicyAnimator DotAnimator;
 
         // Animation
         private bool isActive;
@@ -34,7 +34,6 @@ namespace LycheeLabs.FruityInterface.Elements {
         private void Awake() {
             Backing.color = backingColor;
             Icon.color = backingColor;
-            JumpTo(true);
         }
 
         private void Update() {
@@ -42,14 +41,17 @@ namespace LycheeLabs.FruityInterface.Elements {
             var color = Color.Lerp(OffColor, OnColor, activeTween);
             Border.color = color;
             Dot.color = color;
-            Dot.transform.localPosition = new Vector3(36 * (activeTween - 0.5f), 0, 0);
-    
+
             highlightTween = highlightTween.MoveTowardsUnscaled(isHighlighted, 10);
             pressTween = pressTween.MoveTowardsUnscaled(isPressed, 12);
+            ApplyPose();
+        }
+
+        private void ApplyPose() {
+            DotAnimator.BasePosition = new Vector3(36 * (activeTween - 0.5f), 0, 0);
+            DotAnimator.BaseScale = Vector3.one * (1 + 0.3f * pressTween);
             Animator.BaseScale = Vector3.one * (1 + 0.12f * Tweens.EaseInOutQuad(highlightTween));
             Animator.BasePosition = new Vector3(26 * pressTween * (activeTween - 0.5f), 0);
-
-            Dot.transform.localScale = Vector3.one * (1 + 0.3f * pressTween);
         }
 
         public void JumpTo (bool active) {
@@ -59,6 +61,8 @@ namespace LycheeLabs.FruityInterface.Elements {
             var color = active ? OnColor : OffColor;
             Border.color = color;
             Dot.color = color;
+            ApplyPose();
+            DotAnimator.UpdateNow();
         }
 
         private void AnimateTo (bool active) {

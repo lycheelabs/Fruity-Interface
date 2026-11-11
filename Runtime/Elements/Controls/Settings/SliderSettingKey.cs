@@ -8,7 +8,7 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         private Settings.IntSetting setting;
 
-        void Start () {
+        void OnEnable () {
             if (Settings.SettingsRegistry.Active == null) return;
             if (!Settings.SettingsRegistry.Active.TryGet<Settings.IntSetting>(SettingKey, out setting)) return;
 

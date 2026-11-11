@@ -29,6 +29,7 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.PropertyField(so.FindProperty("Dot"));
             EditorGUILayout.PropertyField(so.FindProperty("Icon"));
             EditorGUILayout.PropertyField(so.FindProperty("Animator"));
+            EditorGUILayout.PropertyField(so.FindProperty("DotAnimator"));
         }
 
     }

@@ -110,7 +110,16 @@ namespace LycheeLabs.FruityInterface.Animation {
 
             if (isIdle) return;
 
-            var deltaTime = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            Tick(useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
+        }
+
+        /// <summary> Runs the LateUpdate pass now, with zero delta, so the Transform reflects the current base pose and animations immediately. </summary>
+        public void UpdateNow() {
+            isIdle = false;
+            Tick(0f);
+        }
+
+        private void Tick(float deltaTime) {
             var transformData = new TransformData {
                 position = animatePosition,
                 rotation = animateRotation,

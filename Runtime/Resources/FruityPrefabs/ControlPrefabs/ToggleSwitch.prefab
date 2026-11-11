@@ -439,6 +439,7 @@ MonoBehaviour:
   Dot: {fileID: 6824002477445829128}
   Icon: {fileID: 3976981436795974599}
   Animator: {fileID: 6220040693205572662}
+  DotAnimator: {fileID: 4392810350994090809}
 --- !u!65 &5780595155863672648
 BoxCollider:
   m_ObjectHideFlags: 0

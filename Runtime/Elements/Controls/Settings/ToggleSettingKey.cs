@@ -8,7 +8,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         public string SettingKey;
         private BoolSetting setting;
 
-        public void Start () {
+        public void OnEnable () {
             if (SettingsRegistry.Active != null &&
                 SettingsRegistry.Active.TryGet<BoolSetting>(SettingKey, out setting)) {
                 var toggle = GetComponentInChildren<ToggleSwitch>();
