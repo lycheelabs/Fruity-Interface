@@ -29,8 +29,14 @@ namespace LycheeLabs.FruityInterface.Elements {
         private MouseButton heldButton;
         private Color chargeColor = Color.white;
 
+        private static readonly Color LockedTint = new Color(136f / 255f, 136f / 255f, 136f / 255f);
+        private bool locked;
+        private Color unlockedBackingColor = Color.white;
+        private Color unlockedTextColor = Color.white;
+
         public float ChargeFill => charge.Fill;
         public float ChargeAlpha => charge.FadeAlpha;
+        public bool IsLocked => locked;
 
         private void Awake () {
             if (ChargeGraphic != null) ChargeGraphic.gameObject.SetActive(false);
@@ -116,12 +122,37 @@ namespace LycheeLabs.FruityInterface.Elements {
             RefreshLayoutDeferred();
         }
 
+        /// <summary>
+        /// Locks the button: disables input and tints its backing and text medium gray. Unlocking restores the colours.
+        /// </summary>
+        public void SetLocked (bool locked) {
+            if (this.locked == locked) return;
+            this.locked = locked;
+            SetInputDisabled(locked);
+
+            if (locked) {
+                unlockedBackingColor = BackingImage.color;
+                unlockedTextColor = ButtonText.color;
+                charge.Release();
+                BackingImage.color = unlockedBackingColor * LockedTint;
+                ButtonText.color = unlockedTextColor * LockedTint;
+            } else {
+                BackingImage.color = unlockedBackingColor;
+                ButtonText.color = unlockedTextColor;
+            }
+        }
+
         public void SetColor (Color color) {
-            BackingImage.color = color;
+            SetBackingColor(color);
         }
 
         public void SetBackingColor (Color color) {
-            BackingImage.color = color;
+            if (!locked) {
+                BackingImage.color = color;
+                return;
+            }
+            unlockedBackingColor = color;
+            BackingImage.color = color * LockedTint;
         }
 
         protected override void AnimateHover (float highlightTween, float heldTween) {
