@@ -2,6 +2,7 @@
 
 namespace LycheeLabs.FruityInterface.Elements {
 
+    [ExecuteAlways]
     public class ListContainerNode : ContainerNode {
 
         public enum Orientations { Vertical, Horizontal }
@@ -29,6 +30,11 @@ namespace LycheeLabs.FruityInterface.Elements {
                 containedWidth = Mathf.Max(containedWidth, node.TotalWidthPixels);
             }
 
+            var size = new Vector2(Mathf.Max(containedWidth, minimumSize.x), Mathf.Max(containedHeight, minimumSize.y));
+            LayoutSizePixels = size;
+            rectTransform.sizeDelta = TotalSizePixels;
+            var pivotOffset = PivotOffset(TotalSizePixels);
+
             float y = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
@@ -36,16 +42,10 @@ namespace LycheeLabs.FruityInterface.Elements {
 
                 var newHeight = node.TotalHeightPixels;
                 var shift = y - containedHeight / 2f + newHeight / 2f;
-                var newPosition = new Vector3(0, -shift);
+                var newPosition = new Vector3(pivotOffset.x, pivotOffset.y - shift);
                 node.rectTransform.localPosition = newPosition;
                 y += newHeight;
             }
-
-            containedWidth = Mathf.Max(containedWidth, minimumSize.x);
-            containedHeight = Mathf.Max(containedHeight, minimumSize.y);
-
-            LayoutSizePixels = new Vector2(containedWidth, containedHeight);
-            rectTransform.sizeDelta = TotalSizePixels;
         }
 
         private void LayoutHorizontal () {
@@ -61,6 +61,11 @@ namespace LycheeLabs.FruityInterface.Elements {
                 containedHeight = Mathf.Max(containedHeight, node.TotalHeightPixels);
             }
 
+            var size = new Vector2(Mathf.Max(containedWidth, minimumSize.x), Mathf.Max(containedHeight, minimumSize.y));
+            LayoutSizePixels = size;
+            rectTransform.sizeDelta = LayoutSizePixels;
+            var pivotOffset = PivotOffset(LayoutSizePixels);
+
             float x = 0;
             for (int i = 0; i < ChildNodes.Count; i++) {
                 var node = ChildNodes[i];
@@ -68,17 +73,15 @@ namespace LycheeLabs.FruityInterface.Elements {
 
                 var newWidth = node.TotalWidthPixels;
                 var shift = x - containedWidth / 2f + newWidth / 2f;
-                var newPosition = new Vector3(shift, 0);
+                var newPosition = new Vector3(shift + pivotOffset.x, pivotOffset.y);
                 node.rectTransform.localPosition = newPosition;
                 x += newWidth;
             }
 
-            containedWidth = Mathf.Max(containedWidth, minimumSize.x);
-            containedHeight = Mathf.Max(containedHeight, minimumSize.y);
+        }
 
-            LayoutSizePixels = new Vector2(containedWidth, containedHeight);
-            rectTransform.sizeDelta = LayoutSizePixels;
-
+        private Vector2 PivotOffset (Vector2 size) {
+            return (new Vector2(0.5f, 0.5f) - rectTransform.pivot) * size;
         }
 
         private void RemoveDestroyedChildren () {

@@ -164,6 +164,7 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 | `SimpleContainerNode` | ContainerNode | Vertical list. |
 | `GridContainerNode` | ContainerNode | Grid with horizontal/vertical wrap. |
 | `ListContainerNode` | ContainerNode | Scrollable vertical list. |
+| `TabbingContainerNode` | ContainerNode | Shows one child at a time by index. Size is the largest child. |
 
 ### Canvas
 
