@@ -8,6 +8,7 @@ namespace LycheeLabs.FruityInterface.Elements {
         public virtual bool MouseButtonIsPermitted (MouseButton clickButton) => clickButton == MouseButton.Left;
         public abstract void Activate(MouseButton clickButton);
         public virtual bool TryUnclick(MouseButton clickButton) => true;
+        public virtual void OnHoldProgress(float tween) { }
 
     }
 

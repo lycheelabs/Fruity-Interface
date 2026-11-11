@@ -33,6 +33,7 @@ namespace LycheeLabs.FruityInterface.Editors {
             EditorGUILayout.PropertyField(so.FindProperty("ButtonText"));
             EditorGUILayout.PropertyField(so.FindProperty("IconImage"));
             EditorGUILayout.PropertyField(so.FindProperty("BoxCollider"));
+            EditorGUILayout.PropertyField(so.FindProperty("ChargeGraphic"));
         }
 
     }

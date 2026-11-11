@@ -9,12 +9,13 @@ namespace LycheeLabs.FruityInterface.Elements {
     /// <summary>
     /// Implementation of a button using the TextButton prefab.
     /// </summary>
-    public class TextButton : ButtonNode, SelectableButton {
+    public class TextButton : ButtonNode, SelectableButton, DragTarget {
 
         public Image BackingImage;
         public TextMeshProUGUI ButtonText;
         public Image IconImage;
         public BoxCollider BoxCollider;
+        public Image ChargeGraphic;
 
         [SerializeField] private float height = 50;
         [SerializeField] private float maxWidth = 200;
@@ -23,8 +24,74 @@ namespace LycheeLabs.FruityInterface.Elements {
 
         [Range(0f, 2f)] [SerializeField] private float fontHeightScaling = 1f;
 
+        private bool holdEnabled;
+        private HoldCharge charge;
+        private MouseButton heldButton;
+        private Color chargeColor = Color.white;
+
+        public float ChargeFill => charge.Fill;
+        public float ChargeAlpha => charge.FadeAlpha;
+
+        private void Awake () {
+            if (ChargeGraphic != null) ChargeGraphic.gameObject.SetActive(false);
+        }
+
         private void OnEnable () {
             RefreshLayoutDeferred();
+        }
+
+        /// <summary>
+        /// Makes this button require a hold to trigger its effect. Holding fills the charge over duration seconds,
+        /// drawn in fillColor on ChargeGraphic. Call from Start or later so the graphic is not hidden again by Awake.
+        /// </summary>
+        public void ConfigureHold (float duration, Color fillColor) {
+            holdEnabled = true;
+            charge.Configure(duration);
+            chargeColor = fillColor;
+            if (ChargeGraphic != null) ChargeGraphic.gameObject.SetActive(true);
+        }
+
+        public MouseDragMode GetDragMode (MouseButton dragButton) {
+            if (!holdEnabled || TryGetEffect == null) return MouseDragMode.Disabled;
+            return TryGetEffect.MouseButtonIsPermitted(dragButton) ? MouseDragMode.DragOnly : MouseDragMode.Disabled;
+        }
+
+        public void UpdateMouseDragging (bool isFirstFrame, DragParams dragParams) {
+            if (!isFirstFrame) return;
+            heldButton = dragParams.DragButton;
+            charge.Press();
+        }
+
+        public void ApplyMouseDrag (DragParams dragParams) {
+            charge.Release();
+        }
+
+        public void CancelMouseDrag () {
+            charge.Release();
+        }
+
+        public override void ApplyMouseClick (ClickParams clickParams) {
+            if (!holdEnabled) base.ApplyMouseClick(clickParams);
+        }
+
+        protected override void OnUpdate () {
+            if (!holdEnabled) return;
+
+            if (charge.Tick(Time.unscaledDeltaTime)) {
+                FruityUI.CancelDrag(this);
+                AnimateClick();
+                TryGetEffect.Activate(heldButton);
+                TryGetSFX?.OnClick();
+            }
+
+            if (ChargeGraphic != null) {
+                ChargeGraphic.fillAmount = charge.Fill;
+                var color = chargeColor;
+                color.a *= charge.FadeAlpha;
+                ChargeGraphic.color = color;
+            }
+
+            if (charge.IsCharging) TryGetEffect?.OnHoldProgress(charge.Fill);
         }
 
         public void SetText (string text) {
