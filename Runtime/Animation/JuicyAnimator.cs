@@ -11,12 +11,23 @@ namespace LycheeLabs.FruityInterface.Animation {
     /// and applied in the order they were queued. 
     /// Note: This component overrides the Transform component!
     /// </summary>
-    [ExecuteAlways]
     public class JuicyAnimator : MonoBehaviour {
 
         private RectTransform rectTransform;
 
         private void Reset() {
+            CaptureBasePose();
+        }
+
+        [ContextMenu("Capture current pose as base")]
+        private void CaptureBasePoseFromMenu() {
+#if UNITY_EDITOR
+            UnityEditor.Undo.RecordObject(this, "Capture base pose");
+#endif
+            CaptureBasePose();
+        }
+
+        private void CaptureBasePose() {
             basePosition = (rectTransform == null) ? transform.localPosition : rectTransform.anchoredPosition;
             baseRotation = transform.localEulerAngles;
             baseScale = transform.localScale;
@@ -24,29 +35,39 @@ namespace LycheeLabs.FruityInterface.Animation {
 
         private void OnEnable () {
             rectTransform = GetComponent<RectTransform>();
-            isIdle = false;
+            MarkDirty();
         }
 
         private void OnDisable() {
             transform.hideFlags = HideFlags.None;
+            JuicyAnimatorManager.Remove(this);
+        }
+
+        private void OnDestroy() {
+            JuicyAnimatorManager.Remove(this);
+        }
+
+        private void MarkDirty() {
+            isIdle = false;
+            JuicyAnimatorManager.MarkDirty(this);
         }
 
         /// <summary> The Transform's position value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BasePosition { 
             get { return basePosition; }
-            set { if (basePosition != value) { basePosition = value; isIdle = false; } }
+            set { if (basePosition != value) { basePosition = value; MarkDirty(); } }
         }
 
         /// <summary> The Transform's rotation value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BaseRotation {
             get { return baseRotation; }
-            set { if (baseRotation != value) { baseRotation = value; isIdle = false; } }
+            set { if (baseRotation != value) { baseRotation = value; MarkDirty(); } }
         }
 
         /// <summary> The Transform's scale value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BaseScale {
             get { return baseScale; }
-            set { if (baseScale != value) { baseScale = value; isIdle = false; } }
+            set { if (baseScale != value) { baseScale = value; MarkDirty(); } }
         }
 
         public bool IsIdle => isIdle;
@@ -74,19 +95,19 @@ namespace LycheeLabs.FruityInterface.Animation {
         /// <summary> Adjusts the BasePosition for one frame. </summary>
         public void OverlayPosition(Vector3 translation) {
             animatePosition += translation;
-            isIdle = false;
+            MarkDirty();
         }
 
         /// <summary> Adjusts the BaseRotation for one frame. </summary>
         public void OverlayRotation(Vector3 rotation) {
             animateRotation += rotation;
-            isIdle = false;
+            MarkDirty();
         }
 
         /// <summary> Adjusts the BaseScale for one frame. </summary>
         public void OverlayScale(Vector3 scale) {
             animateScale = Vector3.Scale(animateScale, scale);
-            isIdle = false;
+            MarkDirty();
         }
 
         /// <summary> Queue an animation that plays each frame until completion. </summary>
@@ -96,27 +117,22 @@ namespace LycheeLabs.FruityInterface.Animation {
             } else {
                 LayeredAnimations.Add(animation);
             }
-            isIdle = false;
+            MarkDirty();
         }
 
-        private void LateUpdate() {
-
-            if (!Application.isPlaying) {
-                basePosition = (rectTransform == null) ? transform.localPosition : rectTransform.anchoredPosition;
-                baseRotation = transform.localEulerAngles;
-                baseScale = transform.localScale;
-                return;
-            }
-
-            if (isIdle) return;
-
+        /// <summary> Advances the animations by one frame. Called by JuicyAnimatorManager. Returns true while still animating. </summary>
+        internal bool Step() {
+            if (isIdle) return false;
             Tick(useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
+            return !isIdle;
         }
 
-        /// <summary> Runs the LateUpdate pass now, with zero delta, so the Transform reflects the current base pose and animations immediately. </summary>
+        /// <summary> Runs one frame now, with zero delta, so the Transform reflects the current base pose and animations immediately. </summary>
         public void UpdateNow() {
-            isIdle = false;
             Tick(0f);
+            if (!isIdle) {
+                JuicyAnimatorManager.MarkDirty(this);
+            }
         }
 
         private void Tick(float deltaTime) {
