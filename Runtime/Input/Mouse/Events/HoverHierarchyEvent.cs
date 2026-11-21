@@ -15,6 +15,10 @@ namespace LycheeLabs.FruityInterface {
             hierarchy.ClearSilently();
         }
 
+        internal static void ResetStateForTests() {
+            ResetOnLoad();
+        }
+
         public MouseTarget Target;
         public HoverParams Params;
 

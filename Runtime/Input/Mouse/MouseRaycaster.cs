@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class MouseRaycaster  {
+public class MouseRaycaster : IMouseRaycaster {
     
     private static readonly float MAX_DISTANCE = float.MaxValue;
     public static readonly int MAX_HITS = 100;

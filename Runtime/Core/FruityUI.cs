@@ -199,6 +199,10 @@ namespace LycheeLabs.FruityInterface {
             disableInput = false;
         }
 
+        internal static void ResetStateForTests() {
+            ResetOnLoad();
+        }
+
         public static void SetUICamera(Camera camera) {
             uiCamera = camera;
         }

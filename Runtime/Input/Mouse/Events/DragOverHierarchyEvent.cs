@@ -15,6 +15,10 @@ namespace LycheeLabs.FruityInterface {
             hierarchy.ClearSilently();
         }
 
+        internal static void ResetStateForTests() {
+            ResetOnLoad();
+        }
+
         public MouseTarget RaycastTarget;
         public InterfaceNode RaycastNode;
         public Vector3 MouseWorldPosition;

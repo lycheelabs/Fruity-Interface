@@ -57,8 +57,12 @@ namespace LycheeLabs.FruityInterface {
         public bool LogEvents { get; }
         public bool LogRawInput { get; }
 
-        internal FruityInputRuntime(bool logEvents, bool logRawInput, bool logRaycasts) {
-            mouseState = new MouseState { LogRaycasts = logRaycasts };
+        internal FruityInputRuntime(bool logEvents, bool logRawInput, bool logRaycasts)
+            : this(new MouseState { LogRaycasts = logRaycasts }, logEvents, logRawInput) {
+        }
+
+        internal FruityInputRuntime(MouseState mouseState, bool logEvents, bool logRawInput) {
+            this.mouseState = mouseState;
             events = new ControlEventQueue();
             inputEvents = new RawInputEventQueue();
             LogEvents = logEvents;

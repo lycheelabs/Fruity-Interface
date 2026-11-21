@@ -40,15 +40,15 @@ namespace LycheeLabs.FruityInterface  {
         public Vector3 pressWorldPosition;
         public Vector2 pressScreenPosition;
 
-        public void StartClick(MouseTarget pressedTarget, MouseButton pressedButton) {
+        public void StartClick(MouseTarget pressedTarget, MouseButton pressedButton, int frame, float time) {
             isPressed = true;
             target = pressedTarget;
             pressIsClick = true;
             button = pressedButton;
             dragMode = MouseDragMode.Disabled;
             isPickUpDrag = false;
-            pressStartFrame = Time.frameCount;
-            pressStartTime = Time.unscaledTime;
+            pressStartFrame = frame;
+            pressStartTime = time;
         }
 
         public void Hold (MouseTarget pressedTarget, MouseButton pressedButton) {
@@ -57,7 +57,7 @@ namespace LycheeLabs.FruityInterface  {
             button = pressedButton;
         }
 
-        public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, MouseDragMode mode, Vector3 worldPosition, Vector2 screenPosition, InterfaceNode sourceNode) {
+        public void StartDrag(MouseTarget pressedTarget, MouseButton pressedButton, MouseDragMode mode, Vector3 worldPosition, Vector2 screenPosition, InterfaceNode sourceNode, int frame, float time) {
             isPressed = true;
             target = pressedTarget;
             pressIsDrag = true;
@@ -68,8 +68,8 @@ namespace LycheeLabs.FruityInterface  {
             // Only PickUpOnly starts as latched pickup
             // DragOrPickUp starts as normal drag, may convert to pickup on mouse-up if it was a short click
             isPickUpDrag = (mode == MouseDragMode.PickUpOnly);
-            pressStartFrame = Time.frameCount;
-            pressStartTime = Time.unscaledTime;
+            pressStartFrame = frame;
+            pressStartTime = time;
             pressWorldPosition = worldPosition;
             pressScreenPosition = screenPosition;
         }
@@ -85,8 +85,8 @@ namespace LycheeLabs.FruityInterface  {
         /// Determines if the drag was a "real" drag (held long enough or moved far enough)
         /// versus a short click that should convert to pickup mode.
         /// </summary>
-        public bool WasRealDrag(Vector2 currentScreenPosition) {
-            var duration = Time.unscaledTime - pressStartTime;
+        public bool WasRealDrag(Vector2 currentScreenPosition, float time) {
+            var duration = time - pressStartTime;
             var distance = (currentScreenPosition - pressScreenPosition).magnitude;
             var threshold = FruityUI.ScreenBounds.BoxedCanvasSize.y / DRAG_DISTANCE_DIVISOR;
             return duration > MAX_CLICK_DURATION || distance > threshold;

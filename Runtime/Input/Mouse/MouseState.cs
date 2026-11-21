@@ -38,8 +38,13 @@ namespace LycheeLabs.FruityInterface {
             disableMouse = false;
             OnNewPress = null;
         }
+
+        internal static void ResetStateForTests() {
+            ResetOnLoad();
+        }
     
-        private readonly MouseRaycaster raycaster;
+        private readonly IMouseRaycaster raycaster;
+        private readonly IMouseClock clock;
         private readonly Queue<PressEvent> pressEventQueue;
 
         private MouseButton activeButton;
@@ -56,8 +61,12 @@ namespace LycheeLabs.FruityInterface {
         private Vector2 oldMousePosition;
         private readonly Queue<RawInputEvent> inputEvents;
 
-        public MouseState() {
-            raycaster = new MouseRaycaster();
+        public MouseState() : this(new MouseRaycaster(), new UnityMouseClock()) {
+        }
+
+        internal MouseState(IMouseRaycaster raycaster, IMouseClock clock) {
+            this.raycaster = raycaster;
+            this.clock = clock;
             pressEventQueue = new Queue<PressEvent>();
             inputEvents = new Queue<RawInputEvent>();
             activeButton = MouseButton.None;
@@ -270,7 +279,7 @@ namespace LycheeLabs.FruityInterface {
             if (activeButton == MouseButton.None) return;
 
             // Time-based debounce: prevent rapid re-clicks from faulty hardware
-            if (Time.unscaledTime <= lastPressTime + PRESS_DEBOUNCE_TIME) return;
+            if (clock.UnscaledTime <= lastPressTime + PRESS_DEBOUNCE_TIME) return;
 
             if (lastRaycastTarget != null) {
                 pressEventQueue.Enqueue(new PressEvent {
@@ -279,7 +288,7 @@ namespace LycheeLabs.FruityInterface {
                     button = activeButton,
                     worldPosition = FruityUI.MouseWorldPosition
                 });
-                lastPressTime = Time.unscaledTime;
+                lastPressTime = clock.UnscaledTime;
             }
         }
 
@@ -326,7 +335,7 @@ namespace LycheeLabs.FruityInterface {
         /// Returns true if the press was started and remains active, false if it was completed immediately.
         /// </summary>
         private bool TryStartClick(ClickTarget clickTarget, PressEvent pressEvent) {
-            activePress.StartClick(clickTarget, pressEvent.button);
+            activePress.StartClick(clickTarget, pressEvent.button, clock.FrameCount, clock.UnscaledTime);
             OnNewPress?.Invoke(clickTarget);
 
             // Handle immediate click (ClickOnMouseDown)
@@ -344,7 +353,7 @@ namespace LycheeLabs.FruityInterface {
         /// </summary>
         private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, MouseDragMode dragMode) {
             var screenPosition = FruityUI.RawMouseScreenPosition;
-            activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition, pressEvent.sourceNode);
+            activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition, pressEvent.sourceNode, clock.FrameCount, clock.UnscaledTime);
 
             // Start with null DragOverTarget - will be updated on first drag update
             var dragParams = new DragParams(dragTarget, null, screenPosition, screenPosition, pressEvent.button);
@@ -388,13 +397,6 @@ namespace LycheeLabs.FruityInterface {
             mouseIsMoving = (newMousePosition != oldMousePosition);
             oldMousePosition = newMousePosition;
 
-            if (!FruityUI.MouseIsOnscreen) {
-                lastRaycastTarget = null;
-                lastRaycastNode = null;
-                lastRaycastWorldPos = Vector3.zero;
-                return;
-            }
-
             raycaster.CollideAndResolve(GetRelevantButton(), 
                 out lastRaycastTarget, out lastRaycastNode, out lastRaycastWorldPos);
         }
@@ -426,7 +428,7 @@ namespace LycheeLabs.FruityInterface {
             // Complete click if active
             if (activePress.pressIsClick && activePress.target is ClickTarget clickTarget) {
                 var clickParams = new ClickParams(activePress.pressWorldPosition, activePress.button);
-                clickParams.HeldDuration = Time.unscaledTime - lastPressTime;
+                clickParams.HeldDuration = clock.UnscaledTime - lastPressTime;
                 QueueClickEvent(clickTarget, clickParams);
                 activePress.ReleaseClick();
             }
@@ -468,7 +470,7 @@ namespace LycheeLabs.FruityInterface {
             
             // Pickup mode: complete on second click of same button
             if (activePress.pressIsDrag && activePress.isPickUpDrag) {
-                if (buttonDownThisEvent && buttonDownEventButton == activePress.button && activePress.pressStartFrame != Time.frameCount) {
+                if (buttonDownThisEvent && buttonDownEventButton == activePress.button && activePress.pressStartFrame != clock.FrameCount) {
                     // Build params after hierarchy has processed to get current DraggedOverTarget
                     var dragParams = BuildCurrentDragParams();
 
@@ -499,7 +501,7 @@ namespace LycheeLabs.FruityInterface {
                 if (activePress.pressIsDrag) {
                     // For DragOrPickUp: short click converts to pickup mode
                     var screenPosition = FruityUI.RawMouseScreenPosition;
-                    if (activePress.dragMode == MouseDragMode.DragOrPickUp && !activePress.WasRealDrag(screenPosition)) {
+                    if (activePress.dragMode == MouseDragMode.DragOrPickUp && !activePress.WasRealDrag(screenPosition, clock.UnscaledTime)) {
                         activePress.ConvertToPickUp();
                         return;
                     }
@@ -519,7 +521,7 @@ namespace LycheeLabs.FruityInterface {
                 // Complete click
                 if (activePress.pressIsClick && activePress.target == clickTarget) {
                     var clickParams = new ClickParams(activePress.pressWorldPosition, activePress.button);
-                    clickParams.HeldDuration = Time.unscaledTime - lastPressTime;
+                    clickParams.HeldDuration = clock.UnscaledTime - lastPressTime;
                     QueueClickEvent(clickTarget, clickParams);
                     activePress.ReleaseClick();
                 }

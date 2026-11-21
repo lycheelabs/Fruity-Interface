@@ -1,0 +1,23 @@
+{
+    "name": "com.lycheelabs.fruityinterface.EDITMODE.TESTS",
+    "rootNamespace": "LycheeLabs.FruityInterface.Tests",
+    "references": [
+        "com.lycheelabs.fruityinterface.RUNTIME"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}
