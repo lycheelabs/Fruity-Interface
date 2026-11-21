@@ -29,8 +29,12 @@ namespace LycheeLabs.FruityInterface {
         }
 
         public void Update (float minAspect = FruityUI.DefaultMinAspect, float maxAspect = FruityUI.DefaultMaxAspect) {
-            float screenWidth = Mathf.Max(Screen.width, 1);
-            float screenHeight = Mathf.Max(Screen.height, 1);
+            ApplySize(Screen.width, Screen.height, minAspect, maxAspect);
+        }
+
+        internal void ApplySize (float width, float height, float minAspect, float maxAspect) {
+            float screenWidth = Mathf.Max(width, 1);
+            float screenHeight = Mathf.Max(height, 1);
 
             // Clamp aspect ratio
             var minRatio = minAspect;
