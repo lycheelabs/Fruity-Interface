@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// A device-independent pointer transition captured before UI processing.

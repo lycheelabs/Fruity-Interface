@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// Event fired every frame to update which target is being highlighted.

@@ -1,4 +1,4 @@
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     public abstract class ControlNode : LayoutNode {
         

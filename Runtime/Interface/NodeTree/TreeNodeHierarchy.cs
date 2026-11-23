@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     internal static class TreeNodeHierarchy {
 

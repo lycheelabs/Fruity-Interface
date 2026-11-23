@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     public class ScreenPositionLerper {
 

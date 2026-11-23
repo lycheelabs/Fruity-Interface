@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.ObjectModel;
 using System;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     public enum Direction {
         LEFT, UP, RIGHT, DOWN, NONE

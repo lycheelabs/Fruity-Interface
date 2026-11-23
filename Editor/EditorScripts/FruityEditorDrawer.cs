@@ -1,10 +1,10 @@
 using System;
-using LycheeLabs.FruityInterface;
-using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.InputTree;
+using LycheeLabs.InputTree.Elements;
 using UnityEditor;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Editors {
+namespace LycheeLabs.InputTree.Editors {
 
 public static class FruityEditorDrawer {
 

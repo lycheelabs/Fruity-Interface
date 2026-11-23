@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     // Pinches the transform, making it bulge in the Y axis and then in the X axis
     public class SquashAnimation : SimpleJuicyAnimation {

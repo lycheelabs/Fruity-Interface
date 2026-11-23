@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a59ac37c04d09fa458bec004cfb53983, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.Elements.CanvasNode
+  m_EditorClassIdentifier: com.lycheelabs.inputtree.RUNTIME::LycheeLabs.InputTree.Elements.CanvasNode
   inputParentOverride: {fileID: 0}
   inputDisabled: 0
   ignoreInterfaceLock: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2901fa2513827884caa4630e03e6ce80, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: com.lycheelabs.fruityinterface.RUNTIME::LycheeLabs.FruityInterface.InterfaceLayer
+  m_EditorClassIdentifier: com.lycheelabs.inputtree.RUNTIME::LycheeLabs.InputTree.InterfaceLayer
   Layer: 0
 --- !u!223 &5663682503117434172
 Canvas:

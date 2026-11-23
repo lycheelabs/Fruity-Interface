@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LycheeLabs.FruityInterface  {
+namespace LycheeLabs.InputTree  {
     
     internal class ControlEventQueue {
 

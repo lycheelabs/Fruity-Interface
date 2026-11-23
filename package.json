@@ -1,9 +1,9 @@
 {
-  "name": "com.lycheelabs.fruityinterface",
-  "displayName": "Fruity Interface",
+  "name": "com.lycheelabs.inputtree",
+  "displayName": "Input Tree",
   "version": "0.1.0",
   "unity": "2022.3",
-  "description": "Fruity Interface",
+  "description": "Input Tree",
 
   "license": "MIT",
   "author": {
@@ -17,7 +17,6 @@
      "com.unity.inputsystem": "1.4.4",
      "com.unity.ugui": "1.0.0",
      "com.unity.textmeshpro": "3.0.7",
-     "com.lycheelabs.fruityassetloader": "0.1.0",
      "com.lycheelabs.fruitysaveload": "0.1.0"
   }
 }

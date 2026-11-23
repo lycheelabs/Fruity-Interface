@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// Event fired every frame during a drag to update which DragOverTarget is being dragged over.

@@ -1,4 +1,4 @@
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// Base interface for objects that can receive mouse hover events.

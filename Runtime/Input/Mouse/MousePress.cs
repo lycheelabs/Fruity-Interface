@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface  {
+namespace LycheeLabs.InputTree  {
 
     /// <summary>
     /// Tracks the state of an active mouse press (click or drag).

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace LycheeLabs.FruityInterface.Settings {
+namespace LycheeLabs.InputTree.Settings {
 
     public class VolumeSetting : IntSetting {
 

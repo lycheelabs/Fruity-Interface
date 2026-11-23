@@ -1,7 +1,7 @@
-﻿using LycheeLabs.FruityInterface.Animation;
+﻿using LycheeLabs.InputTree.Animation;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     public enum CameraFitMode { FitWidthAndHeight, FitHeightToLevelY, FitHeightToLevelZ }
 

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     [RequireComponent(typeof(RectTransform))]
     public class LayoutNode : InterfaceNode, ILayoutController {

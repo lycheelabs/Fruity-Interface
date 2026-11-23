@@ -1,8 +1,8 @@
 using System;
-using LycheeLabs.FruityInterface.Animation;
+using LycheeLabs.InputTree.Animation;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     /// <summary> Abstract implementation of a simple button. </summary>
     public abstract class ButtonNode : ControlNode, ClickTarget, EnteringElement {

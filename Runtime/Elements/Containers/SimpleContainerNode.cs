@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     /// <summary>
     /// This container adjusts its RectTransform size to match the contained LayoutContent's total size.

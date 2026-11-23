@@ -1,6 +1,6 @@
 using Newtonsoft.Json.Linq;
 
-namespace LycheeLabs.FruityInterface.Settings {
+namespace LycheeLabs.InputTree.Settings {
 
     public class StringSetting : Setting {
 

@@ -1,51 +1,31 @@
-using LycheeLabs.FruityInterface.Elements;
-using LycheeLabs.FruityAssetLoader;
+using LycheeLabs.InputTree.Elements;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
-    /// Contains a set of prefabs used for basic UI setup.
+    /// Contains the canvas prefabs needed for basic UI setup.
     /// </summary>
-    public sealed class FruityUIPrefabs : AssetCatalog {
+    public sealed class FruityUIPrefabs {
 
-        private const string PREFABS_PATH = "FruityPrefabs/";
-
-        // ----------------------------------------------------------------
-
-        private const string CANVAS_FOLDER = "CanvasPrefabs/";
-        private const string PROMPT_FOLDER = "PromptPrefabs/";
+        private const string CANVAS_PATH = "FruityPrefabs/CanvasPrefabs/";
 
         // ----------------------------------------------------------------
 
-        public static readonly Prefab<CanvasNode> Canvas = LoadPrefab<CanvasNode>(CANVAS_FOLDER, "CanvasNode");
-        public static readonly Prefab<FullscreenLetterboxNode> FullscreenLetterbox = LoadPrefab<FullscreenLetterboxNode>(CANVAS_FOLDER, "FullscreenLetterboxNode");
-        public static readonly Prefab<ShadowBackgroundNode> ShadowBackground = LoadPrefab<ShadowBackgroundNode>(CANVAS_FOLDER, "ShadowBackgroundNode");
-        public static readonly Prefab<FullscreenButtonNode> FullscreenButton = LoadPrefab<FullscreenButtonNode>(CANVAS_FOLDER, "FullscreenButtonNode");
-        public static readonly Prefab<TextTooltip> TextTooltip = LoadPrefab<TextTooltip>(PROMPT_FOLDER, "TextTooltip");
+        public static CanvasNode InstantiateCanvas () {
+            return UnityEngine.Object.Instantiate(Resources.Load<CanvasNode>(CANVAS_PATH + "CanvasNode"));
+        }
 
-        private static Prefab<T> LoadPrefab<T>(string folder, string file) where T : Component {
-            return new Prefab<T>(Load<GameObject>(PREFABS_PATH + folder, file));
+        public static FullscreenLetterboxNode InstantiateFullscreenLetterbox () {
+            return UnityEngine.Object.Instantiate(Resources.Load<FullscreenLetterboxNode>(CANVAS_PATH + "FullscreenLetterboxNode"));
         }
 
         public static GameObject NewCanvasNode () {
-            return Canvas.InstantiateGameObject();
+            return InstantiateCanvas().gameObject;
         }
 
         public static GameObject NewFullscreenLetterbox () {
-            return FullscreenLetterbox.InstantiateGameObject();
-        }
-
-        public static GameObject NewShadowBackground () {
-            return ShadowBackground.InstantiateGameObject();
-        }
-
-        public static GameObject NewFullscreenButton () {
-            return FullscreenButton.InstantiateGameObject();
-        }
-
-        public static GameObject NewSimpleTooltip () {
-            return TextTooltip.InstantiateGameObject();
+            return InstantiateFullscreenLetterbox().gameObject;
         }
 
     }

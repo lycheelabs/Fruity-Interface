@@ -1,4 +1,4 @@
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// Describes an input transition before it is resolved into a Fruity UI target.

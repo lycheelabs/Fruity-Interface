@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     // Rotates around the Z axis
     public class WiggleAnimation : SimpleJuicyAnimation {

@@ -1,4 +1,4 @@
-﻿namespace LycheeLabs.FruityInterface {
+﻿namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// Interface for objects that can be clicked with the mouse.

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     // Makes the transform bulge in the X and Y axes together
     public class BulgeAnimation : SimpleJuicyAnimation {

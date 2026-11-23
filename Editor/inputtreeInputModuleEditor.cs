@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 
-namespace LycheeLabs.FruityInterface.Editors {
+namespace LycheeLabs.InputTree.Editors {
 
     [CustomEditor(typeof(FruityInterfaceInputModule))]
     public sealed class FruityInterfaceInputModuleEditor : UnityEditor.Editor {

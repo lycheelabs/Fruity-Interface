@@ -1,9 +1,9 @@
-using LycheeLabs.FruityInterface.Animation;
+using LycheeLabs.InputTree.Animation;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     public class InterfaceModeSwitcher<T> where T : Enum {
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     // Juicy Animators can have 1 base animation, which is replaceable.
     // They can have any number of layered animations, which overlay.

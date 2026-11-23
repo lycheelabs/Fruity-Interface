@@ -1,6 +1,6 @@
-using LycheeLabs.FruityInterface;
+using LycheeLabs.InputTree;
 
-namespace FruityInterface.Tests {
+namespace InputTree.Tests {
 
     public sealed class TestNode : TreeNode {
 

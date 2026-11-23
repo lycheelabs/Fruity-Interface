@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.LowLevel;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     /// <summary>
     /// Ticks only the JuicyAnimators that are currently animating, once per frame, after the LateUpdate phase.

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using LycheeLabs.FruityInterface;
+using LycheeLabs.InputTree;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

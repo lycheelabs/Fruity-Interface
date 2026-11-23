@@ -1,7 +1,7 @@
-using LycheeLabs.FruityInterface;
+using LycheeLabs.InputTree;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     public abstract class BackgroundNode : InterfaceNode {
 

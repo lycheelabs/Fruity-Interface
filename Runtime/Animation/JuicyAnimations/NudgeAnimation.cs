@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     // Bounces the transform's position in a direction
     public class NudgeAnimation : SimpleJuicyAnimation {

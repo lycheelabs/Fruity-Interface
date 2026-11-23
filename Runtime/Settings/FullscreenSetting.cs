@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Settings {
+namespace LycheeLabs.InputTree.Settings {
 
     public class FullscreenSetting : BoolSetting {
 

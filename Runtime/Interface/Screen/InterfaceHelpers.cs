@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface  {
+namespace LycheeLabs.InputTree  {
 
     internal static class InterfaceHelpers {
                 

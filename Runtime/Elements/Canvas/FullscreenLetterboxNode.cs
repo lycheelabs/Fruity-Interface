@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     public class FullscreenLetterboxNode : InterfaceNode {
 
 		public static FullscreenLetterboxNode Instantiate (Transform parent) {
-			var instance = FruityUIPrefabs.FullscreenLetterbox.Instantiate();
+			var instance = FruityUIPrefabs.InstantiateFullscreenLetterbox();
 			instance.transform.SetParent(parent, false);
 			return instance;
         }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     public static class Tweens {
 

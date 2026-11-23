@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace LycheeLabs.FruityInterface.Settings {
+namespace LycheeLabs.InputTree.Settings {
 
     public class SettingsRegistry {
 

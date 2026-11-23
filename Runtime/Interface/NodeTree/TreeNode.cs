@@ -1,4 +1,4 @@
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// A node in an input hierarchy. Implemented by InterfaceNode and by plain test nodes.

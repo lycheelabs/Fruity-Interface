@@ -1,7 +1,7 @@
-﻿using LycheeLabs.FruityInterface.Elements;
+﻿using LycheeLabs.InputTree.Elements;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     public class SpacerNode : LayoutNode {
 

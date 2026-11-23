@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// FIFO queue for input transitions captured outside the EventSystem tick.

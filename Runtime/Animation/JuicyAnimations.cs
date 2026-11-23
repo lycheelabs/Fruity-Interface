@@ -1,7 +1,7 @@
-using LycheeLabs.FruityInterface.Animation;
+using LycheeLabs.InputTree.Animation;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
 
     /// <summary>
     /// An extensions class for easily instantiating new JuicyAnimations

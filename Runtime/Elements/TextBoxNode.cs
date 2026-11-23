@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     public class TextBoxNode : LayoutNode {
 

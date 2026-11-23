@@ -1,6 +1,8 @@
-# FruityInterface
+# InputTree
 
-Unity package (`com.lycheelabs.fruityinterface`) providing UI rendering, input handling, stage sequencing, and a generic settings pipeline. Depends on `TextMeshPro`, `FruitySaveLoad`, and `FruityAssetLoader`.
+Unity package (`com.lycheelabs.inputtree`) providing UI rendering, input handling, stage sequencing, and a generic settings pipeline. Depends on `com.unity.ugui`, `com.unity.inputsystem`, `TextMeshPro`, and `FruitySaveLoad`.
+
+Default controls, tooltips, fullscreen controls, and the settings UI bridge live in LycheeGameKit (`com.lycheelabs.gamekit`). Only the canvas and letterbox prefabs remain here, and they load through `Resources.Load`.
 
 ---
 
@@ -12,7 +14,7 @@ Save/load functionality is provided by the `com.lycheelabs.fruitysaveload` depen
 
 ## Settings (`Runtime/Settings/`)
 
-Namespace `LycheeLabs.FruityInterface.Settings`. Generic typed settings with JSON persistence, category grouping via dotted keys, and an overrideable `Apply()` hook per setting.
+Namespace `LycheeLabs.InputTree.Settings`. Generic typed settings with JSON persistence, category grouping via dotted keys, and an overrideable `Apply()` hook per setting.
 
 ### Core types
 
@@ -74,33 +76,9 @@ Complex settings subclass the base type and override `Apply()` — see `Fullscre
 
 ---
 
-## Settings UI Bridge (`Runtime/Elements/Controls/Settings/`)
+## Settings UI Bridge
 
-Connects UI controls to the settings pipeline. Two-component pattern per control type.
-
-### Toggle bridge
-
-| Component | Goes on | Role |
-|---|---|---|
-| `ToggleSettingKey` | SettingNode (the field) | Holds `SettingKey` string. `Start()` reads the `BoolSetting` and calls `SetUpAs()`. `OnToggled()` writes back. |
-| `ToggleSettingEffect` | ToggleSwitch (the child) | Extends `ToggleEffect`. `ApplyToggle()` routes to `GetComponentInParent<ToggleSettingKey>().OnToggled()`. |
-
-### Slider bridge
-
-| Component | Goes on | Role |
-|---|---|---|
-| `SliderSettingKey` | SettingNode (the field) | Holds `SettingKey` string. `Start()` calls `slider.Configure(min, max, value)`. `OnSlid(int)` writes to `IntSetting`. |
-| `SliderSettingEffect` | SliderNode (the child) | Extends `SliderEffect`. `OnValueChanged(int)` routes to `GetComponentInParent<SliderSettingKey>().OnSlid()`. |
-
-### Extending
-
-Future control types follow the same pattern:
-
-| Data | Field Key Component | Effect Component |
-|---|---|---|
-| `BoolSetting` | `ToggleSettingKey` | `ToggleSettingEffect` |
-| `IntSetting` | `SliderSettingKey` | `SliderSettingEffect` |
-| `StringSetting` | `DropdownSettingKey` | `DropdownSettingEffect` |
+The bridge that connects controls to settings (`ToggleSettingKey`, `SliderSettingKey`, and their effects) lives in LycheeGameKit under `Runtime/Elements/Controls/Settings/`. The data classes in `Runtime/Settings/` stay here.
 
 ---
 
@@ -115,30 +93,15 @@ Future control types follow the same pattern:
 | `ColliderNode` | InterfaceNode | BoxCollider-based raycast target. |
 | `ControlNode` | LayoutNode | Adds `LayoutDriver` for parent-driven sizing. |
 | `ContainerNode` | LayoutNode | Abstract — `ChildNodes` list, `RebuildChildNodes()`. |
-| `SettingNode` | ControlNode | Field layout — text label + control child. |
 
-### Button types
+### Button base
 
 | Class | Extends | Role |
 |---|---|---|
 | `ButtonEffect` | MonoBehaviour | Abstract click behavior — `MouseOver()`, `Activate(button)`, `TryUnclick()`. |
 | `ButtonNode` | ControlNode + ClickTarget | Hover animation, delegates click to `ButtonEffect`. Has `TryGetSFX`. |
-| `TextButton` | ButtonNode | Button with TMP text + optional icon. |
-| `IconButton` | ButtonNode | Button with sprite icon. |
-| `ToggleSwitch` | LayoutNode + ClickTarget | Animated boolean switch. Has `TryGetSFX` — calls `OnTurnOn()` / `OnTurnOff()`. |
 
-### Toggle types
-
-| Class | Extends | Role |
-|---|---|---|
-| `ToggleEffect` | MonoBehaviour | Abstract — `IsToggledOn`, `Toggle()`, `ToggleTo()`, `ApplyToggle(bool)`. |
-
-### Slider types
-
-| Class | Extends | Role |
-|---|---|---|
-| `SliderNode` | LayoutNode + DragTarget | Draggable int slider. Configurable `width`, `showValue`, `valueIsPercentage`. Has `TryGetSFX` — calls `OnClick()` on drag start, `OnSliderModified()` on value change (throttled). |
-| `SliderEffect` | MonoBehaviour | Abstract — `OnValueChanged(int value)`. |
+Concrete buttons, toggles, and sliders (`TextButton`, `IconButton`, `ToggleSwitch`, `SliderNode`, and their effects) live in LycheeGameKit.
 
 ### SFX
 
@@ -172,9 +135,7 @@ Attach a concrete `NodeSFX` subclass to any `ButtonNode`, `ToggleSwitch`, or `Sl
 | Class | Role |
 |---|---|
 | `CanvasNode` | Root Canvas wrapper. |
-| `FullscreenButtonNode` | Fullscreen toggle button. |
 | `FullscreenLetterboxNode` | Letterbox bars for aspect ratio. |
-| `ShadowBackgroundNode` | Dimming shadow under modal prompts. Extends `BackgroundNode` and follows its target directly. |
 
 ### Backgrounds
 
@@ -225,7 +186,7 @@ physical button-down event cannot preempt an active or queued press.
 |---|---|
 | `FruityUI` | Static access — layer locking, camera/world plane, mouse-to-world projection, `TriggerNewClick()`. |
 | `FruityUIManager` | MonoBehaviour singleton — mouse input, aspect ratio, click buffering. |
-| `FruityUIPrefabs` | Prefab loading — Canvas, Letterbox, Shadow, FullscreenButton. |
+| `FruityUIPrefabs` | Canvas and letterbox prefab loading through `Resources.Load`. |
 | `FruityEditorDrawer` | Editor helpers — `DrawConfigProperties()`, `DrawLayoutProperties()`, `DrawPrefabProperties()`, `DrawAdditionalProperties()`. |
 | `Anchor` / `ScreenAnchor` / `WorldAnchor` | RectTransform anchoring helpers. |
 | `InterfaceHelpers` | Coordinate conversion between screen, UI, and world space. |

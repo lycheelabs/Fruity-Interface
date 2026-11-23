@@ -1,9 +1,9 @@
-using LycheeLabs.FruityInterface;
+using LycheeLabs.InputTree;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FruityInterface.Tests {
+namespace InputTree.Tests {
 
     /// <summary>
     /// Drives a real FruityInputRuntime with a fake raycaster and clock.

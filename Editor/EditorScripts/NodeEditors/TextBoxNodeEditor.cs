@@ -1,7 +1,7 @@
-using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.InputTree.Elements;
 using UnityEditor;
 
-namespace LycheeLabs.FruityInterface.Editors {
+namespace LycheeLabs.InputTree.Editors {
 
     [CustomEditor(typeof(TextBoxNode))]
     public class TextBoxNodeEditor : UnityEditor.Editor {

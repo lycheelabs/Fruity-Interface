@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// Static access point for UI system state and utilities.

@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Elements {
+namespace LycheeLabs.InputTree.Elements {
 
     [RequireComponent(typeof(Canvas))]
     public sealed class CanvasNode : InterfaceNode {
 
         public static CanvasNode Spawn (string name, Camera camera, float planeDistance = 1f) {
-            var instance = FruityUIPrefabs.Canvas.Instantiate();
+            var instance = FruityUIPrefabs.InstantiateCanvas();
             instance.name = "Canvas-" + name;
             instance.SetCamera(camera, planeDistance);
             return instance;

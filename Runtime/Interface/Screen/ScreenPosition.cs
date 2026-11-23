@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     [System.Obsolete("Use WorldAnchor for world→screen resolution or ScreenAnchor for screen→world resolution.")]
     public struct ScreenPosition {

@@ -1,7 +1,7 @@
 using UnityEditor;
-using LycheeLabs.FruityInterface.Elements;
+using LycheeLabs.InputTree.Elements;
 
-namespace LycheeLabs.FruityInterface.Editors {
+namespace LycheeLabs.InputTree.Editors {
 
     [CustomEditor(typeof(SpacerNode))]
     public class SpacerNodeEditor : UnityEditor.Editor {

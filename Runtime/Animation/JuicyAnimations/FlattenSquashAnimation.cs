@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Animation {
+namespace LycheeLabs.InputTree.Animation {
     // Squashes the transform along the Y axis, making it almost disappear
     public class FlattenSquashAnimation : SimpleJuicyAnimation {
 

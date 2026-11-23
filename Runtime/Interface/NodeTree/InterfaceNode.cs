@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     /// <summary>
     /// InputNodes can arrange your various input-handling elements into a tree (or multiple trees). 

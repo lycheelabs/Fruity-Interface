@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-namespace LycheeLabs.FruityInterface {
+namespace LycheeLabs.InputTree {
 
     [RequireComponent(typeof(EventSystem))]
     public sealed class FruityInterfaceInputModule : BaseInputModule {

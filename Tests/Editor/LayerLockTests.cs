@@ -1,5 +1,5 @@
-using LycheeLabs.FruityInterface;
-using FruityInterface.Tests;
+using LycheeLabs.InputTree;
+using InputTree.Tests;
 using NUnit.Framework;
 
 namespace Hierarchy {

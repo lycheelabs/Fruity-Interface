@@ -1,8 +1,8 @@
 {
-    "name": "com.lycheelabs.fruityinterface.EDITMODE.TESTS",
-    "rootNamespace": "LycheeLabs.FruityInterface.Tests",
+    "name": "com.lycheelabs.inputtree.EDITMODE.TESTS",
+    "rootNamespace": "LycheeLabs.InputTree.Tests",
     "references": [
-        "com.lycheelabs.fruityinterface.RUNTIME"
+        "com.lycheelabs.inputtree.RUNTIME"
     ],
     "includePlatforms": [
         "Editor"
