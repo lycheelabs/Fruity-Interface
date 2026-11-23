@@ -8,72 +8,72 @@ namespace Hierarchy {
 
         [SetUp]
         public void SetUp() {
-            FruityUI.ResetStateForTests();
+            Interface.ResetStateForTests();
         }
 
         [TearDown]
         public void TearDown() {
-            FruityUI.ResetStateForTests();
+            Interface.ResetStateForTests();
         }
 
         [Test]
         public void LockLayer_SetsThresholdAndIsLocked() {
-            FruityUI.LockLayer(1);
+            Interface.LockLayer(1);
 
-            Assert.AreEqual(1, FruityUI.ActiveLayerThreshold);
-            Assert.IsTrue(FruityUI.InterfaceIsLocked);
+            Assert.AreEqual(1, Interface.ActiveLayerThreshold);
+            Assert.IsTrue(Interface.InterfaceIsLocked);
         }
 
         [Test]
         public void LockLayer_HigherLayerRaisesThreshold_LowerDoesNot() {
-            FruityUI.LockLayer(1);
-            FruityUI.LockLayer(3);
-            FruityUI.LockLayer(2);
+            Interface.LockLayer(1);
+            Interface.LockLayer(3);
+            Interface.LockLayer(2);
 
-            Assert.AreEqual(3, FruityUI.ActiveLayerThreshold);
+            Assert.AreEqual(3, Interface.ActiveLayerThreshold);
         }
 
         [Test]
         public void UnlockLayer_RefCounted_StaysLockedUntilLastUnlock() {
-            FruityUI.LockLayer(1);
-            FruityUI.LockLayer(1);
+            Interface.LockLayer(1);
+            Interface.LockLayer(1);
 
-            FruityUI.UnlockLayer(1);
-            Assert.AreEqual(1, FruityUI.ActiveLayerThreshold);
-            Assert.IsTrue(FruityUI.InterfaceIsLocked);
+            Interface.UnlockLayer(1);
+            Assert.AreEqual(1, Interface.ActiveLayerThreshold);
+            Assert.IsTrue(Interface.InterfaceIsLocked);
 
-            FruityUI.UnlockLayer(1);
-            Assert.AreEqual(0, FruityUI.ActiveLayerThreshold);
-            Assert.IsFalse(FruityUI.InterfaceIsLocked);
+            Interface.UnlockLayer(1);
+            Assert.AreEqual(0, Interface.ActiveLayerThreshold);
+            Assert.IsFalse(Interface.InterfaceIsLocked);
         }
 
         [Test]
         public void UnlockLayer_HighestLayer_DropsToNextHighest() {
-            FruityUI.LockLayer(1);
-            FruityUI.LockLayer(3);
+            Interface.LockLayer(1);
+            Interface.LockLayer(3);
 
-            FruityUI.UnlockLayer(3);
+            Interface.UnlockLayer(3);
 
-            Assert.AreEqual(1, FruityUI.ActiveLayerThreshold);
+            Assert.AreEqual(1, Interface.ActiveLayerThreshold);
         }
 
         [Test]
         public void UnlockLayer_LowerLayer_KeepsHighestThreshold() {
-            FruityUI.LockLayer(1);
-            FruityUI.LockLayer(3);
+            Interface.LockLayer(1);
+            Interface.LockLayer(3);
 
-            FruityUI.UnlockLayer(1);
+            Interface.UnlockLayer(1);
 
-            Assert.AreEqual(3, FruityUI.ActiveLayerThreshold);
+            Assert.AreEqual(3, Interface.ActiveLayerThreshold);
         }
 
         [Test]
         public void UnlockLayer_UnlockedLayer_IsNoOp() {
-            FruityUI.LockLayer(2);
+            Interface.LockLayer(2);
 
-            FruityUI.UnlockLayer(5);
+            Interface.UnlockLayer(5);
 
-            Assert.AreEqual(2, FruityUI.ActiveLayerThreshold);
+            Assert.AreEqual(2, Interface.ActiveLayerThreshold);
         }
     }
 

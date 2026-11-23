@@ -9,7 +9,7 @@ namespace LycheeLabs.InputTree {
     public struct WorldAnchor {
 
         public static WorldAnchor FromCamera(Vector2 screenOffset, Camera camera = null) {
-            camera = camera ?? FruityUI.UICamera;
+            camera = camera ?? Interface.UICamera;
             var cameraCenter = camera.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height) / 2f);
             return new WorldAnchor(cameraCenter, screenOffset);
         }
@@ -26,42 +26,42 @@ namespace LycheeLabs.InputTree {
             offset = screenOffset;
         }
 
-        public ScreenAnchor PinToScreen() => PinToScreen(FruityUI.UICamera);
+        public ScreenAnchor PinToScreen() => PinToScreen(Interface.UICamera);
 
         public ScreenAnchor PinToScreen(Camera camera) {
             return new ScreenAnchor(camera.WorldToScreenPoint(position), offset);
         }
 
-        public Vector3 ScreenVector() => ScreenVector(FruityUI.UICamera);
+        public Vector3 ScreenVector() => ScreenVector(Interface.UICamera);
 
         public Vector3 ScreenVector(Camera camera) {
-            var canvasVector = RawScreenVector(camera) * FruityUI.ScreenBounds.UIScaling;
-            var screenOffset = (Vector3)(-FruityUI.ScreenBounds.WindowCanvasSize / 2f);
+            var canvasVector = RawScreenVector(camera) * Interface.ScreenBounds.UIScaling;
+            var screenOffset = (Vector3)(-Interface.ScreenBounds.WindowCanvasSize / 2f);
             return canvasVector + screenOffset;
         }
 
-        public Vector3 RawScreenVector() => RawScreenVector(FruityUI.UICamera);
+        public Vector3 RawScreenVector() => RawScreenVector(Interface.UICamera);
 
         public Vector3 RawScreenVector(Camera camera) {
             if (camera == null) {
                 Debug.LogWarning("Resolving a WorldAnchor requires a Camera");
                 return default;
             }
-            return camera.WorldToScreenPoint(position) + (Vector3)offset / FruityUI.ScreenBounds.UIScaling;
+            return camera.WorldToScreenPoint(position) + (Vector3)offset / Interface.ScreenBounds.UIScaling;
         }
 
-        public Vector3 RawViewportVector() => RawViewportVector(FruityUI.UICamera);
+        public Vector3 RawViewportVector() => RawViewportVector(Interface.UICamera);
 
         public Vector2 RawViewportVector(Camera camera) {
             var rawVector = RawScreenVector(camera);
             return new Vector2(rawVector.x / Screen.width, rawVector.y / Screen.height);
         }
 
-        public Vector3 WorldVector() => WorldVector(FruityUI.UICamera);
+        public Vector3 WorldVector() => WorldVector(Interface.UICamera);
 
         public Vector3 WorldVector(Camera camera) {
             var screenVector = ScreenVector(camera);
-            var adjusted = (screenVector / FruityUI.ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
+            var adjusted = (screenVector / Interface.ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
             return camera.ScreenToWorldPoint(adjusted).IntersectWithWorldPlane();
         }
 

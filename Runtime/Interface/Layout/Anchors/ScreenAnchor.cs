@@ -31,7 +31,7 @@ namespace LycheeLabs.InputTree {
             this.offset = offset;
         }
 
-        public WorldAnchor PinWorld() => PinWorld(FruityUI.UICamera);
+        public WorldAnchor PinWorld() => PinWorld(Interface.UICamera);
 
         public WorldAnchor PinWorld(Camera camera) {
             var adjusted = ScreenToAdjusted();
@@ -39,7 +39,7 @@ namespace LycheeLabs.InputTree {
             return new WorldAnchor(worldPos.IntersectWithWorldPlane());
         }
 
-        public Vector3 WorldVector() => WorldVector(FruityUI.UICamera);
+        public Vector3 WorldVector() => WorldVector(Interface.UICamera);
 
         public Vector3 WorldVector(Camera camera) {
             var adjusted = ScreenToAdjusted();
@@ -47,8 +47,8 @@ namespace LycheeLabs.InputTree {
         }
 
         public Vector3 ScreenVector() {
-            var canvasVector = RawScreenVector() * FruityUI.ScreenBounds.UIScaling;
-            return canvasVector + (Vector3)(-FruityUI.ScreenBounds.WindowCanvasSize / 2f);
+            var canvasVector = RawScreenVector() * Interface.ScreenBounds.UIScaling;
+            return canvasVector + (Vector3)(-Interface.ScreenBounds.WindowCanvasSize / 2f);
         }
 
         public Vector3 RawScreenVector() {
@@ -57,7 +57,7 @@ namespace LycheeLabs.InputTree {
                 viewportPosition.y * Screen.height,
                 viewportPosition.z
             );
-            return screenPosition + (Vector3)offset / FruityUI.ScreenBounds.UIScaling;
+            return screenPosition + (Vector3)offset / Interface.ScreenBounds.UIScaling;
         }
 
         public Vector3 RawViewportVector() {
@@ -67,7 +67,7 @@ namespace LycheeLabs.InputTree {
 
         private Vector3 ScreenToAdjusted() {
             var screenVector = ScreenVector();
-            return (screenVector / FruityUI.ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
+            return (screenVector / Interface.ScreenBounds.UIScaling) + new Vector3(Screen.width, Screen.height) / 2f;
         }
 
     }

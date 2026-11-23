@@ -88,7 +88,7 @@ namespace Input {
             Assert.GreaterOrEqual(a.CountOf("drag"), 1);
             Assert.AreEqual(1, a.CountOf("dragDrop"));
             Assert.AreSame(a, a.LastDropParams.DraggingOver);
-            Assert.IsNull(FruityUI.DraggedTarget);
+            Assert.IsNull(Interface.DraggedTarget);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Input {
 
             Assert.AreEqual(1, a.CountOf("dragCancel"));
             Assert.AreEqual(0, a.CountOf("dragDrop"));
-            Assert.IsNull(FruityUI.DraggedTarget);
+            Assert.IsNull(Interface.DraggedTarget);
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace Input {
             harness.Cancel();
 
             Assert.AreEqual(1, a.CountOf("dragCancel"));
-            Assert.IsNull(FruityUI.DraggedTarget);
+            Assert.IsNull(Interface.DraggedTarget);
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace Input {
             harness.Raycaster.Target = a;
             harness.Press(MouseButton.Left);
 
-            FruityUI.CancelDrag(a);
+            Interface.CancelDrag(a);
             harness.Step();
 
             Assert.AreEqual(1, a.CountOf("dragCancel"));
@@ -182,7 +182,7 @@ namespace Input {
             harness.Release(MouseButton.Left);
 
             Assert.AreEqual(0, a.CountOf("dragDrop"));
-            Assert.AreSame(a, FruityUI.DraggedTarget);
+            Assert.AreSame(a, Interface.DraggedTarget);
 
             harness.AdvanceTime(0.1f);
             harness.Press(MouseButton.Left);
@@ -201,14 +201,14 @@ namespace Input {
 
             Assert.AreEqual(1, a.CountOf("hoverEnd"));
             Assert.AreEqual(1, b.CountOf("hover.first"));
-            Assert.AreSame(b, FruityUI.HighlightedTarget);
+            Assert.AreSame(b, Interface.HighlightedTarget);
         }
 
         [Test]
         public void TriggerNewClick_ClicksWithoutRawInput() {
             harness.Raycaster.Target = a;
 
-            FruityUI.TriggerNewClick(a, MouseButton.Left);
+            Interface.TriggerNewClick(a, MouseButton.Left);
             harness.Step();
 
             Assert.AreEqual(1, a.CountOf("click"));

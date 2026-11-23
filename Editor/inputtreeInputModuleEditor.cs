@@ -6,8 +6,8 @@ using System.Linq;
 
 namespace LycheeLabs.InputTree.Editors {
 
-    [CustomEditor(typeof(FruityInterfaceInputModule))]
-    public sealed class FruityInterfaceInputModuleEditor : UnityEditor.Editor {
+    [CustomEditor(typeof(InputTreeInputModule))]
+    public sealed class InputTreeInputModuleEditor : UnityEditor.Editor {
 
         private const string DEFAULT_ACTIONS_PATH =
             "Packages/com.unity.inputsystem/InputSystem/Runtime/Plugins/PlayerInput/DefaultInputActions.inputactions";
@@ -22,12 +22,12 @@ namespace LycheeLabs.InputTree.Editors {
         private string[] availableNames;
 
         private void OnEnable() {
-            actionsAsset = serializedObject.FindProperty(nameof(FruityInterfaceInputModule.actionsAsset));
-            point = serializedObject.FindProperty(nameof(FruityInterfaceInputModule.point));
-            leftClick = serializedObject.FindProperty(nameof(FruityInterfaceInputModule.leftClick));
-            rightClick = serializedObject.FindProperty(nameof(FruityInterfaceInputModule.rightClick));
-            middleClick = serializedObject.FindProperty(nameof(FruityInterfaceInputModule.middleClick));
-            scrollWheel = serializedObject.FindProperty(nameof(FruityInterfaceInputModule.scrollWheel));
+            actionsAsset = serializedObject.FindProperty(nameof(InputTreeInputModule.actionsAsset));
+            point = serializedObject.FindProperty(nameof(InputTreeInputModule.point));
+            leftClick = serializedObject.FindProperty(nameof(InputTreeInputModule.leftClick));
+            rightClick = serializedObject.FindProperty(nameof(InputTreeInputModule.rightClick));
+            middleClick = serializedObject.FindProperty(nameof(InputTreeInputModule.middleClick));
+            scrollWheel = serializedObject.FindProperty(nameof(InputTreeInputModule.scrollWheel));
             AssignDefaultAssetIfNeeded();
             RefreshAvailableReferences();
         }
@@ -37,7 +37,7 @@ namespace LycheeLabs.InputTree.Editors {
             EditorGUILayout.PropertyField(actionsAsset);
 
             if (serializedObject.ApplyModifiedProperties()) {
-                ((FruityInterfaceInputModule)target).AssignActionsFromAsset();
+                ((InputTreeInputModule)target).AssignActionsFromAsset();
                 RefreshAvailableReferences();
                 serializedObject.Update();
             }
@@ -51,12 +51,12 @@ namespace LycheeLabs.InputTree.Editors {
             EditorGUILayout.Space();
             DrawPropertiesExcluding(
                 serializedObject,
-                nameof(FruityInterfaceInputModule.actionsAsset),
-                nameof(FruityInterfaceInputModule.point),
-                nameof(FruityInterfaceInputModule.leftClick),
-                nameof(FruityInterfaceInputModule.rightClick),
-                nameof(FruityInterfaceInputModule.middleClick),
-                nameof(FruityInterfaceInputModule.scrollWheel));
+                nameof(InputTreeInputModule.actionsAsset),
+                nameof(InputTreeInputModule.point),
+                nameof(InputTreeInputModule.leftClick),
+                nameof(InputTreeInputModule.rightClick),
+                nameof(InputTreeInputModule.middleClick),
+                nameof(InputTreeInputModule.scrollWheel));
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -81,7 +81,7 @@ namespace LycheeLabs.InputTree.Editors {
         }
 
         private void RefreshAvailableReferences() {
-            var module = (FruityInterfaceInputModule)target;
+            var module = (InputTreeInputModule)target;
             if (module.actionsAsset == null) {
                 availableReferences = null;
                 availableNames = new[] { "None" };
@@ -108,7 +108,7 @@ namespace LycheeLabs.InputTree.Editors {
         }
 
         private void AssignDefaultAssetIfNeeded() {
-            var module = (FruityInterfaceInputModule)target;
+            var module = (InputTreeInputModule)target;
             if (module.actionsAsset != null) return;
 
             var asset = AssetDatabase.LoadAssetAtPath<InputActionAsset>(DEFAULT_ACTIONS_PATH);

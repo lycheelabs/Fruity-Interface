@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LycheeLabs.InputTree  {
 
@@ -88,7 +88,7 @@ namespace LycheeLabs.InputTree  {
         public bool WasRealDrag(Vector2 currentScreenPosition, float time) {
             var duration = time - pressStartTime;
             var distance = (currentScreenPosition - pressScreenPosition).magnitude;
-            var threshold = FruityUI.ScreenBounds.BoxedCanvasSize.y / DRAG_DISTANCE_DIVISOR;
+            var threshold = Interface.ScreenBounds.BoxedCanvasSize.y / DRAG_DISTANCE_DIVISOR;
             return duration > MAX_CLICK_DURATION || distance > threshold;
         }
 

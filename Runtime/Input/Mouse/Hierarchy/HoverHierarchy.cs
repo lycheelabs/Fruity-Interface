@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LycheeLabs.InputTree {
@@ -42,7 +42,7 @@ namespace LycheeLabs.InputTree {
         }
 
         protected override void UpdateGlobalState(MouseTarget target) {
-            FruityUI.HighlightedTarget = target;
+            Interface.HighlightedTarget = target;
         }
 
         protected override void LogTargetChange(MouseTarget target) {

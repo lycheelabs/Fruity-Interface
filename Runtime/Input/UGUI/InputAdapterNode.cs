@@ -34,7 +34,7 @@ namespace LycheeLabs.InputTree {
         }
 
         public void UpdateMouseHover(bool firstFrame, HoverParams hoverParams) {
-            SetPointerPosition(FruityUI.RawMouseScreenPosition);
+            SetPointerPosition(Interface.RawMouseScreenPosition);
             if (firstFrame) {
                 Execute(ExecuteEvents.pointerEnterHandler);
             }
@@ -49,7 +49,7 @@ namespace LycheeLabs.InputTree {
         }
 
         public void ApplyMouseClick(ClickParams clickParams) {
-            SetPointerPosition(FruityUI.RawMouseScreenPosition);
+            SetPointerPosition(Interface.RawMouseScreenPosition);
             if (!pointerIsDown) {
                 BeginPointer(clickParams.ClickButton);
             }
@@ -62,7 +62,7 @@ namespace LycheeLabs.InputTree {
         public bool TryMouseUnclick(ClickParams clickParams) {
             if (!pointerIsDown) return true;
 
-            SetPointerPosition(FruityUI.RawMouseScreenPosition);
+            SetPointerPosition(Interface.RawMouseScreenPosition);
             Execute(ExecuteEvents.pointerUpHandler);
             ClearPointerPress();
             return true;

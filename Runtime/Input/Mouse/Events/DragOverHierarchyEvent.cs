@@ -26,15 +26,15 @@ namespace LycheeLabs.InputTree {
 
         public void Activate(bool logging) {
             // Build hierarchy from the raycast data passed to the event
-            // The hierarchy filters to only DragOverTarget instances and updates FruityUI.DraggedOverTarget
+            // The hierarchy filters to only DragOverTarget instances and updates Interface.DraggedOverTarget
             hierarchy.Build(RaycastTarget, RaycastNode, MouseWorldPosition, DragButton);
             
             // ApplyDiff needs DragParams for the callbacks - build it from current global state
             var dragParams = new DragParams(
-                FruityUI.DraggedTarget,
-                FruityUI.DraggedOverTarget,
+                Interface.DraggedTarget,
+                Interface.DraggedOverTarget,
                 Vector2.zero,  // Not used by DragOver callbacks
-                FruityUI.RawMouseScreenPosition,
+                Interface.RawMouseScreenPosition,
                 DragButton
             );
             

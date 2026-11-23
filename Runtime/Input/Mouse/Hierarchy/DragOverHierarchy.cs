@@ -26,7 +26,7 @@ namespace LycheeLabs.InputTree {
         }
 
         protected override void UpdateGlobalState(MouseTarget target) {
-            FruityUI.DraggedOverTarget = target as DraggedOverTarget;
+            Interface.DraggedOverTarget = target as DraggedOverTarget;
         }
 
         protected override void LogTargetChange(MouseTarget target) {

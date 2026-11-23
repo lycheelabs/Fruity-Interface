@@ -30,7 +30,7 @@ namespace LycheeLabs.InputTree {
         }
 
         /// <summary>Current mouse position in screen/UI coordinates.</summary>
-        public Vector2 MouseUIPosition => FruityUI.WorldPointToScreenPoint(MouseWorldPosition);
+        public Vector2 MouseUIPosition => Interface.WorldPointToScreenPoint(MouseWorldPosition);
 
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace InputTree.Tests {
 
     /// <summary>
-    /// Drives a real FruityInputRuntime with a fake raycaster and clock.
+    /// Drives a real InputTreeRuntime with a fake raycaster and clock.
     /// Each Press/Release/Move/Cancel queues raw input and runs one Process() step.
     /// </summary>
     public sealed class MouseHarness : IDisposable {
@@ -15,12 +15,12 @@ namespace InputTree.Tests {
         public readonly FakeClock Clock = new FakeClock();
         public readonly List<string> Log = new List<string>();
 
-        private readonly FruityInputRuntime runtime;
+        private readonly InputTreeRuntime runtime;
 
         public MouseHarness() {
             ResetAllState();
             Clock.UnscaledTime = 1f;
-            runtime = new FruityInputRuntime(new MouseState(Raycaster, Clock), false, false);
+            runtime = new InputTreeRuntime(new MouseState(Raycaster, Clock), false, false);
         }
 
         public RecordingTarget CreateTarget(string name) {
@@ -62,7 +62,7 @@ namespace InputTree.Tests {
         }
 
         public static void ResetAllState() {
-            FruityUI.ResetStateForTests();
+            Interface.ResetStateForTests();
             MouseState.ResetStateForTests();
             HoverHierarchyEvent.ResetStateForTests();
             DragOverHierarchyEvent.ResetStateForTests();

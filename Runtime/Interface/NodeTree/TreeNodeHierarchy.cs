@@ -39,8 +39,8 @@ namespace LycheeLabs.InputTree {
                 if (current.IsInputDisabled) return false;
                 current = current.Parent;
             }
-            if (FruityUI.ActiveLayerThreshold > node.Layer) return false;
-            if (!FruityUI.InterfaceIsLocked && FruityUI.DisableInput) return false;
+            if (Interface.ActiveLayerThreshold > node.Layer) return false;
+            if (!Interface.InterfaceIsLocked && Interface.DisableInput) return false;
             return true;
         }
     }

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 namespace LycheeLabs.InputTree {
 
     [RequireComponent(typeof(EventSystem))]
-    public sealed class FruityInterfaceInputModule : BaseInputModule {
+    public sealed class InputTreeInputModule : BaseInputModule {
 
         [Header("Pointer Actions")]
         public InputActionAsset actionsAsset;
@@ -21,7 +21,7 @@ namespace LycheeLabs.InputTree {
         public bool logRaycasts;
 
         private DefaultInputActions defaultActions;
-        private FruityInputRuntime inputRuntime;
+        private InputTreeRuntime inputRuntime;
         [System.NonSerialized] private InputActionAsset validatedActionsAsset;
         private bool actionsSubscribed;
         private bool leftPressed;
@@ -36,9 +36,9 @@ namespace LycheeLabs.InputTree {
 
         protected override void Awake() {
             base.Awake();
-            FruityUI.SetUICamera(Camera.main);
-            FruityUI.SetWorldPlane(new Plane(Vector3.up, Vector3.zero));
-            inputRuntime = new FruityInputRuntime(logEvents, logRawInput, logRaycasts);
+            Interface.SetUICamera(Camera.main);
+            Interface.SetWorldPlane(new Plane(Vector3.up, Vector3.zero));
+            inputRuntime = new InputTreeRuntime(logEvents, logRawInput, logRaycasts);
             AssignActionsIfNeeded();
         }
 
@@ -107,7 +107,7 @@ namespace LycheeLabs.InputTree {
         }
 
         public override void DeactivateModule() {
-            FruityInputRuntime.SubmitRawInput(RawInputEvent.Cancel(0, Vector2.zero, Time.unscaledTime));
+            InputTreeRuntime.SubmitRawInput(RawInputEvent.Cancel(0, Vector2.zero, Time.unscaledTime));
             inputRuntime?.Process();
             UnsubscribeActions();
             DisableActions();
@@ -182,11 +182,11 @@ namespace LycheeLabs.InputTree {
         }
 
         private void OnPoint(InputAction.CallbackContext context) {
-            FruityInputRuntime.SubmitRawInput(RawInputEvent.Move(0, context.ReadValue<Vector2>(), context.time));
+            InputTreeRuntime.SubmitRawInput(RawInputEvent.Move(0, context.ReadValue<Vector2>(), context.time));
         }
 
         private void OnScrollWheel(InputAction.CallbackContext context) {
-            FruityInputRuntime.SubmitRawInput(RawInputEvent.Scroll(
+            InputTreeRuntime.SubmitRawInput(RawInputEvent.Scroll(
                 0,
                 PointAction != null ? PointAction.ReadValue<Vector2>() : Vector2.zero,
                 context.ReadValue<Vector2>(),
@@ -215,7 +215,7 @@ namespace LycheeLabs.InputTree {
             var inputEvent = pressed
                 ? RawInputEvent.ButtonDown(0, button, position, context.time)
                 : RawInputEvent.ButtonUp(0, button, position, context.time);
-            FruityInputRuntime.SubmitRawInput(inputEvent);
+            InputTreeRuntime.SubmitRawInput(inputEvent);
         }
 
         protected override void OnDestroy() {

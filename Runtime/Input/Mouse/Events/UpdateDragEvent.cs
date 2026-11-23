@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LycheeLabs.InputTree {
 
@@ -10,17 +10,17 @@ namespace LycheeLabs.InputTree {
         public DragParams Params;
         
         public void Activate(bool logging) {
-            if (FruityUI.DraggedTarget == null) return;
+            if (Interface.DraggedTarget == null) return;
             
             // Safety check: params target should match current dragged target
-            if (Params.Target != FruityUI.DraggedTarget) {
-                if (logging) Debug.Log("Drag target mismatch, cancelling: " + FruityUI.DraggedTarget);
-                FruityUI.DraggedTarget.CancelMouseDrag();
-                FruityUI.DraggedTarget = null;
+            if (Params.Target != Interface.DraggedTarget) {
+                if (logging) Debug.Log("Drag target mismatch, cancelling: " + Interface.DraggedTarget);
+                Interface.DraggedTarget.CancelMouseDrag();
+                Interface.DraggedTarget = null;
                 return;
             }
             
-            FruityUI.DraggedTarget.UpdateMouseDragging(false, Params);
+            Interface.DraggedTarget.UpdateMouseDragging(false, Params);
         }
     }
 }

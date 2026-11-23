@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LycheeLabs.InputTree {
 
@@ -29,7 +29,7 @@ namespace LycheeLabs.InputTree {
         public Vector3 MouseWorldPosition => mouseWorldPosition;
         
         /// <summary>Mouse position in screen/UI coordinates when clicked.</summary>
-        public Vector2 MouseUIPosition => FruityUI.WorldPointToScreenPoint(mouseWorldPosition);
+        public Vector2 MouseUIPosition => Interface.WorldPointToScreenPoint(mouseWorldPosition);
 
     }
 

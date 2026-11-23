@@ -5,7 +5,7 @@ namespace LycheeLabs.InputTree.Elements {
     public class FullscreenLetterboxNode : InterfaceNode {
 
 		public static FullscreenLetterboxNode Instantiate (Transform parent) {
-			var instance = FruityUIPrefabs.InstantiateFullscreenLetterbox();
+			var instance = InputTreePrefabs.InstantiateFullscreenLetterbox();
 			instance.transform.SetParent(parent, false);
 			return instance;
         }
@@ -20,8 +20,8 @@ namespace LycheeLabs.InputTree.Elements {
         }
 
 		private void Update () {
-			float width = FruityUI.ScreenBounds.LetterboxWidth / FruityUI.ScreenBounds.UIScaling;
-			float height = FruityUI.ScreenBounds.LetterboxHeight / FruityUI.ScreenBounds.UIScaling;
+			float width = Interface.ScreenBounds.LetterboxWidth / Interface.ScreenBounds.UIScaling;
+			float height = Interface.ScreenBounds.LetterboxHeight / Interface.ScreenBounds.UIScaling;
 
 			borderL.sizeDelta = new Vector2 (width / 2, 0);
 			borderR.sizeDelta = new Vector2 (width / 2, 0);

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace LycheeLabs.InputTree {
 
@@ -20,28 +20,28 @@ namespace LycheeLabs.InputTree {
             if (!IsAlive(Target)) return;
 
             // Cancel any active drag
-            if (IsAlive(FruityUI.DraggedTarget)) {
-                if (logging) Debug.Log("Drag cancelled by click: " + FruityUI.DraggedTarget);
-                FruityUI.DraggedTarget.CancelMouseDrag();
-                FruityUI.DraggedTarget = null;
+            if (IsAlive(Interface.DraggedTarget)) {
+                if (logging) Debug.Log("Drag cancelled by click: " + Interface.DraggedTarget);
+                Interface.DraggedTarget.CancelMouseDrag();
+                Interface.DraggedTarget = null;
             } else {
-                FruityUI.DraggedTarget = null;
+                Interface.DraggedTarget = null;
             }
             
             // Try to unclick the currently selected target
-            if (!IsAlive(FruityUI.SelectedTarget)) {
-                FruityUI.SelectedTarget = null;
-            } else if (Target != FruityUI.SelectedTarget) {
-                if (!FruityUI.SelectedTarget.TryMouseUnclick(Params)) {
-                    if (logging) Debug.Log("Unclick blocked by: " + FruityUI.SelectedTarget);
+            if (!IsAlive(Interface.SelectedTarget)) {
+                Interface.SelectedTarget = null;
+            } else if (Target != Interface.SelectedTarget) {
+                if (!Interface.SelectedTarget.TryMouseUnclick(Params)) {
+                    if (logging) Debug.Log("Unclick blocked by: " + Interface.SelectedTarget);
                     return;
                 }
             }
 
             if (logging) Debug.Log("Click: " + Target);
 
-            FruityUI.SelectedTarget = Target;
-            FruityUI.SelectedTarget?.ApplyMouseClick(Params);
+            Interface.SelectedTarget = Target;
+            Interface.SelectedTarget?.ApplyMouseClick(Params);
         }
 
     }

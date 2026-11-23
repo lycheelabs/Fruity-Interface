@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace LycheeLabs.InputTree {
 
-    internal sealed class FruityInputRuntime {
+    internal sealed class InputTreeRuntime {
 
-        private static FruityInputRuntime active = null;
+        private static InputTreeRuntime active = null;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetOnLoad() {
@@ -20,7 +20,7 @@ namespace LycheeLabs.InputTree {
 
         internal static void TriggerNewClick (MouseTarget target, MouseButton button) {
             if (active == null) {
-                Debug.LogWarning("The scene contains no FruityInterfaceInputModule!");
+                Debug.LogWarning("The scene contains no InputTreeInputModule!");
                 return;
             }
             if (target != null) {
@@ -30,7 +30,7 @@ namespace LycheeLabs.InputTree {
 
         internal static void CancelDrag (DragTarget target) {
             if (active == null) {
-                Debug.LogWarning("The scene contains no FruityInterfaceInputModule!");
+                Debug.LogWarning("The scene contains no InputTreeInputModule!");
                 return;
             }
             if (target != null) {
@@ -40,7 +40,7 @@ namespace LycheeLabs.InputTree {
 
         internal static void QueueEvent (ControlEvent newEvent) {
             if (active == null) {
-                Debug.LogWarning("The scene contains no FruityInterfaceInputModule!");
+                Debug.LogWarning("The scene contains no InputTreeInputModule!");
                 return;
             }
             if (newEvent != null) {
@@ -57,11 +57,11 @@ namespace LycheeLabs.InputTree {
         public bool LogEvents { get; }
         public bool LogRawInput { get; }
 
-        internal FruityInputRuntime(bool logEvents, bool logRawInput, bool logRaycasts)
+        internal InputTreeRuntime(bool logEvents, bool logRawInput, bool logRaycasts)
             : this(new MouseState { LogRaycasts = logRaycasts }, logEvents, logRawInput) {
         }
 
-        internal FruityInputRuntime(MouseState mouseState, bool logEvents, bool logRawInput) {
+        internal InputTreeRuntime(MouseState mouseState, bool logEvents, bool logRawInput) {
             this.mouseState = mouseState;
             events = new ControlEventQueue();
             inputEvents = new RawInputEventQueue();
@@ -72,7 +72,7 @@ namespace LycheeLabs.InputTree {
 
         internal void QueueInputEvent(RawInputEvent inputEvent) {
             if (LogRawInput) {
-                Debug.Log($"[FruityInputRuntime] Raw input: {inputEvent.Type}, button={inputEvent.Button}, " +
+                Debug.Log($"[InputTreeRuntime] Raw input: {inputEvent.Type}, button={inputEvent.Button}, " +
                     $"position={inputEvent.ScreenPosition}, time={inputEvent.Time}");
             }
             inputEvents.Enqueue(inputEvent);
@@ -87,7 +87,7 @@ namespace LycheeLabs.InputTree {
         }
 
         internal void Process() {
-            FruityUI.Update();
+            Interface.Update();
             ProcessInput();
         }
 

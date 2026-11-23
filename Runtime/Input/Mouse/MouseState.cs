@@ -89,23 +89,23 @@ namespace LycheeLabs.InputTree {
                 pressEventQueue.Enqueue(new PressEvent {
                     target = target,
                     button = button,
-                    worldPosition = FruityUI.MouseWorldPosition
+                    worldPosition = Interface.MouseWorldPosition
                 });
             }
         }
 
         /// <summary>
         /// Cancel the active drag if it matches the specified target.
-        /// FruityUI.DraggedTarget is cleared immediately to keep state aligned within the same frame.
+        /// Interface.DraggedTarget is cleared immediately to keep state aligned within the same frame.
         /// A cancellation event is then queued to invoke CancelMouseDrag() on the target once
         /// the event queue processes, even though DraggedTarget is already null by that point.
         /// Safe to call at any time - even during event processing.
         /// </summary>
         public void CancelDrag(DragTarget target) {
-            if (activePress.pressIsDrag && FruityUI.DraggedTarget == target) {
+            if (activePress.pressIsDrag && Interface.DraggedTarget == target) {
                 // Null immediately so ValidateState() next frame sees a consistent state.
                 // The target reference is passed to the event so CancelMouseDrag() is still called.
-                FruityUI.DraggedTarget = null;
+                Interface.DraggedTarget = null;
 
                 // Queue the cancellation event with the captured target
                 QueueDragCancelEvent(target);
@@ -147,7 +147,7 @@ namespace LycheeLabs.InputTree {
             if (!targetIsMissing) return;
 
             if (activePress.pressIsDrag) {
-                FruityUI.DraggedTarget = null;
+                Interface.DraggedTarget = null;
                 ClearDragOverState();
             }
 
@@ -155,7 +155,7 @@ namespace LycheeLabs.InputTree {
         }
 
         private void ProcessInputEvent(RawInputEvent inputEvent) {
-            FruityUI.SetRawMouseScreenPosition(inputEvent.ScreenPosition);
+            Interface.SetRawMouseScreenPosition(inputEvent.ScreenPosition);
             buttonDownThisEvent = false;
 
             switch (inputEvent.Type) {
@@ -229,13 +229,13 @@ namespace LycheeLabs.InputTree {
 
             if (LogRaycasts && previousTarget != lastRaycastTarget) {
                 var targetName = lastRaycastTarget == null ? "<none>" : lastRaycastTarget.ToString();
-                Debug.Log($"[MouseState] Raycast target: {targetName}, position={FruityUI.RawMouseScreenPosition}");
+                Debug.Log($"[MouseState] Raycast target: {targetName}, position={Interface.RawMouseScreenPosition}");
             }
 
-            var hoverTarget = FruityUI.DraggedTarget ?? lastRaycastTarget;
+            var hoverTarget = Interface.DraggedTarget ?? lastRaycastTarget;
 
             // Only pass button if this target is the one being pressed (dragged or clicked)
-            var pressButton = (hoverTarget == FruityUI.DraggedTarget || hoverTarget == activePress.target) 
+            var pressButton = (hoverTarget == Interface.DraggedTarget || hoverTarget == activePress.target) 
                 ? activePress.button 
                 : MouseButton.None;
             
@@ -264,7 +264,7 @@ namespace LycheeLabs.InputTree {
         private void UpdateActivePress() {
             if (!activePress.isPressed) return;
 
-            var pressTarget = (MouseTarget)FruityUI.DraggedTarget ?? lastRaycastTarget;
+            var pressTarget = (MouseTarget)Interface.DraggedTarget ?? lastRaycastTarget;
             UpdateMousePress(pressTarget);
         }
 
@@ -286,7 +286,7 @@ namespace LycheeLabs.InputTree {
                     target = lastRaycastTarget,
                     sourceNode = lastRaycastNode,
                     button = activeButton,
-                    worldPosition = FruityUI.MouseWorldPosition
+                    worldPosition = Interface.MouseWorldPosition
                 });
                 lastPressTime = clock.UnscaledTime;
             }
@@ -352,7 +352,7 @@ namespace LycheeLabs.InputTree {
         /// Returns true if the drag was started successfully.
         /// </summary>
         private bool TryStartDrag(DragTarget dragTarget, PressEvent pressEvent, MouseDragMode dragMode) {
-            var screenPosition = FruityUI.RawMouseScreenPosition;
+            var screenPosition = Interface.RawMouseScreenPosition;
             activePress.StartDrag(dragTarget, pressEvent.button, dragMode, pressEvent.worldPosition, screenPosition, pressEvent.sourceNode, clock.FrameCount, clock.UnscaledTime);
 
             // Start with null DragOverTarget - will be updated on first drag update
@@ -363,16 +363,16 @@ namespace LycheeLabs.InputTree {
 
         /// <summary>
         /// Validate state invariants (editor only).
-        /// Detects and corrects desyncs between FruityUI drag state and active press state.
+        /// Detects and corrects desyncs between Interface drag state and active press state.
         /// </summary>
         private void ValidateState() {
-            // Detect desync between FruityUI.DraggedTarget and press state
-            if (FruityUI.DraggedTarget != null && !activePress.pressIsDrag) {
+            // Detect desync between Interface.DraggedTarget and press state
+            if (Interface.DraggedTarget != null && !activePress.pressIsDrag) {
                 Debug.LogWarning("[MouseState] State desync: DraggedTarget set but no press drag active");
-                FruityUI.DraggedTarget = null;
+                Interface.DraggedTarget = null;
             }
 
-            if (activePress.pressIsDrag && FruityUI.DraggedTarget == null) {
+            if (activePress.pressIsDrag && Interface.DraggedTarget == null) {
                 Debug.LogWarning("[MouseState] State desync: Press drag active but no DraggedTarget");
                 CancelDragPress();
             }
@@ -393,7 +393,7 @@ namespace LycheeLabs.InputTree {
         /// </summary>
         private void GetRaycastTarget() {
             // Track mouse movement
-            var newMousePosition = FruityUI.RawMouseScreenPosition;
+            var newMousePosition = Interface.RawMouseScreenPosition;
             mouseIsMoving = (newMousePosition != oldMousePosition);
             oldMousePosition = newMousePosition;
 
@@ -421,7 +421,7 @@ namespace LycheeLabs.InputTree {
             if (!activePress.isPressed) return;
 
             // Complete drag if active
-            if (activePress.pressIsDrag && FruityUI.DraggedTarget != null) {
+            if (activePress.pressIsDrag && Interface.DraggedTarget != null) {
                 QueueDragCompleteEvent(BuildCurrentDragParams());
             }
 
@@ -441,15 +441,15 @@ namespace LycheeLabs.InputTree {
         /// Returns DragParams.Null if no valid drag is active.
         /// </summary>
         private DragParams BuildCurrentDragParams() {
-            if (!activePress.pressIsDrag || FruityUI.DraggedTarget == null) {
+            if (!activePress.pressIsDrag || Interface.DraggedTarget == null) {
                 return DragParams.Null;
             }
 
             return new DragParams(
-                FruityUI.DraggedTarget,
-                FruityUI.DraggedOverTarget,
+                Interface.DraggedTarget,
+                Interface.DraggedOverTarget,
                 activePress.pressScreenPosition,
-                FruityUI.RawMouseScreenPosition,
+                Interface.RawMouseScreenPosition,
                 activePress.button
             );
         }
@@ -461,10 +461,10 @@ namespace LycheeLabs.InputTree {
         private void UpdateMousePress(MouseTarget pressTarget) {
             var clickTarget = pressTarget as ClickTarget;
 
-            if (activePress.pressIsDrag && FruityUI.DraggedTarget != null &&
+            if (activePress.pressIsDrag && Interface.DraggedTarget != null &&
                 activePress.hasDragSourceNode &&
                 (activePress.dragSourceNode == null || !activePress.dragSourceNode.InputEnabledInHierarchy)) {
-                CancelDrag(FruityUI.DraggedTarget);
+                CancelDrag(Interface.DraggedTarget);
                 return;
             }
             
@@ -481,7 +481,7 @@ namespace LycheeLabs.InputTree {
                         activePress.Clear();
                     } else {
                         // Check if multi-place should keep the drag alive after placement
-                        var multiPlaceTarget = FruityUI.DraggedTarget as MultiPlaceDragTarget;
+                        var multiPlaceTarget = Interface.DraggedTarget as MultiPlaceDragTarget;
                         var isMultiPlace = multiPlaceTarget != null && multiPlaceTarget.AllowMultiPlace(dragParams);
                         QueueDragCompleteEvent(dragParams, isMultiPlace);
                         if (!isMultiPlace) {
@@ -500,7 +500,7 @@ namespace LycheeLabs.InputTree {
                 // Complete or convert drag
                 if (activePress.pressIsDrag) {
                     // For DragOrPickUp: short click converts to pickup mode
-                    var screenPosition = FruityUI.RawMouseScreenPosition;
+                    var screenPosition = Interface.RawMouseScreenPosition;
                     if (activePress.dragMode == MouseDragMode.DragOrPickUp && !activePress.WasRealDrag(screenPosition, clock.UnscaledTime)) {
                         activePress.ConvertToPickUp();
                         return;
@@ -531,9 +531,9 @@ namespace LycheeLabs.InputTree {
             }
 
             // Continue drag
-            if (activePress.pressIsDrag && FruityUI.DraggedTarget != null) {
+            if (activePress.pressIsDrag && Interface.DraggedTarget != null) {
                 // Check if drag mode is still enabled
-                var currentMode = FruityUI.DraggedTarget.GetDragMode(activePress.button);
+                var currentMode = Interface.DraggedTarget.GetDragMode(activePress.button);
                 if (currentMode == MouseDragMode.Disabled) {
                     QueueDragCancelEvent();
                     ClearDragOverState();
@@ -579,26 +579,26 @@ namespace LycheeLabs.InputTree {
         #region Event Queuing
 
         private static void QueueHoverEvent(MouseTarget target, HoverParams hoverParams) {
-            FruityInputRuntime.QueueEvent(new HoverHierarchyEvent {
+            InputTreeRuntime.QueueEvent(new HoverHierarchyEvent {
                 Target = target,
                 Params = hoverParams 
             });
         }
 
         private static void QueueClickEvent(ClickTarget target, ClickParams clickParams) {
-            FruityInputRuntime.QueueEvent(new ClickEvent { Target = target, Params = clickParams });
+            InputTreeRuntime.QueueEvent(new ClickEvent { Target = target, Params = clickParams });
         }
 
         private static void QueueDragStartEvent(DragParams dragParams) {
-            FruityInputRuntime.QueueEvent(new StartDragEvent { Params = dragParams });
+            InputTreeRuntime.QueueEvent(new StartDragEvent { Params = dragParams });
         }
 
         private static void QueueDragUpdateEvent(DragParams dragParams) {
-            FruityInputRuntime.QueueEvent(new UpdateDragEvent { Params = dragParams });
+            InputTreeRuntime.QueueEvent(new UpdateDragEvent { Params = dragParams });
         }
 
         private static void QueueDragOverUpdateEvent(MouseTarget raycastTarget, InterfaceNode raycastNode, Vector3 mouseWorldPos, MouseButton button) {
-            FruityInputRuntime.QueueEvent(new DragOverHierarchyEvent {
+            InputTreeRuntime.QueueEvent(new DragOverHierarchyEvent {
                 RaycastTarget = raycastTarget,
                 RaycastNode = raycastNode,
                 MouseWorldPosition = mouseWorldPos,
@@ -607,11 +607,11 @@ namespace LycheeLabs.InputTree {
         }
 
         private static void QueueDragCompleteEvent(DragParams dragParams, bool isMultiPlace = false) {
-            FruityInputRuntime.QueueEvent(new EndDragEvent { Params = dragParams, WasCancelled = false, IsMultiPlace = isMultiPlace });
+            InputTreeRuntime.QueueEvent(new EndDragEvent { Params = dragParams, WasCancelled = false, IsMultiPlace = isMultiPlace });
         }
 
         private static void QueueDragCancelEvent(DragTarget cancelTarget = null) {
-            FruityInputRuntime.QueueEvent(new EndDragEvent { Params = default, WasCancelled = true, CancelTarget = cancelTarget });
+            InputTreeRuntime.QueueEvent(new EndDragEvent { Params = default, WasCancelled = true, CancelTarget = cancelTarget });
         }
 
         #endregion

@@ -42,7 +42,7 @@ namespace Hierarchy {
             Hover(a);
 
             Assert.AreEqual(1, a.CountOf("hover.first"));
-            Assert.AreSame(a, FruityUI.HighlightedTarget);
+            Assert.AreSame(a, Interface.HighlightedTarget);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Hierarchy {
 
             Assert.AreEqual(1, a.CountOf("hoverEnd"));
             Assert.AreEqual(1, b.CountOf("hover.first"));
-            Assert.AreSame(b, FruityUI.HighlightedTarget);
+            Assert.AreSame(b, Interface.HighlightedTarget);
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Hierarchy {
             Hover(null);
 
             Assert.AreEqual(1, a.CountOf("hoverEnd"));
-            Assert.IsNull(FruityUI.HighlightedTarget);
+            Assert.IsNull(Interface.HighlightedTarget);
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Hierarchy {
             DragOver(a);
 
             Assert.AreEqual(1, a.CountOf("over.first"));
-            Assert.AreSame(a, FruityUI.DraggedOverTarget);
+            Assert.AreSame(a, Interface.DraggedOverTarget);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Hierarchy {
             DragOver(null);
 
             Assert.AreEqual(1, a.CountOf("overEnd"));
-            Assert.IsNull(FruityUI.DraggedOverTarget);
+            Assert.IsNull(Interface.DraggedOverTarget);
         }
 
         [Test]
@@ -109,7 +109,7 @@ namespace Hierarchy {
             DragOver(a);
 
             Assert.AreEqual(0, a.CountOf("over.first"));
-            Assert.IsNull(FruityUI.DraggedOverTarget);
+            Assert.IsNull(Interface.DraggedOverTarget);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace Hierarchy {
 
             DragOver(hoverOnly);
 
-            Assert.IsNull(FruityUI.DraggedOverTarget);
+            Assert.IsNull(Interface.DraggedOverTarget);
         }
     }
 

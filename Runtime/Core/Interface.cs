@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ namespace LycheeLabs.InputTree {
     /// <summary>
     /// Static access point for UI system state and utilities.
     /// </summary>
-    public static partial class FruityUI {
+    public static partial class Interface {
 
         private static readonly bool DEBUG_LAYER_LOCK = false;
 
@@ -30,7 +30,7 @@ namespace LycheeLabs.InputTree {
 
         public static void SetAspect(float min, float max) {
             if (!float.IsFinite(min) || !float.IsFinite(max) || min <= 0 || max <= 0 || min > max) {
-                Debug.LogError($"Invalid FruityUI aspect range: {min} to {max}.");
+                Debug.LogError($"Invalid Interface aspect range: {min} to {max}.");
                 return;
             }
 
@@ -155,7 +155,7 @@ namespace LycheeLabs.InputTree {
                 _activeLayerThreshold = layer;
             }
             if (DEBUG_LAYER_LOCK) {
-                Debug.Log($"[FruityUI] LockLayer({layer}) count={count + 1} threshold={_activeLayerThreshold}" +
+                Debug.Log($"[Interface] LockLayer({layer}) count={count + 1} threshold={_activeLayerThreshold}" +
                     (prevThreshold != _activeLayerThreshold ? " (raised from " + prevThreshold + ")" : ""));
             }
         }
@@ -163,7 +163,7 @@ namespace LycheeLabs.InputTree {
         /// <summary>Unlock the given layer. If no locks remain on any layer, all nodes are active again.</summary>
         public static void UnlockLayer(int layer) {
             if (!_layerLockCounts.TryGetValue(layer, out var count)) {
-                if (DEBUG_LAYER_LOCK) Debug.LogWarning($"[FruityUI] UnlockLayer({layer}) called but layer is not locked.");
+                if (DEBUG_LAYER_LOCK) Debug.LogWarning($"[Interface] UnlockLayer({layer}) called but layer is not locked.");
                 return;
             }
             var prevThreshold = _activeLayerThreshold;
@@ -175,7 +175,7 @@ namespace LycheeLabs.InputTree {
             }
             var newCount = _layerLockCounts.TryGetValue(layer, out var nc) ? nc : 0;
             if (DEBUG_LAYER_LOCK) {
-                Debug.Log($"[FruityUI] UnlockLayer({layer}) count={newCount} threshold={_activeLayerThreshold}" +
+                Debug.Log($"[Interface] UnlockLayer({layer}) count={newCount} threshold={_activeLayerThreshold}" +
                     (prevThreshold != _activeLayerThreshold ? " (dropped from " + prevThreshold + ")" : ""));
             }
         }
@@ -213,7 +213,7 @@ namespace LycheeLabs.InputTree {
 
         /// <summary>
         /// Updates screen bounds to match current window/display dimensions.
-        /// Called automatically by FruityInterfaceInputModule each frame.
+        /// Called automatically by InputTreeInputModule each frame.
         /// </summary>
         public static void Update() {
             if (_screenBounds != null) {
@@ -229,7 +229,7 @@ namespace LycheeLabs.InputTree {
         /// Targets that don't implement ClickTarget or DragTarget are silently ignored.
         /// </summary>
         public static void TriggerNewClick(MouseTarget target, MouseButton button) {
-            FruityInputRuntime.TriggerNewClick(target, button);
+            InputTreeRuntime.TriggerNewClick(target, button);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace LycheeLabs.InputTree {
         /// Safe to call at any time, even during event processing or from within drag callbacks.
         /// </summary>
         public static void CancelDrag(DragTarget target) {
-            FruityInputRuntime.CancelDrag(target);
+            InputTreeRuntime.CancelDrag(target);
         }
 
     }

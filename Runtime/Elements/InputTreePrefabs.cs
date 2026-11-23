@@ -6,9 +6,9 @@ namespace LycheeLabs.InputTree {
     /// <summary>
     /// Contains the canvas prefabs needed for basic UI setup.
     /// </summary>
-    public sealed class FruityUIPrefabs {
+    public sealed class InputTreePrefabs {
 
-        private const string CANVAS_PATH = "FruityPrefabs/CanvasPrefabs/";
+        private const string CANVAS_PATH = "InputTree/Prefabs/CanvasPrefabs/";
 
         // ----------------------------------------------------------------
 

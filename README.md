@@ -93,7 +93,7 @@ Events go through queues: `HoverHierarchyEvent` → `ClickEvent` → `StartDragE
 `MouseState` resolves raw input and active press state before deferred callbacks
 are delivered. Drag callbacks are emitted as queued start, over, update, and end
 events, so target callbacks observe a settled input state for the frame. The
-global `FruityUI.DraggedTarget` reference and the active press are cleared during
+global `Interface.DraggedTarget` reference and the active press are cleared during
 normal cancellation and when a Unity target is destroyed between frames. A
 physical button-down event cannot preempt an active or queued press.
 
@@ -114,9 +114,8 @@ physical button-down event cannot preempt an active or queued press.
 
 | Class | Role |
 |---|---|
-| `FruityUI` | Static access — layer locking, camera/world plane, mouse-to-world projection, `TriggerNewClick()`. |
-| `FruityUIManager` | MonoBehaviour singleton — mouse input, aspect ratio, click buffering. |
-| `FruityUIPrefabs` | Canvas and letterbox prefab loading through `Resources.Load`. |
+| `Interface` | Static access — layer locking, camera/world plane, mouse-to-world projection, `TriggerNewClick()`. |
+| `InputTreePrefabs` | Canvas and letterbox prefab loading through `Resources.Load`. |
 | `FruityEditorDrawer` | Editor helpers — `DrawConfigProperties()`, `DrawLayoutProperties()`, `DrawPrefabProperties()`, `DrawAdditionalProperties()`. |
 | `Anchor` / `ScreenAnchor` / `WorldAnchor` | RectTransform anchoring helpers. |
 | `InterfaceHelpers` | Coordinate conversion between screen, UI, and world space. |

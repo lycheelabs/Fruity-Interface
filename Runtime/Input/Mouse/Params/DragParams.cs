@@ -51,14 +51,14 @@ namespace LycheeLabs.InputTree {
         public Vector2 OriginalUIPosition => startScreenPos;
         
         /// <summary>World position (on world plane) where the drag started.</summary>
-        public Vector3 OriginalWorldPosition => FruityUI.ScreenPointToWorldPoint(startScreenPos);
+        public Vector3 OriginalWorldPosition => Interface.ScreenPointToWorldPoint(startScreenPos);
 
         // Current position
         /// <summary>Current mouse screen position.</summary>
         public Vector2 MouseUIPosition => currentScreenPos;
         
         /// <summary>Current mouse world position (on world plane).</summary>
-        public Vector3 MouseWorldPosition => FruityUI.ScreenPointToWorldPoint(currentScreenPos);
+        public Vector3 MouseWorldPosition => Interface.ScreenPointToWorldPoint(currentScreenPos);
 
         // Displacement
         /// <summary>Screen-space displacement from drag start to current position.</summary>

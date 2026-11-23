@@ -22,7 +22,7 @@ public class MouseRaycaster : IMouseRaycaster {
         targetNode = null;
         targetPoint = Vector3.zero; 
 
-        if (!FruityUI.MouseIsOnscreen) {
+        if (!Interface.MouseIsOnscreen) {
             return;
         }
 
@@ -34,7 +34,7 @@ public class MouseRaycaster : IMouseRaycaster {
         // SyncTransforms ensures 2D colliders reflect their current transform positions,
         // since Physics2D only syncs automatically during FixedUpdate.
         Physics2D.SyncTransforms();
-        Ray ray = InterfaceHelpers.ScreenPointToRay(FruityUI.UICamera, FruityUI.RawMouseScreenPosition);
+        Ray ray = InterfaceHelpers.ScreenPointToRay(Interface.UICamera, Interface.RawMouseScreenPosition);
         int hitCount = Physics.RaycastNonAlloc(ray, RaycastBuffer, MAX_DISTANCE);
         int hitCount2D = Physics2D.GetRayIntersectionNonAlloc(ray, RaycastBuffer2D, MAX_DISTANCE, everything);
 
@@ -108,7 +108,7 @@ public class MouseRaycaster : IMouseRaycaster {
         if (eventSystem == null) return false;
 
         var pointerData = new PointerEventData(eventSystem) {
-            position = FruityUI.RawMouseScreenPosition,
+            position = Interface.RawMouseScreenPosition,
             button = ToPointerEventButton(button)
         };
 

@@ -8,12 +8,12 @@ namespace Hierarchy {
 
         [SetUp]
         public void SetUp() {
-            FruityUI.ResetStateForTests();
+            Interface.ResetStateForTests();
         }
 
         [TearDown]
         public void TearDown() {
-            FruityUI.ResetStateForTests();
+            Interface.ResetStateForTests();
         }
 
         private static TestNode Child(TreeNode parent, bool disabled = false, int layer = 0) {
@@ -99,7 +99,7 @@ namespace Hierarchy {
 
         [Test]
         public void IsInputEnabled_LayerBelowLockedThreshold_IsFalse() {
-            FruityUI.LockLayer(2);
+            Interface.LockLayer(2);
 
             Assert.IsFalse(TreeNodeHierarchy.IsInputEnabled(Child(null, layer: 0)));
             Assert.IsTrue(TreeNodeHierarchy.IsInputEnabled(Child(null, layer: 2)));
@@ -107,15 +107,15 @@ namespace Hierarchy {
 
         [Test]
         public void IsInputEnabled_DisableInputWithoutLock_IsFalse() {
-            FruityUI.DisableInput = true;
+            Interface.DisableInput = true;
 
             Assert.IsFalse(TreeNodeHierarchy.IsInputEnabled(Child(null)));
         }
 
         [Test]
         public void IsInputEnabled_DisableInputWithLock_IgnoredForLockedLayer() {
-            FruityUI.LockLayer(1);
-            FruityUI.DisableInput = true;
+            Interface.LockLayer(1);
+            Interface.DisableInput = true;
 
             Assert.IsTrue(TreeNodeHierarchy.IsInputEnabled(Child(null, layer: 1)));
         }

@@ -6,7 +6,7 @@ namespace LycheeLabs.InputTree.Elements {
     public sealed class CanvasNode : InterfaceNode {
 
         public static CanvasNode Spawn (string name, Camera camera, float planeDistance = 1f) {
-            var instance = FruityUIPrefabs.InstantiateCanvas();
+            var instance = InputTreePrefabs.InstantiateCanvas();
             instance.name = "Canvas-" + name;
             instance.SetCamera(camera, planeDistance);
             return instance;
@@ -49,8 +49,8 @@ namespace LycheeLabs.InputTree.Elements {
         }
 
         private void Update () {
-            contents.sizeDelta = FruityUI.ScreenBounds.BoxedCanvasSize;
-            contents.localScale = Vector3.one / FruityUI.ScreenBounds.UIScaling;
+            contents.sizeDelta = Interface.ScreenBounds.BoxedCanvasSize;
+            contents.localScale = Vector3.one / Interface.ScreenBounds.UIScaling;
         }
 
     }

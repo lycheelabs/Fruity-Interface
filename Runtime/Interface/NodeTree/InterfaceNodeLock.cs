@@ -15,12 +15,12 @@ namespace LycheeLabs.InputTree {
             }
             _lockedLayer = InterfaceLayer.GetLayer(node);
             _isLocked = true;
-            FruityUI.LockLayer(_lockedLayer);
+            Interface.LockLayer(_lockedLayer);
         }
 
         private void OnDisable() {
             if (_isLocked) {
-                FruityUI.UnlockLayer(_lockedLayer);
+                Interface.UnlockLayer(_lockedLayer);
                 _isLocked = false;
             }
         }

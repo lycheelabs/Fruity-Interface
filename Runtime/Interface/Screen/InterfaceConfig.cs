@@ -28,7 +28,7 @@ namespace LycheeLabs.InputTree {
             UIScaling = 1;
         }
 
-        public void Update (float minAspect = FruityUI.DefaultMinAspect, float maxAspect = FruityUI.DefaultMaxAspect) {
+        public void Update (float minAspect = Interface.DefaultMinAspect, float maxAspect = Interface.DefaultMaxAspect) {
             ApplySize(Screen.width, Screen.height, minAspect, maxAspect);
         }
 
