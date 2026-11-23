@@ -1,7 +1,9 @@
+using LycheeLabs.FruityInterface;
+using FruityInterface.Tests;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Tests {
+namespace Input {
 
     public class MouseStateTests {
 

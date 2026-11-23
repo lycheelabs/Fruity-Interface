@@ -1,7 +1,8 @@
+using LycheeLabs.FruityInterface;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LycheeLabs.FruityInterface.Tests {
+namespace FruityInterface.Tests {
 
     public sealed class FakeRaycaster : IMouseRaycaster {
 

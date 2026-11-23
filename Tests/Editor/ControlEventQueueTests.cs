@@ -1,8 +1,10 @@
+using LycheeLabs.FruityInterface;
+using FruityInterface.Tests;
 using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace LycheeLabs.FruityInterface.Tests {
+namespace Input {
 
     public class ControlEventQueueTests {
 

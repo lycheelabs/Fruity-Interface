@@ -1,6 +1,8 @@
+using LycheeLabs.FruityInterface;
+using FruityInterface.Tests;
 using NUnit.Framework;
 
-namespace LycheeLabs.FruityInterface.Tests {
+namespace Hierarchy {
 
     public class TreeNodeHierarchyTests {
 
