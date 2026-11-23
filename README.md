@@ -1,84 +1,14 @@
 # InputTree
 
-Unity package (`com.lycheelabs.inputtree`) providing UI rendering, input handling, stage sequencing, and a generic settings pipeline. Depends on `com.unity.ugui`, `com.unity.inputsystem`, `TextMeshPro`, and `FruitySaveLoad`.
+Unity package (`com.lycheelabs.inputtree`) providing UI rendering, input handling, and stage sequencing. Depends on `com.unity.ugui`, `com.unity.inputsystem`, and `TextMeshPro`.
 
 Default controls, tooltips, fullscreen controls, and the settings UI bridge live in LycheeGameKit (`com.lycheelabs.gamekit`). Only the canvas and letterbox prefabs remain here, and they load through `Resources.Load`.
 
 ---
 
-## Save & Load
-
-Save/load functionality is provided by the `com.lycheelabs.fruitysaveload` dependency in the `LycheeLabs.FruitySaveLoad` namespace. `SettingsFile` uses that package for persistence.
-
----
-
-## Settings (`Runtime/Settings/`)
-
-Namespace `LycheeLabs.InputTree.Settings`. Generic typed settings with JSON persistence, category grouping via dotted keys, and an overrideable `Apply()` hook per setting.
-
-### Core types
-
-| Class | Role |
-|---|---|
-| `Setting` | Abstract base — `Key`, `virtual Apply()`. Serialized via JToken internally. |
-| `BoolSetting` | Concrete — `bool Value`, `DefaultValue`, `Reset()`. |
-| `IntSetting` | Concrete — `int Value`, `Min`, `Max`, `DefaultValue`, `Reset()`. Auto-clamps. |
-| `StringSetting` | Concrete — `string Value`, `DefaultValue`, `Reset()`. |
-| `VolumeSetting` | `: IntSetting` — takes `AudioMixer` + exposed parameter. `Apply()` sets mixer dB. |
-| `VSyncSetting` | `: BoolSetting` — `Apply()` sets `QualitySettings.vSyncCount`. |
-| `SettingsRegistry` | Static `Active` instance. `Register<T>()`, `TryGet<T>(key)`, `ApplyAll()`, `ResetAll()`. |
-| `SettingsFile` | Subclass of `SaveFile`. `CaptureFrom(registry)`, `ApplyTo(registry)`, `Save()`, `Load()`. |
-
-### Value setter behavior
-
-Setting `Value` calls `Apply()` immediately. The base `Apply()` is a no-op — override it for settings that need side effects.
-
-During load, `SettingsFile.ApplyTo()` writes all values silently via `FromToken()` (bypasses the property setter), then calls `Apply()` on every parameter once all values are consistent.
-
-### JSON shape
-
-```json
-{"Data":{"display":{"fullscreen":true,"vsync":true,"render_scale":100},"audio":{"master_vol":80,"music_vol":65,"sfx_vol":100}}}
-```
-
-Dotted keys (`"display.fullscreen"`) become nested objects. Key is the single source of truth for category structure.
-
-### Usage in a game project
-
-```csharp
-public static class GameSettings {
-    public static void Initialise(AudioMixer mixer, UniversalRenderPipelineAsset urp) {
-        var r = new SettingsRegistry();
-
-        Fullscreen  = r.Register(new FullscreenSetting("display.fullscreen", true));
-        RenderScale = r.Register(new RenderScaleSetting("display.render_scale", urp));
-        Vsync       = r.Register(new VSyncSetting("display.vsync", true));
-        MasterVol   = r.Register(new VolumeSetting("audio.master_vol", mixer, "MasterVolume"));
-        MusicVol    = r.Register(new VolumeSetting("audio.music_vol",  mixer, "MusicVolume"));
-        SfxVol      = r.Register(new VolumeSetting("audio.sfx_vol",    mixer, "SFXVolume"));
-
-        Registry = r;
-        SettingsRegistry.Active = r;
-        Load();
-    }
-
-    public static void Save() {
-        var f = new SettingsFile(); f.CaptureFrom(Registry); f.Save();
-    }
-    public static void Load() {
-        var r = SettingsFile.Load();
-        if (r.IsValid) r.Data.ApplyTo(Registry);
-    }
-}
-```
-
-Complex settings subclass the base type and override `Apply()` — see `FullscreenSetting`, `VSyncSetting`, `VolumeSetting`, `RenderScaleSetting`.
-
----
-
 ## Settings UI Bridge
 
-The bridge that connects controls to settings (`ToggleSettingKey`, `SliderSettingKey`, and their effects) lives in LycheeGameKit under `Runtime/Elements/Controls/Settings/`. The data classes in `Runtime/Settings/` stay here.
+The bridge that connects controls to settings (`ToggleSettingKey`, `SliderSettingKey`, and their effects) lives in LycheeGameKit under `Runtime/Elements/Controls/Settings/`. The settings data classes (`Setting`, `SettingsRegistry`, `SettingsFile`, etc.) live in `com.lycheelabs.inputtree.standardnodes` under `Runtime/Settings/`, with save/load via FruitySaveLoad.
 
 ---
 
