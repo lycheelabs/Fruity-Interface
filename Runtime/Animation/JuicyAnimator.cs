@@ -11,6 +11,7 @@ namespace LycheeLabs.InputTree.Animation {
     /// and applied in the order they were queued. 
     /// Note: This component overrides the Transform component!
     /// </summary>
+    [ExecuteAlways]
     public class JuicyAnimator : MonoBehaviour {
 
         private RectTransform rectTransform;
@@ -35,39 +36,29 @@ namespace LycheeLabs.InputTree.Animation {
 
         private void OnEnable () {
             rectTransform = GetComponent<RectTransform>();
-            MarkDirty();
+            isIdle = false;
         }
 
         private void OnDisable() {
             transform.hideFlags = HideFlags.None;
-            JuicyAnimatorManager.Remove(this);
-        }
-
-        private void OnDestroy() {
-            JuicyAnimatorManager.Remove(this);
-        }
-
-        private void MarkDirty() {
-            isIdle = false;
-            JuicyAnimatorManager.MarkDirty(this);
         }
 
         /// <summary> The Transform's position value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BasePosition { 
             get { return basePosition; }
-            set { if (basePosition != value) { basePosition = value; MarkDirty(); } }
+            set { if (basePosition != value) { basePosition = value; isIdle = false; } }
         }
 
         /// <summary> The Transform's rotation value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BaseRotation {
             get { return baseRotation; }
-            set { if (baseRotation != value) { baseRotation = value; MarkDirty(); } }
+            set { if (baseRotation != value) { baseRotation = value; isIdle = false; } }
         }
 
         /// <summary> The Transform's scale value is reset to this value every frame, before animations are applied. </summary>
         public Vector3 BaseScale {
             get { return baseScale; }
-            set { if (baseScale != value) { baseScale = value; MarkDirty(); } }
+            set { if (baseScale != value) { baseScale = value; isIdle = false; } }
         }
 
         public bool IsIdle => isIdle;
@@ -95,19 +86,19 @@ namespace LycheeLabs.InputTree.Animation {
         /// <summary> Adjusts the BasePosition for one frame. </summary>
         public void OverlayPosition(Vector3 translation) {
             animatePosition += translation;
-            MarkDirty();
+            isIdle = false;
         }
 
         /// <summary> Adjusts the BaseRotation for one frame. </summary>
         public void OverlayRotation(Vector3 rotation) {
             animateRotation += rotation;
-            MarkDirty();
+            isIdle = false;
         }
 
         /// <summary> Adjusts the BaseScale for one frame. </summary>
         public void OverlayScale(Vector3 scale) {
             animateScale = Vector3.Scale(animateScale, scale);
-            MarkDirty();
+            isIdle = false;
         }
 
         /// <summary> Queue an animation that plays each frame until completion. </summary>
@@ -117,22 +108,24 @@ namespace LycheeLabs.InputTree.Animation {
             } else {
                 LayeredAnimations.Add(animation);
             }
-            MarkDirty();
+            isIdle = false;
         }
 
-        /// <summary> Advances the animations by one frame. Called by JuicyAnimatorManager. Returns true while still animating. </summary>
-        internal bool Step() {
-            if (isIdle) return false;
+        private void LateUpdate() {
+            if (!Application.isPlaying) {
+                CaptureBasePose();
+                return;
+            }
+
+            if (isIdle) return;
+
             Tick(useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime);
-            return !isIdle;
         }
 
         /// <summary> Runs one frame now, with zero delta, so the Transform reflects the current base pose and animations immediately. </summary>
         public void UpdateNow() {
+            isIdle = false;
             Tick(0f);
-            if (!isIdle) {
-                JuicyAnimatorManager.MarkDirty(this);
-            }
         }
 
         private void Tick(float deltaTime) {
@@ -167,7 +160,6 @@ namespace LycheeLabs.InputTree.Animation {
             animatePosition = Vector3.zero;
             animateRotation = Vector3.zero;
             animateScale = Vector3.one;
-
         }
 
         protected virtual void Apply (ref TransformData transformData) {
